@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>ATR-72 FMC / MCDU 互動模擬器</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Chakra+Petch:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bezel-1:#7c8898;
+    --bezel-2:#3d4552;
+    --bezel-edge:#20242c;
+    --screen-bg:#04120a;
+    --screen-glow: rgba(60,255,150,0.06);
+    --green:#3fe06a;
+    --green-dim:#237a3c;
+    --cyan:#3fdcea;
+    --white:#eef3f2;
+    --amber:#f2a83a;
+    --magenta:#ff7fe0;
+    --key-face:#e7ebee;
+    --key-face-dark:#c7cdd3;
+    --key-text:#1b2027;
+    --lsk-face:#aab2bb;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;
+    min-height:100%;
+    background:
+      radial-gradient(1200px 700px at 50% -10%, #232a35 0%, #12151b 55%, #0a0c10 100%);
+    font-family:'Chakra Petch', sans-serif;
+    color:#dfe4e8;
+    padding:28px 12px 60px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .page-head{
+    text-align:center;
+    margin-bottom:18px;
+    max-width:640px;
+  }
+  .page-head .eyebrow{
+    font-size:11px;
+    letter-spacing:0.32em;
+    color:#7c8898;
+    text-transform:uppercase;
+    margin-bottom:6px;
+  }
+  .page-head h1{
+    font-size:22px;
+    margin:0 0 6px;
+    color:#f1f4f6;
+    letter-spacing:0.02em;
+  }
+  .page-head p{
+    font-size:12.5px;
+    color:#8b94a0;
+    line-height:1.6;
+    margin:0;
+  }
+
+  /* ===== Unit shell ===== */
+  .unit{
+    width:min(94vw, 460px);
+    background:
+      linear-gradient(160deg, var(--bezel-1), var(--bezel-2) 55%, var(--bezel-edge));
+    border-radius:18px;
+    padding:16px 16px 20px;
+    box-shadow:
+      0 30px 60px -20px rgba(0,0,0,0.65),
+      inset 0 1px 0 rgba(255,255,255,0.25),
+      inset 0 -6px 14px rgba(0,0,0,0.35);
+    position:relative;
+  }
+  .unit::before{
+    content:"";
+    position:absolute; inset:6px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,0.12);
+    pointer-events:none;
+  }
+  .unit-label{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 4px 10px;
+    font-size:9.5px;
+    letter-spacing:0.18em;
+    color:#e4e8ec;
+    text-shadow:0 1px 0 rgba(0,0,0,0.3);
+  }
+  .unit-label b{ font-size:10.5px; letter-spacing:0.1em; }
+  .screw{
+    width:11px;height:11px;border-radius:50%;
+    background: radial-gradient(circle at 35% 30%, #d9dee3, #7d858f 60%, #4a4f57);
+    box-shadow: inset 0 0 2px rgba(0,0,0,0.6);
+  }
+
+  /* ===== Screen + LSK frame ===== */
+  .screen-frame{
+    display:grid;
+    grid-template-columns:26px 1fr 26px;
+    gap:6px;
+    align-items:stretch;
+    background:linear-gradient(160deg,#2b313a,#171b21);
+    border-radius:10px;
+    padding:10px 6px;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.05);
+  }
+  .lsk-col{
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    padding:14px 0;
+  }
+  .lsk-btn{
+    width:100%;
+    height:15px;
+    border-radius:3px;
+    background:linear-gradient(180deg, var(--lsk-face), #7f8790);
+    box-shadow: 0 2px 0 #545a62, inset 0 1px 0 rgba(255,255,255,0.5);
+    cursor:pointer;
+    border:none;
+    padding:0;
+  }
+  .lsk-btn:active{ transform:translateY(1px); box-shadow:0 1px 0 #545a62; }
+  .lsk-btn.lit{ background:linear-gradient(180deg, #fff3b0, #d8b23a); box-shadow:0 2px 0 #8a6f1c, inset 0 1px 0 rgba(255,255,255,0.7); }
+
+  .screen{
+    background: radial-gradient(120% 130% at 50% 0%, var(--screen-glow), transparent 60%), var(--screen-bg);
+    border-radius:6px;
+    padding:10px 10px 8px;
+    font-family:'Share Tech Mono', monospace;
+    font-size:12.6px;
+    line-height:1.62;
+    box-shadow: inset 0 0 22px rgba(0,0,0,0.85), inset 0 0 3px #000;
+    min-height:300px;
+    position:relative;
+    overflow:hidden;
+  }
+  .screen::after{
+    content:"";
+    position:absolute; inset:0;
+    background: repeating-linear-gradient(180deg, rgba(0,0,0,0.16) 0px, rgba(0,0,0,0.16) 1px, transparent 1px, transparent 3px);
+    pointer-events:none;
+    opacity:0.35;
+  }
+  .row{ display:flex; white-space:pre; }
+  .row.title{ justify-content:space-between; font-weight:bold; letter-spacing:0.04em; }
+  .row.two-col{ justify-content:space-between; }
+  .c-green{ color:var(--green); text-shadow:0 0 5px rgba(63,224,106,0.55); }
+  .c-cyan{ color:var(--cyan); text-shadow:0 0 5px rgba(63,220,234,0.5); }
+  .c-white{ color:var(--white); text-shadow:0 0 4px rgba(238,243,242,0.35); }
+  .c-amber{ color:var(--amber); text-shadow:0 0 5px rgba(242,168,58,0.55); }
+  .c-magenta{ color:var(--magenta); text-shadow:0 0 5px rgba(255,127,224,0.55); }
+  .c-dim{ color:var(--green-dim); }
+  .scratch-row{ margin-top:4px; }
+  .msg-row{ min-height:1.62em; }
+  .cursor{ animation:blink 1s steps(1) infinite; }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  /* ===== Keypad area ===== */
+  .keypad{ margin-top:12px; }
+  .krow{ display:grid; gap:5px; margin-bottom:6px; grid-template-columns:repeat(9, minmax(0,1fr)); }
+  .key{
+    font-family:'Chakra Petch', sans-serif;
+    font-weight:600;
+    font-size:9.5px;
+    color:var(--key-text);
+    background:linear-gradient(180deg, var(--key-face), var(--key-face-dark));
+    border:none;
+    border-radius:5px;
+    padding:8px 1px;
+    box-shadow:0 3px 0 #8b929b, inset 0 1px 0 rgba(255,255,255,0.7);
+    cursor:pointer;
+    letter-spacing:0.01em;
+    min-width:0;
+    min-height:0;
+    width:100%;
+  }
+  .key:active{ transform:translateY(2px); box-shadow:0 1px 0 #8b929b; }
+  .key.exec{ background:linear-gradient(180deg,#fff2a8,#e0bd3f); box-shadow:0 3px 0 #a9862a, inset 0 1px 0 rgba(255,255,255,0.7); }
+  .key.exec.armed{ background:linear-gradient(180deg,#ffe27a,#c99a1c); animation:pulse 0.9s infinite; }
+  @keyframes pulse{ 50%{ filter:brightness(1.25);} }
+  .key.blank{ background:transparent; box-shadow:none; cursor:default; pointer-events:none; }
+  .key.msg{ position:relative; }
+  .key.msg.active::after{
+    content:""; position:absolute; top:3px; right:5px; width:6px; height:6px; border-radius:50%;
+    background:#ff5b3d; box-shadow:0 0 5px #ff5b3d;
+  }
+
+  .grid-alpha{
+    display:grid;
+    grid-template-columns:repeat(10, minmax(0,1fr));
+    gap:5px;
+  }
+  .key.round{
+    border-radius:50%;
+    aspect-ratio:1/1;
+    font-size:11px;
+    padding:0;
+    display:flex; align-items:center; justify-content:center;
+    min-width:0;
+    width:100%;
+    height:auto;
+  }
+  .compass-ring{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:64%;
+    aspect-ratio:1/1;
+    border-radius:50%;
+    border:1.4px solid var(--key-text);
+  }
+
+  .hint{
+    margin-top:16px;
+    max-width:460px;
+    font-size:12px;
+    line-height:1.75;
+    color:#9aa3ad;
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:10px;
+    padding:14px 16px;
+  }
+  .hint b{ color:#cfd6dc; }
+  .hint code{ color:var(--green); background:rgba(63,224,106,0.08); padding:1px 5px; border-radius:3px; }
+
+  @media (max-width:420px){
+    .screen{ font-size:11px; }
+    .key{ font-size:8px; padding:7px 1px; }
+  }
+
+  /* ===== Manual reference panel (step 3 prototype) ===== */
+  .manual-fab{
+    position:fixed;
+    right:18px;
+    bottom:18px;
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    border:none;
+    background:linear-gradient(160deg,#3fdcea,#1f8f9c);
+    color:#0a2226;
+    font-size:22px;
+    box-shadow:0 10px 24px -6px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.5);
+    cursor:pointer;
+    z-index:40;
+  }
+  .manual-fab:active{ transform:translateY(1px); }
+  .manual-panel{
+    position:fixed;
+    top:0; right:0; bottom:0;
+    width:min(86vw, 320px);
+    background:#171b21;
+    border-left:1px solid rgba(255,255,255,0.08);
+    box-shadow:-20px 0 40px rgba(0,0,0,0.5);
+    transform:translateX(100%);
+    transition:transform 0.25s ease;
+    z-index:50;
+    display:flex;
+    flex-direction:column;
+    padding:18px 16px 20px;
+    overflow-y:auto;
+  }
+  .manual-panel.open{ transform:translateX(0); }
+  .manual-panel h2{
+    font-size:14px;
+    color:#f1f4f6;
+    margin:0 0 2px;
+  }
+  .manual-panel .sub{
+    font-size:10.5px;
+    color:#7c8898;
+    margin-bottom:14px;
+    letter-spacing:0.04em;
+  }
+  .manual-close{
+    position:absolute;
+    top:14px; right:14px;
+    background:none;
+    border:none;
+    color:#8b94a0;
+    font-size:18px;
+    cursor:pointer;
+  }
+  .manual-current{
+    font-size:11px;
+    color:#3fdcea;
+    background:rgba(63,220,234,0.08);
+    border:1px solid rgba(63,220,234,0.25);
+    border-radius:8px;
+    padding:8px 10px;
+    margin-bottom:12px;
+  }
+  .manual-entry{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:8px;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.07);
+    border-radius:8px;
+    padding:9px 10px;
+    margin-bottom:8px;
+  }
+  .manual-entry .txt{ font-size:11.5px; color:#dfe4e8; line-height:1.4; }
+  .manual-entry .txt small{ display:block; color:#7c8898; font-size:9.5px; margin-top:2px; }
+  .manual-entry button{
+    flex-shrink:0;
+    font-family:'Chakra Petch', sans-serif;
+    font-size:10px;
+    font-weight:600;
+    color:#0a2226;
+    background:linear-gradient(160deg,#3fdcea,#1f8f9c);
+    border:none;
+    border-radius:6px;
+    padding:6px 8px;
+    cursor:pointer;
+  }
+  .manual-note{
+    margin-top:auto;
+    font-size:10px;
+    line-height:1.6;
+    color:#6b7480;
+    border-top:1px solid rgba(255,255,255,0.08);
+    padding-top:10px;
+  }
+  .manual-note code{ color:#3fdcea; }
+
+  .gh-connect{
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:8px;
+    padding:10px;
+    margin-bottom:14px;
+  }
+  .gh-connect label{
+    display:block;
+    font-size:10px;
+    color:#9aa3ad;
+    margin-bottom:6px;
+  }
+  .gh-connect input[type=password]{
+    width:100%;
+    background:#0e1116;
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:6px;
+    color:#dfe4e8;
+    font-family:'Share Tech Mono', monospace;
+    font-size:11px;
+    padding:7px 8px;
+    margin-bottom:8px;
+  }
+  .gh-btn-row{ display:flex; gap:6px; margin-bottom:8px; }
+  .gh-btn-row button{
+    flex:1;
+    font-family:'Chakra Petch', sans-serif;
+    font-size:10px;
+    font-weight:600;
+    border:none;
+    border-radius:6px;
+    padding:7px 6px;
+    cursor:pointer;
+    color:#0a2226;
+    background:linear-gradient(160deg,#3fdcea,#1f8f9c);
+  }
+  .gh-btn-row button.secondary{
+    color:#dfe4e8;
+    background:rgba(255,255,255,0.08);
+  }
+  .gh-status{ font-size:10.5px; color:#7c8898; }
+  .gh-status.ok{ color:#3fe06a; }
+  .gh-status.err{ color:#ff6b5e; }
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <div class="eyebrow">ATR-72 · THALES / UNIVERSAL FMS</div>
+  <h1>互動式 ATR FMC 模擬器</h1>
+  <p>比照你上傳的照片重製的 MCDU 面板 — 點擊下方鍵盤輸入資料到 SCRATCHPAD（洋紅色那一行），再按左右兩側對應的 LSK 把資料寫入畫面欄位。這是純前端教學模擬，數值僅供練習操作邏輯用。</p>
+</div>
+
+<div class="unit">
+  <div class="unit-label">
+    <span class="screw"></span>
+    <b>MCDU &nbsp;·&nbsp; ATR 72-600</b>
+    <span class="screw"></span>
+  </div>
+
+  <div class="screen-frame">
+    <div class="lsk-col" id="lskLeft"></div>
+    <div class="screen" id="screen"></div>
+    <div class="lsk-col" id="lskRight"></div>
+  </div>
+
+  <div class="keypad">
+    <div class="krow fn1">
+      <button class="key" onclick="nav('MENU')" id="menuKey">MENU</button>
+      <button class="key" onclick="prevPage()">PREV</button>
+      <button class="key" onclick="nextPage()">NEXT</button>
+      <button class="key blank" aria-label="blank key" onclick="flash('BLANK KEY &mdash; NOT ASSIGNED')" style="pointer-events:auto; box-shadow:0 3px 0 #8b929b, inset 0 1px 0 rgba(255,255,255,0.7); background:linear-gradient(180deg, var(--key-face), var(--key-face-dark));"></button>
+      <button class="key" onclick="nav('FPLN')">FPLN</button>
+      <button class="key" onclick="doDTO()">DTO</button>
+      <button class="key" onclick="nav('PERF')">PERF</button>
+      <button class="key msg" id="msgKey" onclick="nav('MSG')">MSG</button>
+      <button class="key exec" id="execKey" onclick="doExec()">EXEC</button>
+    </div>
+    <div class="krow fn2">
+      <span class="key blank"></span>
+      <button class="key" onclick="nav('PROG')">PROG</button>
+      <button class="key" onclick="nav('DATA')">DATA</button>
+      <button class="key" onclick="nav('VNAV')">VNAV</button>
+      <button class="key" onclick="nav('MARK')">MRK</button>
+      <div class="brt-stack">
+        <button class="key" onclick="adjustBrightness(1)">&#9650; BRT</button>
+        <button class="key" onclick="adjustBrightness(-1)">&#9660; BRT</button>
+      </div>
+    </div>
+
+    <div class="grid-alpha" style="margin-bottom:5px;">
+      <button class="key round" onclick="type('1')">1</button>
+      <button class="key round" onclick="type('2')">2</button>
+      <button class="key round" onclick="type('3')">3</button>
+      <button class="key round" onclick="type('A')">A</button>
+      <button class="key round" onclick="type('B')">B</button>
+      <button class="key round" onclick="type('C')">C</button>
+      <button class="key round" onclick="type('D')">D</button>
+      <button class="key round" onclick="type('E')"><span class="compass-ring">E</span></button>
+      <button class="key round" onclick="type('F')">F</button>
+      <button class="key round" onclick="type('G')">G</button>
+    </div>
+    <div class="grid-alpha" style="margin-bottom:5px;">
+      <button class="key round" onclick="type('4')">4</button>
+      <button class="key round" onclick="type('5')">5</button>
+      <button class="key round" onclick="type('6')">6</button>
+      <button class="key round" onclick="type('H')">H</button>
+      <button class="key round" onclick="type('I')">I</button>
+      <button class="key round" onclick="type('J')">J</button>
+      <button class="key round" onclick="type('K')">K</button>
+      <button class="key round" onclick="type('L')">L</button>
+      <button class="key round" onclick="type('M')">M</button>
+      <button class="key round" onclick="type('N')"><span class="compass-ring">N</span></button>
+    </div>
+    <div class="grid-alpha" style="margin-bottom:5px;">
+      <button class="key round" onclick="type('7')">7</button>
+      <button class="key round" onclick="type('8')">8</button>
+      <button class="key round" onclick="type('9')">9</button>
+      <button class="key round" onclick="type('O')">O</button>
+      <button class="key round" onclick="type('P')">P</button>
+      <button class="key round" onclick="type('Q')">Q</button>
+      <button class="key round" onclick="type('R')">R</button>
+      <button class="key round" onclick="type('S')"><span class="compass-ring">S</span></button>
+      <button class="key round" onclick="type('T')">T</button>
+      <button class="key round" onclick="type('U')">U</button>
+    </div>
+    <div class="grid-alpha" style="margin-bottom:5px;">
+      <button class="key round" onclick="type('.')">.</button>
+      <button class="key round" onclick="type('0')">0</button>
+      <button class="key round" onclick="type('+/-')">+/-</button>
+      <button class="key round" onclick="type('V')">V</button>
+      <button class="key round" onclick="type('W')"><span class="compass-ring">W</span></button>
+      <button class="key round" onclick="type('X')">X</button>
+      <button class="key round" onclick="type('Y')">Y</button>
+      <button class="key round" onclick="type('Z')">Z</button>
+      <button class="key round" onclick="clrKey()" style="font-size:8.5px;">CLR</button>
+    </div>
+    <div class="grid-alpha">
+      <button class="key round" onclick="type('/')">/</button>
+      <button class="key round" onclick="type(' ')" style="font-size:8.5px;">SP</button>
+    </div>
+  </div>
+</div>
+
+<div class="hint">
+  <b>快速上手：</b><br>
+  1. 按 <code>MENU</code> 再按右上角 LSK 進入 INIT 頁,輸入 FROM/TO 機場代碼（如 RCSS 松山 → RCFN 台東）。<br>
+  2. 按 <code>FPLN</code> 建立航線,用鍵盤打航點代碼,再按左側對應 LSK 寫入。<br>
+  3. 按 <code>PERF</code> 設定 V1/VR/V2 與巡航高度;按 <code>VNAV</code> 看 T/C、T/D 預估;按 <code>PROG</code> 查看剩餘距離與 ETA。<br>
+  4. 按 <code>MRK</code> 可回到你截圖那種 MARK 頁面樣式;<code>RMS</code> 在此模擬中未實作,僅顯示提示訊息。<br>
+  5. 右下角 <code>BRT ▲ / BRT ▼</code> 可即時調整螢幕亮度,跟實機一樣。<br>
+  6. SCRATCHPAD（畫面最下方洋紅字）打字後,按<b>對應那一列</b>的 LSK 按鈕（螢幕左右兩側灰色小按鍵）即可把資料寫入欄位;再按一次同一顆 LSK 可把欄位內容叫回 scratchpad 編輯。<br>
+  7. 右下角圓形 <b>📖 手冊</b> 按鈕（只有你自己會用到）會依照目前畫面自動列出對應的 FMS220 手冊章節,這部分還是雛形,細節見程式碼裡的 TODO 註解。
+</div>
+
+<button class="manual-fab" onclick="toggleManualPanel()" title="參考手冊（僅示範，未接上私人資料）">📖</button>
+<div class="manual-panel" id="manualPanel">
+  <button class="manual-close" onclick="toggleManualPanel(false)">✕</button>
+  <h2>參考手冊</h2>
+  <div class="sub">FMS220 · THALES USER'S MANUAL</div>
+
+  <div class="gh-connect">
+    <label for="ghTokenInput">GitHub Token（私人 repo 讀取用）</label>
+    <input type="password" id="ghTokenInput" placeholder="貼上 fine-grained PAT..." autocomplete="off">
+    <div class="gh-btn-row">
+      <button onclick="connectGitHub()">儲存並測試連線</button>
+      <button class="secondary" onclick="disconnectGitHub()">清除</button>
+    </div>
+    <div class="gh-status" id="ghStatus">尚未連線</div>
+  </div>
+
+  <div class="manual-current" id="manualCurrent"></div>
+  <div id="manualEntries"></div>
+  <div class="manual-note">
+    Token 只會存在這個瀏覽器分頁的 session 裡（關掉分頁就清除,不會寫進程式碼、不會上傳到任何 repo）。建議用 GitHub 的 <b>fine-grained token</b>,只授權 <code>study-private-docs</code> 這個 repo、且只給 <code>Contents: Read-only</code> 權限,不要用有完整 repo 存取的 classic token。
+  </div>
+</div>
+
+<script>
+/* ================= STATE ================= */
+const state = {
+  page: 'MENU',
+  scratchpad: '',
+  msg: '',
+  msgActive: false,
+  execArmed: false,
+  brightness: 1,
+  init: { from:'RCSS', to:'RCFN', costIndex:'20', crzFL:'FL180' },
+  fpln: { wpts: ['RCSS','TAKAO','RCFN'] },
+  perf: { v1:'104', vr:'108', v2:'112', crzSpd:'250', crzFL:'FL180', flapTO:'15' },
+  prog: {},
+  mark: {}
+};
+
+const pages = ['MENU','INIT','FPLN','PERF','VNAV','PROG','DATA','MARK'];
+
+function adjustBrightness(dir){
+  state.brightness = Math.min(1.4, Math.max(0.55, state.brightness + dir*0.12));
+  render();
+}
+
+/* ================================================================
+   MANUAL REFERENCE PANEL (step 3 prototype)
+   ----------------------------------------------------------------
+   MANUAL_MAP: 每個模擬器分頁 -> 對應到 FMS220 手冊的章節清單。
+   這份對照表是從你那份 fms220_toc_index.json（自動解析整本手冊
+   目錄產生的 329 筆資料）裡，手動挑出跟目前這幾個分頁相關的條目。
+   之後如果模擬器加新分頁，或是想要更完整的對照，可以直接從那份
+   JSON 裡查 title 找 section/page 補進來，不用重新翻書。
+   ================================================================ */
+const MANUAL_MAP = {
+  MENU: [ { section:'3.1.1', title:'MENU page', page:71 } ],
+  INIT: [
+    { section:'3.3.1.2', title:'INIT page', page:107 },
+    { section:'3.3.1.3', title:'POS INIT page', page:109 }
+  ],
+  FPLN: [
+    { section:'3.3.2.1', title:'FPLN page', page:113 },
+    { section:'3.3.2.2', title:'FPLN INIT page', page:121 }
+  ],
+  PERF: [
+    { section:'3.3.5.1', title:'PERF INIT page', page:162 },
+    { section:'3.3.5.3', title:'TAKE OFF page', page:167 },
+    { section:'3.3.5.4', title:'CRUISE page', page:169 }
+  ],
+  VNAV: [
+    { section:'3.3.3.9', title:'VNAV page 1/2', page:155 },
+    { section:'3.3.3.10', title:'VNAV page 2/2', page:156 }
+  ],
+  PROG: [
+    { section:'3.3.3.1', title:'PROG 1/3 page', page:145 },
+    { section:'3.3.3.2', title:'PROG 2/3 page', page:146 },
+    { section:'3.3.3.3', title:'PROG 3/3 page', page:147 }
+  ],
+  DATA: [ { section:'3.3.9.1', title:'DATA MENU page', page:180 } ],
+  MARK: [ { section:'3.3.8.1', title:'MARK page', page:178 } ]
+};
+
+const MANUAL_PDF_PATH = 'manuals/fms220/FMS-ATR-3.pdf'; // 對應你 repo 截圖裡的實際路徑/檔名
+
+/* ================================================================
+   GitHub 私人 repo 連線（測試用）
+   ----------------------------------------------------------------
+   直接從瀏覽器呼叫 GitHub REST API 讀取私人 repo 裡的檔案。
+   api.github.com 有開放 CORS，靜態頁面（GitHub Pages）不需要
+   後端伺服器就能打這隻 API。
+   Token 只存在 sessionStorage（分頁關閉即清除），不會被寫進
+   任何檔案或上傳到 repo 裡。
+   ================================================================ */
+const GH_OWNER = 'a24626296';
+const GH_REPO = 'study-private-docs';
+
+function ghToken(){ return sessionStorage.getItem('gh_pat') || ''; }
+
+function updateGhStatus(text, cls){
+  const el = document.getElementById('ghStatus');
+  if(!el) return;
+  el.textContent = text;
+  el.className = 'gh-status' + (cls ? ' '+cls : '');
+}
+
+async function connectGitHub(){
+  const input = document.getElementById('ghTokenInput');
+  const token = input.value.trim();
+  if(!token){ updateGhStatus('請先貼上 token', 'err'); return; }
+  updateGhStatus('測試連線中...');
+  try{
+    const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}`, {
+      headers: { 'Authorization': `token ${token}` }
+    });
+    if(res.ok){
+      sessionStorage.setItem('gh_pat', token);
+      updateGhStatus('已連線到 ' + GH_REPO, 'ok');
+      input.value = '';
+    } else if(res.status === 401 || res.status === 403){
+      updateGhStatus('認證失敗（HTTP '+res.status+'）,檢查 token 是否過期或權限不足', 'err');
+    } else if(res.status === 404){
+      updateGhStatus('找不到 repo（HTTP 404）,檢查 repo 名稱或 token 是否有這個 repo 的權限', 'err');
+    } else {
+      updateGhStatus('連線失敗（HTTP '+res.status+'）', 'err');
+    }
+  }catch(e){
+    updateGhStatus('連線錯誤：' + e.message, 'err');
+  }
+}
+
+function disconnectGitHub(){
+  sessionStorage.removeItem('gh_pat');
+  updateGhStatus('尚未連線');
+}
+
+/**
+ * 讀取私人 repo 裡的檔案，回傳一個瀏覽器可以打開的 blob URL。
+ * 用 Accept: application/vnd.github.raw 直接拿原始檔案內容，
+ * 不會卡到 GitHub Contents API 對 JSON+base64 回應的 1MB 限制
+ * （這份 PDF 有 4MB 多，一定要用這個 header，不能用預設的 JSON 回應）。
+ */
+window.fetchPrivateRepoFile = async function(path){
+  const token = ghToken();
+  if(!token) throw new Error('尚未設定 GitHub token');
+  const encodedPath = path.split('/').map(encodeURIComponent).join('/');
+  const url = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${encodedPath}`;
+  const res = await fetch(url, {
+    headers: {
+      'Authorization': `token ${token}`,
+      'Accept': 'application/vnd.github.raw'
+    }
+  });
+  if(!res.ok) throw new Error('HTTP ' + res.status);
+  const blob = await res.blob();
+  return URL.createObjectURL(blob);
+};
+
+function toggleManualPanel(forceOpen){
+  const panel = document.getElementById('manualPanel');
+  const shouldOpen = forceOpen !== undefined ? forceOpen : !panel.classList.contains('open');
+  panel.classList.toggle('open', shouldOpen);
+  if(shouldOpen){
+    renderManualPanel();
+    updateGhStatus(ghToken() ? '已連線到 '+GH_REPO : '尚未連線', ghToken() ? 'ok' : '');
+  }
+}
+
+function renderManualPanel(){
+  const cur = document.getElementById('manualCurrent');
+  const list = document.getElementById('manualEntries');
+  if(!cur || !list) return; // panel not open yet / not in DOM interaction
+
+  cur.textContent = '目前畫面：' + state.page;
+
+  const entries = MANUAL_MAP[state.page] || [];
+  if(entries.length === 0){
+    list.innerHTML = '<div class="manual-entry"><span class="txt">這個分頁還沒有對照到手冊章節。</span></div>';
+    return;
+  }
+  list.innerHTML = entries.map(e => `
+    <div class="manual-entry">
+      <span class="txt">${e.section} ${escapeHtml(e.title)}<small>第 ${e.page} 頁</small></span>
+      <button onclick="openManualSection(${e.page}, '${e.section}')">開啟</button>
+    </div>
+  `).join('');
+}
+
+/**
+ * 開啟手冊指定頁面。
+ * 會呼叫上面的 window.fetchPrivateRepoFile()：
+ *  - 已連線（有 token）→ 抓到 PDF、開新分頁跳到指定頁碼
+ *  - 未連線（沒 token，例如別人打開這個公開頁面）→ 顯示提示訊息，不會出錯
+ */
+async function openManualSection(pageNum, sectionId){
+  if(!ghToken()){
+    flash('尚未連線 GitHub，請先在📖面板輸入 token');
+    return;
+  }
+  try{
+    const pdfUrl = await window.fetchPrivateRepoFile(MANUAL_PDF_PATH);
+    window.open(pdfUrl + '#page=' + pageNum, '_blank');
+  }catch(e){
+    console.error('fetchPrivateRepoFile failed:', e);
+    flash('讀取私人手冊失敗：' + e.message);
+  }
+}
+
+/* ================= HELPERS ================= */
+function pad(s, n){ s = (s===undefined||s===null) ? '' : String(s); return s.length>=n ? s.slice(0,n) : s + ' '.repeat(n-s.length); }
+function padL(s, n){ s = (s===undefined||s===null) ? '' : String(s); return s.length>=n ? s.slice(0,n) : ' '.repeat(n-s.length) + s; }
+function nowUTC(){
+  const d = new Date();
+  const hh = padL(d.getUTCHours(),2,'0').replace(/ /g,'0');
+  const mm = padL(d.getUTCMinutes(),2,'0').replace(/ /g,'0');
+  const ss = padL(d.getUTCSeconds(),2,'0').replace(/ /g,'0');
+  return hh+'H'+mm+':'+ss+' Z';
+}
+
+function nav(p){
+  if(p==='MSG'){ state.msgActive=false; render(); return; }
+  state.page = p;
+  state.scratchpad = '';
+  render();
+}
+function prevPage(){
+  const i = pages.indexOf(state.page);
+  state.page = pages[(i-1+pages.length)%pages.length];
+  render();
+}
+function nextPage(){
+  const i = pages.indexOf(state.page);
+  state.page = pages[(i+1)%pages.length];
+  render();
+}
+function flash(msg){
+  state.msg = msg;
+  state.msgActive = true;
+  render();
+}
+function type(ch){
+  state.msgActive = false;
+  if(ch==='+/-'){
+    if(state.scratchpad.includes('-')) state.scratchpad = state.scratchpad.replace('-','');
+    else state.scratchpad += '-';
+  } else {
+    if(state.scratchpad.length < 22) state.scratchpad += ch;
+  }
+  render();
+}
+function clrKey(){
+  state.msgActive = false;
+  if(state.scratchpad.length>0){
+    state.scratchpad = state.scratchpad.slice(0,-1);
+  } else {
+    state.msg = '';
+  }
+  render();
+}
+function doDTO(){
+  if(state.scratchpad.trim()===''){
+    flash('DTO: TYPE WAYPOINT FIRST');
+    return;
+  }
+  const wp = state.scratchpad.trim().toUpperCase();
+  state.fpln.wpts = [wp, ...state.fpln.wpts.filter(w=>w!==wp)];
+  state.scratchpad = '';
+  state.execArmed = true;
+  flash('DIRECT TO '+wp+' — PRESS EXEC');
+  state.page = 'FPLN';
+  render();
+}
+function doExec(){
+  if(state.execArmed){
+    state.execArmed = false;
+    flash('MODIFICATION INSERTED');
+  } else {
+    flash('NO ACTIVE MOD');
+  }
+  render();
+}
+
+/* generic LSK writer: fieldSetter receives scratchpad text; returns error string or null */
+function lsk(side, idx){
+  const p = state.page;
+  const handlers = pageHandlers[p];
+  if(!handlers) return;
+  const h = handlers[side+idx];
+  if(!h) return;
+  if(state.scratchpad.trim()===''){
+    if(h.recall){
+      state.scratchpad = h.recall();
+    }
+    render();
+    return;
+  }
+  const err = h.set(state.scratchpad.trim());
+  if(err){
+    flash(err);
+  } else {
+    state.scratchpad = '';
+    state.msg='';
+    state.msgActive=false;
+    state.execArmed = true;
+    render();
+  }
+}
+
+/* ================= PAGE HANDLERS (LSK bindings) ================= */
+const pageHandlers = {
+  MENU: {
+    L1:{ set:()=>{ nav('FPLN'); return null; } },
+    L2:{ set:()=>{ nav('PERF'); return null; } },
+    L3:{ set:()=>{ nav('DATA'); return null; } },
+    R1:{ set:()=>{ nav('INIT'); return null; } },
+    R2:{ set:()=>{ nav('PROG'); return null; } },
+    R3:{ set:()=>{ nav('MARK'); return null; } },
+  },
+  INIT: {
+    L1:{ set:(v)=>{ const parts=v.replace('/','/').split('/'); if(parts.length<2) return 'FORMAT: FROM/TO'; state.init.from=parts[0].toUpperCase(); state.init.to=parts[1].toUpperCase(); return null; }, recall:()=>state.init.from+'/'+state.init.to },
+    L2:{ set:(v)=>{ if(isNaN(parseInt(v))) return 'INVALID ENTRY'; state.init.costIndex=v; return null; }, recall:()=>state.init.costIndex },
+    L3:{ set:(v)=>{ state.init.crzFL = v.toUpperCase(); return null; }, recall:()=>state.init.crzFL },
+  },
+  FPLN: {
+    L1:{ set:(v)=>{ state.fpln.wpts[0]=v.toUpperCase(); return null; }, recall:()=>state.fpln.wpts[0]||'' },
+    L2:{ set:(v)=>{ state.fpln.wpts[1]=v.toUpperCase(); return null; }, recall:()=>state.fpln.wpts[1]||'' },
+    L3:{ set:(v)=>{ state.fpln.wpts[2]=v.toUpperCase(); return null; }, recall:()=>state.fpln.wpts[2]||'' },
+    L4:{ set:(v)=>{ if(state.fpln.wpts.length>=8) return 'FPLN FULL'; state.fpln.wpts.push(v.toUpperCase()); return null; } },
+    R1:{ set:(v)=>{ if(state.fpln.wpts.length<2) return 'NOT ALLOWED'; state.fpln.wpts.splice(state.fpln.wpts.length-1,0,v.toUpperCase()); return null; } },
+  },
+  PERF: {
+    L1:{ set:(v)=>{ if(isNaN(parseInt(v))) return 'INVALID ENTRY'; state.perf.v1=v; return null; }, recall:()=>state.perf.v1 },
+    L2:{ set:(v)=>{ if(isNaN(parseInt(v))) return 'INVALID ENTRY'; state.perf.vr=v; return null; }, recall:()=>state.perf.vr },
+    L3:{ set:(v)=>{ if(isNaN(parseInt(v))) return 'INVALID ENTRY'; state.perf.v2=v; return null; }, recall:()=>state.perf.v2 },
+    L4:{ set:(v)=>{ state.perf.flapTO=v; return null; }, recall:()=>state.perf.flapTO },
+    R1:{ set:(v)=>{ if(isNaN(parseInt(v))) return 'INVALID ENTRY'; state.perf.crzSpd=v; return null; }, recall:()=>state.perf.crzSpd },
+    R2:{ set:(v)=>{ state.perf.crzFL=v.toUpperCase(); return null; }, recall:()=>state.perf.crzFL },
+  },
+  DATA: {
+    L1:{ set:(v)=>{ const known=['RCSS','RCFN','RCQS','RCTP','RCKH']; state.msg2 = known.includes(v.toUpperCase()) ? v.toUpperCase()+' — VALID AIRPORT' : v.toUpperCase()+' — NOT IN DATABASE'; return null; } },
+  },
+  MARK: {},
+  PROG: {},
+  VNAV: {}
+};
+
+/* ================= COMPUTED VALUES ================= */
+function distNM(){
+  // simple mock: 42nm per leg
+  return Math.max(0,(state.fpln.wpts.length-1))*42;
+}
+function fuelRemain(){
+  return Math.max(400, 1800 - distNM()*3);
+}
+function eta(){
+  const d = new Date(Date.now() + distNM()*1000*7);
+  return padL(d.getUTCHours(),2).replace(/ /g,'0')+':'+padL(d.getUTCMinutes(),2).replace(/ /g,'0')+'Z';
+}
+
+/* ================= RENDER PAGES ================= */
+function line(html){ return html; }
+function span(cls,text){ return '<span class="'+cls+'">'+escapeHtml(text)+'</span>'; }
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function buildScreenHTML(){
+  const p = state.page;
+  let rows = [];
+  const pageIdx = pages.indexOf(p)+1;
+
+  if(p==='MENU'){
+    rows.push(row2('', span('c-white','MENU'), pageIdx+'/'+pages.length, true));
+    rows.push(rowLR(span('c-cyan','<FPLN'), span('c-cyan','INIT/VNAV>')));
+    rows.push(rowLR(span('c-dim','  FLIGHT PLAN'), span('c-dim','FROM-TO  ')));
+    rows.push(rowLR(span('c-cyan','<PERF'), span('c-cyan','PROG>')));
+    rows.push(rowLR(span('c-dim','  V-SPEEDS'), span('c-dim','DIST/ETA/FUEL')));
+    rows.push(rowLR(span('c-cyan','<DATA'), span('c-cyan','MRK>')));
+    rows.push(rowLR(span('c-dim','  DATABASE'), span('c-dim','POSITION')));
+  }
+  else if(p==='INIT'){
+    rows.push(row2(span('c-white','INIT'), '', 'GPS PRIMARY', true));
+    rows.push(rowLabel('FROM/TO', ''));
+    rows.push(rowLR(span('c-green','<'+state.init.from+'/'+state.init.to), ''));
+    rows.push(rowLabel('COST INDEX', 'CRZ FL'));
+    rows.push(rowLR(span('c-green','<'+state.init.costIndex), span('c-green', state.init.crzFL+'>')));
+    rows.push(rowLabel('', ''));
+    rows.push(rowLR('', ''));
+  }
+  else if(p==='FPLN'){
+    rows.push(row2(span('c-white','FLIGHT PLAN'), '', '1/1', true));
+    rows.push(rowLabel('ORIGIN', 'DIST'));
+    const wpts = state.fpln.wpts;
+    for(let i=0;i<3;i++){
+      const wp = wpts[i];
+      rows.push(rowLR(
+        wp ? span('c-green','<'+wp) : span('c-dim','<----'),
+        wp && i>0 ? span('c-cyan', (i*42)+'NM') : ''
+      ));
+    }
+    rows.push(rowLabel('ADD WPT', 'INSERT BEFORE DEST'));
+    rows.push(rowLR(span('c-magenta','[ SP ENTER ]'), span('c-cyan','---->')));
+  }
+  else if(p==='PERF'){
+    rows.push(row2(span('c-white','TAKEOFF PERF'), '', 'RWY 10', true));
+    rows.push(rowLabel('V1','FLAP'));
+    rows.push(rowLR(span('c-green','<'+state.perf.v1), span('c-green',state.perf.flapTO+'>')));
+    rows.push(rowLabel('VR','CRZ SPD'));
+    rows.push(rowLR(span('c-green','<'+state.perf.vr), span('c-green',state.perf.crzSpd+'>')));
+    rows.push(rowLabel('V2','CRZ FL'));
+    rows.push(rowLR(span('c-green','<'+state.perf.v2), span('c-green',state.perf.crzFL+'>')));
+  }
+  else if(p==='PROG'){
+    rows.push(row2(span('c-white','PROGRESS'), '', nowUTC(), true));
+    rows.push(rowLabel('DIST TO GO', 'ETA'));
+    rows.push(rowLR(span('c-cyan',distNM()+' NM'), span('c-cyan',eta())));
+    rows.push(rowLabel('FUEL REM', 'CRZ FL'));
+    rows.push(rowLR(span('c-cyan',fuelRemain()+' KG'), span('c-cyan',state.perf.crzFL)));
+    rows.push(rowLabel('WIND', 'GS'));
+    rows.push(rowLR(span('c-cyan','230/07'), span('c-cyan','214 KT')));
+  }
+  else if(p==='VNAV'){
+    rows.push(row2(span('c-white','VNAV'), '', 'CRZ '+state.perf.crzFL, true));
+    rows.push(rowLabel('T/C', 'ALT'));
+    rows.push(rowLR(span('c-cyan','0012.4'), span('c-cyan',state.perf.crzFL)));
+    rows.push(rowLabel('T/D', 'DIST TO T/D'));
+    rows.push(rowLR(span('c-cyan','WPT '+(state.fpln.wpts[state.fpln.wpts.length-1]||'----')), span('c-cyan',Math.max(0,distNM()-20)+' NM')));
+    rows.push(rowLabel('DES SPD/FL', ''));
+    rows.push(rowLR(span('c-green', state.perf.crzSpd+'/FL100'), ''));
+  }
+  else if(p==='DATA'){
+    rows.push(row2(span('c-white','DATA BASE'), '', pageIdx+'/'+pages.length, true));
+    rows.push(rowLabel('IDENT', ''));
+    rows.push(rowLR(span('c-magenta','[ TYPE ICAO + LSK1 ]'), ''));
+    rows.push(rowLabel('RESULT',''));
+    rows.push(rowLR(span('c-amber', state.msg2 || ''), ''));
+    rows.push(rowLabel('',''));
+    rows.push(rowLR('',''));
+  }
+  else if(p==='MARK'){
+    const d = new Date();
+    rows.push(row2(span('c-green','M'), span('c-white','MARK'), span('c-green','GPS .06'), true));
+    rows.push(line(span('c-green','MK017')+'          '+span('c-cyan','AT '+nowUTC())));
+    rows.push(line(span('c-cyan','S12&deg; 4.77/W045&deg; 0.07')));
+    rows.push(line(span('c-white','UPD AT /BRG   /DIST')));
+    rows.push(line(span('c-cyan','-----   /---&deg;  /---&deg; NM')));
+    rows.push(line(span('c-white','LAT/LONG')));
+    rows.push(line(span('c-cyan','---&deg;--.--/----&deg;--.--')));
+  }
+
+  // pad to 7 content rows
+  while(rows.length<7) rows.push('&nbsp;');
+
+  let msgLine = '&nbsp;';
+  if(state.msg) msgLine = span('c-amber', state.msg);
+
+  let scratchLine = span('c-magenta', state.scratchpad) + (state.scratchpad.length<22 ? '<span class="cursor c-magenta">_</span>' : '');
+
+  const execIndicator = state.execArmed ? '<span class="c-amber">EXEC&#9650;</span>' : '&nbsp;';
+
+  let html = '';
+  rows.forEach(r=>{ html += '<div class="row">'+r+'</div>'; });
+  html += '<div class="row msg-row">'+msgLine+'</div>';
+  html += '<div class="row two-col scratch-row"><span>'+scratchLine+'</span><span>'+execIndicator+'</span></div>';
+  return html;
+}
+
+function row2(l,c,r, bold){
+  return '<div style="display:flex;justify-content:space-between;width:100%;'+(bold?'font-weight:bold;':'')+'">'+
+    '<span>'+l+'</span><span>'+c+'</span><span>'+r+'</span></div>';
+}
+function rowLR(l,r){
+  return '<div style="display:flex;justify-content:space-between;width:100%;"><span>'+l+'</span><span>'+r+'</span></div>';
+}
+function rowLabel(l,r){
+  return '<div style="display:flex;justify-content:space-between;width:100%;font-size:10px;">'+
+    '<span class="c-white">'+escapeHtml(l)+'</span><span class="c-white">'+escapeHtml(r)+'</span></div>';
+}
+
+/* ================= LSK BUTTONS ================= */
+function buildLSK(side){
+  let html='';
+  for(let i=1;i<=6;i++){
+    html += '<button class="lsk-btn" onclick="lsk(\''+side+'\','+i+')" title="'+side+i+'"></button>';
+  }
+  return html;
+}
+
+/* ================= MAIN RENDER ================= */
+function render(){
+  const scr = document.getElementById('screen');
+  scr.innerHTML = buildScreenHTML();
+  scr.style.filter = 'brightness('+state.brightness+')';
+  document.getElementById('lskLeft').innerHTML = buildLSK('L');
+  document.getElementById('lskRight').innerHTML = buildLSK('R');
+  document.getElementById('execKey').classList.toggle('armed', state.execArmed);
+  document.getElementById('msgKey').classList.toggle('active', !!state.msg);
+  renderManualPanel();
+}
+
+render();
+setInterval(()=>{ if(state.page==='MARK' || state.page==='PROG') render(); }, 1000);
+</script>
+</body>
+</html>
