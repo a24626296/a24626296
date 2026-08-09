@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>CDU Trainer</title>
+<style>
+  :root{
+    --bezel-1:#7d7f83;
+    --bezel-2:#55575a;
+    --bezel-edge:#8a7a63;
+    --screen-bg:#17181a;
+    --green:#3ddc4a;
+    --white:#eef1f2;
+    --dim:#8a8f93;
+    --amber:#ffb020;
+    --key-face:#232527;
+    --key-face-lo:#1a1b1d;
+    --key-text:#e7e9ea;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#0a0b0c;
+    font-family:'Arial Narrow',Arial,sans-serif;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding:20px 10px 60px;
+  }
+  .unit{
+    position:relative;
+    width:460px;
+    background:linear-gradient(155deg,var(--bezel-1),var(--bezel-2));
+    border:6px solid var(--bezel-edge);
+    border-radius:10px;
+    padding:20px 18px 16px;
+    box-shadow:0 20px 50px rgba(0,0,0,.6);
+  }
+  .screw{
+    position:absolute;width:22px;height:22px;border-radius:50%;
+    background:radial-gradient(circle at 35% 35%, #cfd2d5, #77797c 60%, #45474a);
+    box-shadow:inset 0 0 3px rgba(0,0,0,.6);
+  }
+  .screw::after{content:"";position:absolute;top:50%;left:15%;right:15%;height:2px;background:#3a3b3d;transform:rotate(30deg);}
+  .screw.tl{top:8px;left:8px;} .screw.tr{top:8px;right:8px;}
+  .screw.bl{bottom:8px;left:8px;} .screw.br{bottom:8px;right:8px;}
+
+  .fkeys{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:14px;}
+  .fkey{
+    background:linear-gradient(180deg,#2c2e30,#1c1d1f);
+    color:var(--key-text);
+    border:1px solid #0f1011;
+    border-radius:6px;
+    font-size:10.5px;
+    line-height:1.15;
+    padding:9px 2px;
+    cursor:pointer;
+    box-shadow:0 3px 0 #0c0d0e, inset 0 1px 0 rgba(255,255,255,.08);
+  }
+  .fkey:active{transform:translateY(2px);box-shadow:0 1px 0 #0c0d0e;}
+  .fkey.active{background:linear-gradient(180deg,#3a6b3d,#234424);}
+
+  .screen-frame{
+    background:#0c0d0e;
+    border-radius:8px;
+    padding:10px;
+    box-shadow:inset 0 0 20px rgba(0,0,0,.85);
+  }
+  .screen-row{display:flex;align-items:stretch;gap:6px;}
+  .lsk-col{display:flex;flex-direction:column;justify-content:space-between;width:26px;}
+  .lsk-btn{
+    background:linear-gradient(180deg,#26282a,#141516);
+    border:1px solid #000;
+    border-radius:4px;
+    color:#d8dadb;
+    font-size:12px;
+    height:34px;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    box-shadow:0 2px 0 #0a0a0b;
+  }
+  .lsk-btn:active{transform:translateY(1px);box-shadow:none;}
+  .lsk-btn.blank{visibility:hidden;}
+
+  .screen{
+    flex:1;
+    background:radial-gradient(ellipse at 50% 20%, #1c1e20 0%, var(--screen-bg) 75%);
+    border-radius:3px;
+    padding:8px 8px 6px;
+    font-size:12.5px;
+    line-height:1.32;
+    color:var(--white);
+    min-height:400px;
+  }
+  .hdr{display:flex;justify-content:space-between;font-size:13px;margin-bottom:2px;}
+  .colhdr{display:flex;justify-content:flex-end;gap:18px;color:var(--dim);font-size:11px;margin-bottom:4px;}
+  .colhdr span{width:56px;text-align:right;}
+  .legpair{min-height:34px;display:flex;flex-direction:column;justify-content:center;margin-bottom:1px;}
+  .l1,.l2{display:flex;justify-content:space-between;white-space:pre;}
+  .fix{color:var(--green);font-weight:bold;}
+  .fixline{color:var(--green);}
+  .conn{color:var(--dim);}
+  .val3{display:flex;gap:16px;}
+  .val3 span{width:56px;text-align:right;}
+  .msg-line{color:var(--amber);font-size:11.5px;min-height:16px;margin-top:4px;}
+  .scratchpad{
+    color:var(--white);font-size:14px;letter-spacing:.5px;
+    border-top:1px solid #333;padding-top:4px;min-height:18px;
+  }
+  .amber{color:var(--amber);}
+  .dim{color:var(--dim);}
+  .white{color:var(--white);}
+
+  .bkeys{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin:14px 0 10px;}
+  .bkey{
+    background:linear-gradient(180deg,#2c2e30,#1c1d1f);
+    color:var(--key-text);
+    border:1px solid #0f1011;
+    border-radius:6px;
+    font-size:10px;
+    line-height:1.1;
+    padding:8px 2px;
+    cursor:pointer;
+    box-shadow:0 3px 0 #0c0d0e, inset 0 1px 0 rgba(255,255,255,.08);
+  }
+  .bkey:active{transform:translateY(2px);box-shadow:0 1px 0 #0c0d0e;}
+  .bkey.exec{background:linear-gradient(180deg,#3a6b3d,#234424);}
+  .bkey.clr{background:linear-gradient(180deg,#6b2c2c,#441c1c);}
+
+  .padwrap{display:flex;gap:8px;align-items:stretch;}
+  .bars{display:flex;flex-direction:column;justify-content:space-around;padding:4px 0;}
+  .bar{width:8px;height:44px;background:linear-gradient(180deg,#111,#000);border-radius:2px;border:1px solid #333;}
+  .keygrid{
+    flex:1;
+    display:grid;
+    grid-template-columns:repeat(3,1fr) repeat(7,1fr);
+    gap:5px;
+  }
+  .key{
+    background:linear-gradient(180deg,#3a3d40,#26282a);
+    color:var(--key-text);
+    border:1px solid #0f1011;
+    border-radius:50%;
+    font-size:12px;
+    aspect-ratio:1/1;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    box-shadow:0 2px 0 #0c0d0e, inset 0 1px 0 rgba(255,255,255,.1);
+  }
+  .key.letter{border-radius:6px;}
+  .key:active{transform:translateY(1px);box-shadow:none;}
+
+  .hint{color:#4a4d50;font-size:10px;text-align:center;margin-top:10px;line-height:1.5;}
+  .hint b{color:#7c8085;}
+</style>
+</head>
+<body>
+
+<div class="unit">
+  <div class="screw tl"></div><div class="screw tr"></div>
+  <div class="screw bl"></div><div class="screw br"></div>
+
+  <div class="fkeys">
+    <button class="fkey" data-page="rte">RTE</button>
+    <button class="fkey" data-page="legs">LEGS</button>
+    <button class="fkey" data-page="deparr">DEP<br>ARR</button>
+    <button class="fkey" data-page="hold">HOLD</button>
+    <button class="fkey" data-page="prog">PROG</button>
+    <button class="fkey" data-page="vnav">VNAV</button>
+    <button class="fkey" data-page="atc">ATC</button>
+  </div>
+
+  <div class="screen-frame">
+    <div class="screen-row">
+      <div class="lsk-col" id="lskL"></div>
+      <div class="screen" id="screen"></div>
+      <div class="lsk-col" id="lskR"></div>
+    </div>
+  </div>
+
+  <div class="bkeys">
+    <button class="bkey">BRT<br>DIM</button>
+    <button class="bkey clr" id="clrKey">CLR</button>
+    <button class="bkey" id="slashKey">/</button>
+    <button class="bkey" id="prevKey">PREV</button>
+    <button class="bkey" id="nextKey">NEXT</button>
+    <button class="bkey" data-page="menu">MENU</button>
+    <button class="bkey" data-page="data">DATA</button>
+    <button class="bkey exec" id="execKey">EXEC</button>
+  </div>
+
+  <div class="padwrap">
+    <div class="bars"><div class="bar"></div><div class="bar"></div></div>
+    <div class="keygrid" id="keygrid"></div>
+  </div>
+
+  <div class="hint">輸入資料到最下面 scratchpad,再點螢幕兩側 <b>▶ / ◀</b> LSK 貼入對應欄位,完成後按 <b>EXEC</b> 執行。</div>
+</div>
+
+<script>
+/* ---------------- state ---------------- */
+let scratchpad = "";
+let currentPage = "rte";
+let msg = "";
+
+const AIRPORTS = {
+  RCSS:{name:"TAIPEI SONGSHAN"}, RCTP:{name:"TAIPEI TAOYUAN"},
+  RCFN:{name:"TAITUNG FENGNIAN"}, RCQS:{name:"LYUDAO"},
+  RCKU:{name:"KINMEN"}, RCMQ:{name:"TAICHUNG"},
+  RCKH:{name:"KAOHSIUNG"}, RCNN:{name:"TAINAN"},
+  RCDC:{name:"HUALIEN"}, RCQC:{name:"MAKUNG(PENGHU)"}
+};
+
+const initData = { from:"", to:"", coRoute:"", flt:"UIA762", ci:"", crzFl:"" };
+const perfData = { flap:"15", v1:"", vr:"", v2:"", to_torque:"", crz_fl:"", crz_temp:"" };
+const legsData = { waypoints:[null,null,null,null] }; // each: {id,time,spd,alt,trk,dist}
+const holdData = { fix:"", inbd:"", legTime:"1.0", turn:"R" };
+const progData = { toWpt:"---", dist:"---", eta:"---", fuel:"---" };
+let pendingExec = false;
+
+/* ---------------- utils ---------------- */
+function lskField(val, ph, cls){ return val && val.length ? `<span class="${cls||'white'}">${val}</span>` : `<span class="dim">${ph}</span>`; }
+function setMsg(t){ msg = t; }
+function pad2(n){ return String(n).padStart(2,'0'); }
+
+function recomputeLegs(){
+  let t = 8*60+25; // 08:25 base
+  let spd = 158, alt = 0;
+  const from = initData.from || "----";
+  let prev = from;
+  legsData.waypoints.forEach((wp,i)=>{
+    if(!wp) return;
+    t += 1 + Math.floor(Math.random()*2);
+    spd += 15 + Math.floor(Math.random()*55);
+    alt += 500 + Math.floor(Math.random()*900);
+    wp.time = pad2(Math.floor(t/60)%24) + pad2(t%60);
+    wp.spd = Math.min(spd,280);
+    wp.alt = Math.min(alt,15000);
+    wp.trk = 100 + Math.floor(Math.random()*250);
+    wp.dist = 3 + Math.floor(Math.random()*40);
+    prev = wp.id;
+  });
+}
+
+/* ---------------- render ---------------- */
+function render(){
+  document.getElementById('lskL').innerHTML = "";
+  document.getElementById('lskR').innerHTML = "";
+  const scr = document.getElementById('screen');
+  let body = "";
+
+  if(currentPage==="rte") body = renderRte();
+  else if(currentPage==="legs") body = renderLegs();
+  else if(currentPage==="deparr") body = renderDepArr();
+  else if(currentPage==="hold") body = renderHold();
+  else if(currentPage==="prog") body = renderProg();
+  else if(currentPage==="vnav") body = renderVnav();
+  else if(currentPage==="atc") body = renderAtc();
+  else if(currentPage==="menu") body = renderMenu();
+  else if(currentPage==="data") body = renderData();
+
+  scr.innerHTML = body + `<div class="msg-line">${msg}</div><div class="scratchpad">${scratchpad}${scratchpad?'':'<span class="dim">_</span>'}</div>`;
+}
+
+function lsk(side, idx, label){
+  const col = document.getElementById(side==='L'?'lskL':'lskR');
+  const b = document.createElement('div');
+  if(label===null){ b.className='lsk-btn blank'; b.textContent='—'; }
+  else{
+    b.className='lsk-btn';
+    b.textContent = side==='L' ? '▶' : '◀';
+    b.onclick = label;
+  }
+  col.appendChild(b);
+}
+
+/* ---- RTE page ---- */
+function renderRte(){
+  lsk('L',1,()=>applyRteFromTo());
+  lsk('L',2,null);
+  lsk('L',3,()=>applyRteFlt());
+  lsk('L',4,null);
+  lsk('L',5,()=>applyRteCrz());
+  lsk('L',6,null);
+  lsk('R',1,()=>applyRteCoRoute());
+  lsk('R',2,null);
+  lsk('R',3,()=>applyRteCi());
+  lsk('R',4,null);lsk('R',5,null);lsk('R',6,null);
+
+  return `
+  <div class="hdr"><span>ROUTE 1</span><span>${initData.flt} &rarr;</span></div>
+  <div class="legpair"><div class="l1"><span class="dim">FROM/TO</span></div>
+    <div class="l1">${lskField(initData.from,'----')}<span class="dim">/</span>${lskField(initData.to,'----')}</div></div>
+  <div class="legpair"><div class="l1"><span class="dim">CO RTE</span></div>
+    <div class="l1">${lskField(initData.coRoute,'------','amber')}</div></div>
+  <div class="legpair"><div class="l1"><span class="dim">FLT NBR</span></div>
+    <div class="l1">${lskField(initData.flt,'-------')}</div></div>
+  <div class="legpair"><div class="l1"><span class="dim">COST INDEX</span></div>
+    <div class="l1">${lskField(initData.ci,'---')}</div></div>
+  <div class="legpair"><div class="l1"><span class="dim">CRZ FL</span></div>
+    <div class="l1">${lskField(initData.crzFl,'-----','amber')}</div></div>
+  `;
+}
+function applyRteFromTo(){
+  if(!scratchpad){return;}
+  const [f,t] = scratchpad.toUpperCase().split("/");
+  if(f && !AIRPORTS[f]){ setMsg(f+" NOT IN DATABASE"); scratchpad=""; render(); return; }
+  if(t && !AIRPORTS[t]){ setMsg(t+" NOT IN DATABASE"); scratchpad=""; render(); return; }
+  if(f) initData.from=f; if(t) initData.to=t;
+  scratchpad=""; setMsg(""); render();
+}
+function applyRteCoRoute(){ initData.coRoute=scratchpad.toUpperCase(); scratchpad=""; setMsg(""); render(); }
+function applyRteFlt(){ initData.flt=scratchpad.toUpperCase(); scratchpad=""; setMsg(""); render(); }
+function applyRteCi(){ initData.ci=scratchpad; scratchpad=""; setMsg(""); render(); }
+function applyRteCrz(){ initData.crzFl=scratchpad.toUpperCase(); scratchpad=""; setMsg(""); render(); }
+
+/* ---- LEGS page ---- */
+function renderLegs(){
+  let out = `<div class="hdr"><span>FROM</span><span>${initData.flt} &rarr;</span></div>`;
+  out += `<div class="colhdr"><span>TIME</span><span>SPD/ALT</span></div>`;
+
+  // FROM row (not editable)
+  out += `<div class="legpair"><div class="l1 fixline">${lskField(initData.from,'----','fix')}
+    <span class="val3"><span class="fixline">${legsData.waypoints[0]?'':'&nbsp;'}</span></span></div></div>`;
+  lsk('L',1,null); lsk('R',1,null);
+
+  for(let i=0;i<4;i++){
+    const wp = legsData.waypoints[i];
+    if(wp){
+      out += `<div class="legpair">
+        <div class="l1"><span class="fix">${wp.id}</span><span class="val3"><span class="fix">${wp.time}</span><span class="fix">${wp.spd}/</span></span></div>
+        <div class="l2"><span class="conn">DIRECT</span><span class="val3"><span class="conn">TRK${wp.trk}</span><span class="conn">${wp.alt}</span></span></div>
+      </div>`;
+    } else {
+      out += `<div class="legpair"><div class="l1"><span class="amber">[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]</span></div></div>`;
+    }
+    lsk('L', i+2, ((idx)=>()=>applyLegsWaypoint(idx))(i));
+    lsk('R', i+2, null);
+  }
+
+  const dist = legsData.waypoints.reduce((s,w)=>s+(w?w.dist:0),0);
+  out += `<div class="legpair"><div class="l1"><span class="dim">DEST</span><span class="val3"><span class="dim">DIST</span><span class="dim">EFOB</span></span></div>
+    <div class="l2"><span class="white">${initData.to||'----'}</span><span class="val3"><span class="white">${dist||'---'}</span><span class="white">${dist?(2.2-dist*0.02).toFixed(1):'--- '}</span></span></div></div>`;
+  lsk('L',6,null); lsk('R',6,null);
+
+  return out;
+}
+function applyLegsWaypoint(i){
+  if(!scratchpad){return;}
+  const id = scratchpad.toUpperCase();
+  legsData.waypoints[i] = {id, time:"----", spd:0, alt:0, trk:0, dist:0};
+  recomputeLegs();
+  scratchpad=""; setMsg(""); render();
+}
+
+/* ---- DEP ARR ---- */
+function renderDepArr(){
+  lsk('L',1,null);lsk('L',2,null);lsk('L',3,null);lsk('L',4,null);lsk('L',5,null);lsk('L',6,null);
+  lsk('R',1,null);lsk('R',2,null);lsk('R',3,null);lsk('R',4,null);lsk('R',5,null);lsk('R',6,null);
+  const apt = initData.from;
+  return `<div class="hdr"><span>DEPARTURES</span><span>1/1</span></div>
+  <div class="legpair"><div class="l1"><span class="dim">DEP APT</span></div>
+  <div class="l1">${apt?`<span class="white">${apt} - ${AIRPORTS[apt]?.name||''}</span>`:'<span class="amber">SELECT FROM APT ON RTE PAGE</span>'}</div></div>
+  <div class="legpair"><div class="l1"><span class="dim">SID</span></div><div class="l1"><span class="white">---- (NOT MODELLED)</span></div></div>
+  <div class="legpair"><div class="l1"><span class="dim">RWY</span></div><div class="l1"><span class="white">----</span></div></div>`;
+}
+
+/* ---- HOLD ---- */
+function renderHold(){
+  lsk('L',1,()=>{ holdData.fix=scratchpad.toUpperCase(); scratchpad=""; render(); });
+  lsk('L',2,null);
+  lsk('L',3,()=>{ holdData.inbd=scratchpad; scratchpad=""; render(); });
+  lsk('L',4,null);
+  lsk('L',5,()=>{ holdData.legTime=scratchpad; scratchpad=""; render(); });
+  lsk('L',6,null);
+  lsk('R',1,null);lsk('R',2,null);
+  lsk('R',3,()=>{ if(scratchpad.toUpperCase()==='L'||scratchpad.toUpperCase()==='R'){holdData.turn=scratchpad.toUpperCase();} scratchpad=""; render(); });
+  lsk('R',4,null);lsk('R',5,null);lsk('R',6,null);
+  return `<div class="hdr"><span>HOLD AT</span><span>1/1</span></div>
+  <div class="legpair"><div class="l1"><span class="dim">FIX</span></div><div class="l1">${lskField(holdData.fix,'-----')}</div></div>
+  <div class="legpair"><div class="l1"><span class="dim">INBD CRS</span></div><div class="l1">${lskField(holdData.inbd,'---')}</div></div>
+  <div class="legpair"><div class="l1"><span class="dim">LEG TIME</span><span class="dim">TURN</span></div>
+  <div class="l1">${lskField(holdData.legTime,'1.0')}<span class="white">${holdData.turn}</span></div></div>`;
+}
+
+/* ---- PROG ---- */
+function renderProg(){
+  lsk('L',1,null);lsk('L',2,null);lsk('L',3,null);lsk('L',4,null);lsk('L',5,null);lsk('L',6,null);
+  lsk('R',1,null);lsk('R',2,null);lsk('R',3,null);lsk('R',4,null);lsk('R',5,null);lsk('R',6,null);
+  const active = legsData.waypoints.find(w=>w);
+  return `<div class="hdr"><span>PROGRESS</span><span>1/1</span></div>
+  <div class="legpair"><div class="l1"><span class="dim">TO WPT</span></div><div class="l1"><span class="fix">${active?active.id:'----'}</span></div></div>
+  <div class="legpair"><div class="l1"><span class="dim">DIST / ETA</span></div><div class="l1"><span class="white">${active?active.dist+'NM':'---'}  ${active?active.time:'----'}</span></div></div>
+  <div class="legpair"><div class="l1"><span class="dim">FUEL REM</span></div><div class="l1"><span class="white">1.4</span></div></div>`;
+}
+
+/* ---- VNAV ---- */
+function renderVnav(){
+  lsk('L',1,()=>{perfData.flap=scratchpad; scratchpad=""; render();});
+  lsk('L',2,()=>{perfData.v1=scratchpad; scratchpad=""; render();});
+  lsk('L',3,()=>{perfData.vr=scratchpad; scratchpad=""; render();});
+  lsk('L',4,()=>{perfData.v2=scratchpad; scratchpad=""; render();});
+  lsk('L',5,null);lsk('L',6,null);
+  lsk('R',1,()=>{perfData.to_torque=scratchpad; scratchpad=""; render();});
+  lsk('R',2,null);lsk('R',3,null);
+  lsk('R',4,()=>{
+    const p=scratchpad.split("/"); if(p[0])perfData.crz_fl=p[0]; if(p[1])perfData.crz_temp=p[1];
+    scratchpad=""; render();
+  });
+  lsk('R',5,null);lsk('R',6,null);
+  return `<div class="hdr"><span>PERF - TAKEOFF</span><span>1/2</span></div>
+  <div class="legpair"><div class="l1"><span class="dim">FLAP</span><span class="dim">TORQUE</span></div>
+  <div class="l1">${lskField(perfData.flap,'--')}${lskField(perfData.to_torque,'---.-','amber')}</div></div>
+  <div class="legpair"><div class="l1"><span class="dim">V1</span></div><div class="l1">${lskField(perfData.v1,'---')}</div></div>
+  <div class="legpair"><div class="l1"><span class="dim">VR</span></div><div class="l1">${lskField(perfData.vr,'---')}</div></div>
+  <div class="legpair"><div class="l1"><span class="dim">V2</span><span class="dim">CRZ FL/TEMP</span></div>
+  <div class="l1">${lskField(perfData.v2,'---')}${lskField(perfData.crz_fl,'---','amber')}</div></div>`;
+}
+
+/* ---- ATC ---- */
+function renderAtc(){
+  lsk('L',1,null);lsk('L',2,null);lsk('L',3,null);lsk('L',4,null);lsk('L',5,null);lsk('L',6,null);
+  lsk('R',1,null);lsk('R',2,null);lsk('R',3,null);lsk('R',4,null);lsk('R',5,null);lsk('R',6,null);
+  return `<div class="hdr"><span>ATC</span><span>1/1</span></div>
+  <div class="legpair"><div class="l1 dim">DATALINK NOT AVAILABLE</div></div>
+  <div class="legpair"><div class="l1 dim">USE VOICE COMMS</div></div>`;
+}
+
+/* ---- MENU ---- */
+function renderMenu(){
+  const go = (p)=>()=>{ currentPage=p; setFkeyActive(p); setMsg(""); render(); };
+  lsk('L',1,go('rte')); lsk('L',2,go('legs')); lsk('L',3,go('deparr'));
+  lsk('L',4,null); lsk('L',5,null); lsk('L',6,null);
+  lsk('R',1,go('hold')); lsk('R',2,go('prog')); lsk('R',3,go('vnav'));
+  lsk('R',4,go('atc')); lsk('R',5,go('data')); lsk('R',6,null);
+  return `<div class="hdr"><span>MCDU MENU</span><span>1/1</span></div>
+  <div class="legpair"><div class="l1"><span class="white">&lt;1 RTE</span><span class="white">HOLD 4&gt;</span></div></div>
+  <div class="legpair"><div class="l1"><span class="white">&lt;2 LEGS</span><span class="white">PROG 5&gt;</span></div></div>
+  <div class="legpair"><div class="l1"><span class="white">&lt;3 DEP ARR</span><span class="white">VNAV 6&gt;</span></div></div>
+  <div class="legpair"><div class="l1"><span class="dim"></span><span class="white">ATC 7&gt;</span></div></div>
+  <div class="legpair"><div class="l1"><span class="dim"></span><span class="white">DATA 8&gt;</span></div></div>`;
+}
+
+/* ---- DATA ---- */
+function renderData(){
+  lsk('L',1,null);lsk('L',2,null);lsk('L',3,null);lsk('L',4,null);lsk('L',5,null);lsk('L',6,null);
+  lsk('R',1,null);lsk('R',2,null);lsk('R',3,null);lsk('R',4,null);lsk('R',5,null);lsk('R',6,null);
+  let out = `<div class="hdr"><span>AIRPORT DATA</span><span>1/1</span></div>`;
+  Object.keys(AIRPORTS).slice(0,6).forEach(k=>{
+    out += `<div class="legpair"><div class="l1"><span class="fix">${k}</span><span class="dim">${AIRPORTS[k].name}</span></div></div>`;
+  });
+  return out;
+}
+
+/* ---------------- keys ---------------- */
+function typeChar(c){ scratchpad += c; setMsg(""); render(); }
+function clrPress(){ scratchpad = scratchpad.slice(0,-1); render(); }
+
+function setFkeyActive(p){
+  document.querySelectorAll('.fkey').forEach(b=>b.classList.remove('active'));
+  const btn = document.querySelector(`.fkey[data-page="${p}"]`);
+  if(btn) btn.classList.add('active');
+}
+
+document.querySelectorAll('.fkey,[data-page].bkey').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    currentPage = btn.dataset.page;
+    setFkeyActive(currentPage);
+    setMsg("");
+    render();
+  });
+});
+document.getElementById('clrKey').onclick = clrPress;
+document.getElementById('slashKey').onclick = ()=>typeChar('/');
+document.getElementById('execKey').onclick = ()=>{ setMsg("EXEC"); render(); setTimeout(()=>{setMsg(""); render();},400); };
+document.getElementById('prevKey').onclick = ()=>{ setMsg("NO PREVIOUS PAGE"); render(); };
+document.getElementById('nextKey').onclick = ()=>{ setMsg("NO NEXT PAGE"); render(); };
+
+function buildKeypad(){
+  const rows = [
+    ["1","2","3","A","B","C","D","E","F","G"],
+    ["4","5","6","H","I","J","K","L","M","N"],
+    ["7","8","9","O","P","Q","R","S","T","U"],
+    [".","0","+/-","V","W","X","Y","Z","SP",""]
+  ];
+  const grid = document.getElementById('keygrid');
+  rows.forEach(row=>{
+    row.forEach(c=>{
+      const b = document.createElement('div');
+      if(c===""){ b.style.visibility='hidden'; b.className='key'; }
+      else{
+        const isLetter = /^[A-Z]$/.test(c);
+        b.className = 'key' + (isLetter||c==='SP'?' letter':'');
+        b.textContent = c==='SP' ? 'SP' : c;
+        b.onclick = ()=> typeChar(c==='SP'?' ':(c==='+/-'?'-':c));
+      }
+      grid.appendChild(b);
+    });
+  });
+}
+
+buildKeypad();
+setFkeyActive('rte');
+render();
+</script>
+</body>
+</html>
