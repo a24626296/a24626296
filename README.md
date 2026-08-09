@@ -1,7 +1,7 @@
 - 👋 Hi, I’m @a24626296
-- 👀 I’m interested in ...Data analyst
-- 🌱 I’m currently learning ...R+SQL
-- 💞️ I’m looking to collaborate on ...VBA project
+- 👀 I’m interested in ...ATR/airbus/boeing
+- 🌱 I’m currently learning ...all
+- 💞️ I’m looking to collaborate on ...AVIATION project
 - 📫 How to reach me ...a24626296@hotmail.com.tw
 
 <!---
