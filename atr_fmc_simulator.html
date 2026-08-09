@@ -643,8 +643,11 @@ window.fetchPrivateRepoFile = async function(path){
     }
   });
   if(!res.ok) throw new Error('HTTP ' + res.status);
-  const blob = await res.blob();
-  return URL.createObjectURL(blob);
+  const rawBlob = await res.blob();
+  // 強制標示成 application/pdf：GitHub 回傳的原始位元組沒有正確的
+  // Content-Type，瀏覽器看到型別不明的 blob 會觸發下載而不是內嵌開啟。
+  const pdfBlob = new Blob([rawBlob], { type: 'application/pdf' });
+  return URL.createObjectURL(pdfBlob);
 };
 
 function toggleManualPanel(forceOpen){
