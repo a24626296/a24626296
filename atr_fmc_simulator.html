@@ -32,37 +32,69 @@
       radial-gradient(1200px 700px at 50% -10%, #232a35 0%, #12151b 55%, #0a0c10 100%);
     font-family:'Chakra Petch', sans-serif;
     color:#dfe4e8;
-    padding:28px 12px 60px;
+    padding:16px 10px;
     display:flex;
-    flex-direction:column;
+    justify-content:center;
     align-items:center;
   }
-  .page-head{
-    text-align:center;
-    margin-bottom:18px;
-    max-width:640px;
+  .layout{
+    display:flex;
+    flex-wrap:wrap;
+    gap:20px;
+    justify-content:center;
+    align-items:center;
+    max-width:1300px;
+    width:100%;
   }
-  .page-head .eyebrow{
+  .info{
+    flex:1 1 260px;
+    max-width:300px;
+    order:2;
+  }
+  .info .eyebrow{
     font-size:11px;
     letter-spacing:0.32em;
     color:#7c8898;
     text-transform:uppercase;
     margin-bottom:6px;
   }
-  .page-head h1{
-    font-size:22px;
-    margin:0 0 6px;
+  .info h1{
+    font-size:20px;
+    margin:0 0 8px;
     color:#f1f4f6;
     letter-spacing:0.02em;
   }
-  .page-head p{
+  .info p.lead{
     font-size:12.5px;
     color:#8b94a0;
     line-height:1.6;
-    margin:0;
+    margin:0 0 14px;
   }
+  .info details{
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:10px;
+    padding:10px 14px;
+  }
+  .info summary{
+    cursor:pointer;
+    font-size:12.5px;
+    font-weight:600;
+    color:#cfd6dc;
+    padding:2px 0;
+  }
+  .info details[open] summary{ margin-bottom:6px; }
+  .info .hint-body{
+    font-size:12px;
+    line-height:1.75;
+    color:#9aa3ad;
+  }
+  .info .hint-body b{ color:#cfd6dc; }
+  .info .hint-body code{ color:var(--green); background:rgba(63,224,106,0.08); padding:1px 5px; border-radius:3px; }
+  .unit-wrap{ order:1; flex:0 0 auto; position:relative; }
 
   /* ===== Unit shell ===== */
+
   .unit{
     width:min(94vw, 460px);
     background:
@@ -164,7 +196,7 @@
 
   /* ===== Keypad area ===== */
   .keypad{ margin-top:12px; }
-  .krow{ display:grid; gap:5px; margin-bottom:6px; grid-template-columns:repeat(9, minmax(0,1fr)); }
+  .krow{ display:grid; grid-template-columns:repeat(10, minmax(0,1fr)); gap:5px; margin-bottom:5px; }
   .key{
     font-family:'Chakra Petch', sans-serif;
     font-weight:600;
@@ -182,21 +214,19 @@
     width:100%;
   }
   .key:active{ transform:translateY(2px); box-shadow:0 1px 0 #8b929b; }
-  .key.exec{ background:linear-gradient(180deg,#fff2a8,#e0bd3f); box-shadow:0 3px 0 #a9862a, inset 0 1px 0 rgba(255,255,255,0.7); }
+  .key.exec{ grid-column:span 2; background:linear-gradient(180deg,#fff2a8,#e0bd3f); box-shadow:0 3px 0 #a9862a, inset 0 1px 0 rgba(255,255,255,0.7); }
   .key.exec.armed{ background:linear-gradient(180deg,#ffe27a,#c99a1c); animation:pulse 0.9s infinite; }
   @keyframes pulse{ 50%{ filter:brightness(1.25);} }
   .key.blank{ background:transparent; box-shadow:none; cursor:default; pointer-events:none; }
+  .key.spacer{ pointer-events:none; }
   .key.msg{ position:relative; }
   .key.msg.active::after{
     content:""; position:absolute; top:3px; right:5px; width:6px; height:6px; border-radius:50%;
     background:#ff5b3d; box-shadow:0 0 5px #ff5b3d;
   }
+  .brt-stack{ grid-column:span 2; display:flex; flex-direction:column; gap:5px; min-width:0; }
+  .brt-stack .key{ flex:1; padding:3px 1px; font-size:8px; line-height:1; }
 
-  .grid-alpha{
-    display:grid;
-    grid-template-columns:repeat(10, minmax(0,1fr));
-    gap:5px;
-  }
   .key.round{
     border-radius:50%;
     aspect-ratio:1/1;
@@ -207,14 +237,18 @@
     width:100%;
     height:auto;
   }
-  .compass-ring{
+  .key.rect{
+    border-radius:6px;
+    font-size:10.5px;
+    padding:9px 1px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .ew-ring{
     display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    width:64%;
-    aspect-ratio:1/1;
+    align-items:center; justify-content:center;
+    width:18px; height:18px;
     border-radius:50%;
-    border:1.4px solid var(--key-text);
+    border:1.4px solid #1b2027;
   }
 
   .hint{
@@ -235,24 +269,138 @@
     .screen{ font-size:11px; }
     .key{ font-size:8px; padding:7px 1px; }
   }
-
-  /* ===== Manual reference panel (step 3 prototype) ===== */
-  .manual-fab{
-    position:fixed;
-    right:18px;
-    bottom:18px;
-    width:52px;
-    height:52px;
-    border-radius:50%;
-    border:none;
-    background:linear-gradient(160deg,#3fdcea,#1f8f9c);
-    color:#0a2226;
-    font-size:22px;
-    box-shadow:0 10px 24px -6px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.5);
-    cursor:pointer;
-    z-index:40;
+  @media (max-height:760px){
+    body{ padding:10px 10px; }
+    .screen{ min-height:220px; padding:7px 8px 6px; font-size:11.5px; line-height:1.45; }
+    .unit{ padding:10px 12px 14px; }
+    .keypad{ margin-top:8px; }
+    .krow{ margin-bottom:4px; }
+    .key{ padding:6px 1px; }
   }
-  .manual-fab:active{ transform:translateY(1px); }
+
+  /* ===== Ch.1 SCOPE notes column (added — does not modify FMS/keypad styles above) ===== */
+  .notes-col{
+    order:3;
+    flex:1 1 340px;
+    max-width:420px;
+  }
+  .notes-col .notes-head{
+    font-size:11px;
+    letter-spacing:0.28em;
+    color:#7c8898;
+    text-transform:uppercase;
+    margin-bottom:6px;
+  }
+  .notes-col h2.notes-title{
+    font-size:16px;
+    margin:0 0 8px;
+    color:#f1f4f6;
+  }
+  .ch1-intro{
+    font-size:12px;
+    color:#8b94a0;
+    line-height:1.7;
+    margin-bottom:14px;
+  }
+  .ch1-intro b{ color:#dfe4e8; }
+  .note-card{
+    background:rgba(255,255,255,0.035);
+    border:1px solid rgba(255,255,255,0.09);
+    border-radius:12px;
+    padding:14px 16px;
+    margin-bottom:12px;
+  }
+  .note-card .sec-badge{
+    display:inline-block;
+    font-family:'Share Tech Mono', monospace;
+    font-size:10.5px;
+    color:var(--cyan);
+    background:rgba(63,220,234,0.1);
+    border:1px solid rgba(63,220,234,0.3);
+    border-radius:5px;
+    padding:2px 7px;
+    margin-right:8px;
+  }
+  .note-card h3{
+    display:inline;
+    font-size:13.5px;
+    color:#f1f4f6;
+    margin:0;
+  }
+  .note-card ul{ margin:9px 0 0; padding-left:17px; }
+  .note-card li{ font-size:12px; line-height:1.7; color:#c7cdd3; margin-bottom:5px; }
+  .note-card .zh{
+    font-size:11.5px;
+    line-height:1.7;
+    color:#9aa3ad;
+    background:rgba(255,255,255,0.03);
+    border-left:2px solid rgba(63,220,234,0.4);
+    padding:8px 10px;
+    margin-top:9px;
+    border-radius:0 6px 6px 0;
+  }
+  .note-card .open-orig{
+    margin-top:11px;
+    display:inline-block;
+    font-family:'Chakra Petch', sans-serif;
+    font-size:10px;
+    font-weight:600;
+    color:#0a2226;
+    background:linear-gradient(160deg,var(--cyan),#1f8f9c);
+    border:none;
+    border-radius:6px;
+    padding:6px 10px;
+    cursor:pointer;
+  }
+  .term{
+    border-bottom:1px dotted var(--cyan);
+    color:#eef3f2;
+    font-weight:600;
+    cursor:help;
+    position:relative;
+    white-space:nowrap;
+  }
+  .term::after{
+    content: attr(data-zh);
+    position:absolute;
+    left:50%;
+    bottom:130%;
+    transform:translateX(-50%);
+    background:#0e1116;
+    color:var(--cyan);
+    border:1px solid rgba(63,220,234,0.4);
+    border-radius:6px;
+    padding:4px 9px;
+    font-size:11px;
+    white-space:nowrap;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.15s;
+    z-index:20;
+    box-shadow:0 6px 16px rgba(0,0,0,0.4);
+  }
+  .term:hover::after{ opacity:1; }
+
+  /* ===== Manual reference button + slide-out panel (added) ===== */
+  .manual-open-btn{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    font-family:'Chakra Petch', sans-serif;
+    font-weight:600;
+    font-size:12.5px;
+    color:#0a2226;
+    background:linear-gradient(160deg,var(--cyan),#1f8f9c);
+    border:none;
+    border-radius:10px;
+    padding:11px 14px;
+    cursor:pointer;
+    margin-bottom:16px;
+    box-shadow:0 8px 20px -8px rgba(63,220,234,0.5);
+  }
+  .manual-open-btn:active{ transform:translateY(1px); }
   .manual-panel{
     position:fixed;
     top:0; right:0; bottom:0;
@@ -269,234 +417,268 @@
     overflow-y:auto;
   }
   .manual-panel.open{ transform:translateX(0); }
-  .manual-panel h2{
-    font-size:14px;
-    color:#f1f4f6;
-    margin:0 0 2px;
-  }
-  .manual-panel .sub{
-    font-size:10.5px;
-    color:#7c8898;
-    margin-bottom:14px;
-    letter-spacing:0.04em;
-  }
+  .manual-panel h2{ font-size:14px; color:#f1f4f6; margin:0 0 2px; }
+  .manual-panel .sub{ font-size:10.5px; color:#7c8898; margin-bottom:14px; letter-spacing:0.04em; }
   .manual-close{
-    position:absolute;
-    top:14px; right:14px;
-    background:none;
-    border:none;
-    color:#8b94a0;
-    font-size:18px;
-    cursor:pointer;
+    position:absolute; top:14px; right:14px;
+    background:none; border:none; color:#8b94a0; font-size:18px; cursor:pointer;
   }
   .manual-current{
-    font-size:11px;
-    color:#3fdcea;
+    font-size:11px; color:var(--cyan);
     background:rgba(63,220,234,0.08);
     border:1px solid rgba(63,220,234,0.25);
-    border-radius:8px;
-    padding:8px 10px;
-    margin-bottom:12px;
+    border-radius:8px; padding:8px 10px; margin-bottom:12px;
   }
   .manual-entry{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:8px;
+    display:flex; justify-content:space-between; align-items:center; gap:8px;
     background:rgba(255,255,255,0.04);
     border:1px solid rgba(255,255,255,0.07);
-    border-radius:8px;
-    padding:9px 10px;
-    margin-bottom:8px;
+    border-radius:8px; padding:9px 10px; margin-bottom:8px;
   }
   .manual-entry .txt{ font-size:11.5px; color:#dfe4e8; line-height:1.4; }
   .manual-entry .txt small{ display:block; color:#7c8898; font-size:9.5px; margin-top:2px; }
   .manual-entry button{
     flex-shrink:0;
     font-family:'Chakra Petch', sans-serif;
-    font-size:10px;
-    font-weight:600;
-    color:#0a2226;
-    background:linear-gradient(160deg,#3fdcea,#1f8f9c);
-    border:none;
-    border-radius:6px;
-    padding:6px 8px;
-    cursor:pointer;
+    font-size:10px; font-weight:600; color:#0a2226;
+    background:linear-gradient(160deg,var(--cyan),#1f8f9c);
+    border:none; border-radius:6px; padding:6px 8px; cursor:pointer;
   }
   .manual-note{
-    margin-top:auto;
-    font-size:10px;
-    line-height:1.6;
-    color:#6b7480;
-    border-top:1px solid rgba(255,255,255,0.08);
-    padding-top:10px;
+    margin-top:auto; font-size:10px; line-height:1.6; color:#6b7480;
+    border-top:1px solid rgba(255,255,255,0.08); padding-top:10px;
   }
-  .manual-note code{ color:#3fdcea; }
-
+  .manual-note code{ color:var(--cyan); }
   .gh-connect{
     background:rgba(255,255,255,0.04);
     border:1px solid rgba(255,255,255,0.08);
-    border-radius:8px;
-    padding:10px;
-    margin-bottom:14px;
+    border-radius:8px; padding:10px; margin-bottom:14px;
   }
-  .gh-connect label{
-    display:block;
-    font-size:10px;
-    color:#9aa3ad;
-    margin-bottom:6px;
-  }
+  .gh-connect label{ display:block; font-size:10px; color:#9aa3ad; margin-bottom:6px; }
   .gh-connect input[type=password]{
-    width:100%;
-    background:#0e1116;
+    width:100%; background:#0e1116;
     border:1px solid rgba(255,255,255,0.12);
-    border-radius:6px;
-    color:#dfe4e8;
+    border-radius:6px; color:#dfe4e8;
     font-family:'Share Tech Mono', monospace;
-    font-size:11px;
-    padding:7px 8px;
-    margin-bottom:8px;
+    font-size:11px; padding:7px 8px; margin-bottom:8px;
   }
   .gh-btn-row{ display:flex; gap:6px; margin-bottom:8px; }
   .gh-btn-row button{
-    flex:1;
-    font-family:'Chakra Petch', sans-serif;
-    font-size:10px;
-    font-weight:600;
-    border:none;
-    border-radius:6px;
-    padding:7px 6px;
-    cursor:pointer;
-    color:#0a2226;
-    background:linear-gradient(160deg,#3fdcea,#1f8f9c);
+    flex:1; font-family:'Chakra Petch', sans-serif;
+    font-size:10px; font-weight:600; border:none; border-radius:6px;
+    padding:7px 6px; cursor:pointer; color:#0a2226;
+    background:linear-gradient(160deg,var(--cyan),#1f8f9c);
   }
-  .gh-btn-row button.secondary{
-    color:#dfe4e8;
-    background:rgba(255,255,255,0.08);
-  }
+  .gh-btn-row button.secondary{ color:#dfe4e8; background:rgba(255,255,255,0.08); }
   .gh-status{ font-size:10.5px; color:#7c8898; }
-  .gh-status.ok{ color:#3fe06a; }
+  .gh-status.ok{ color:var(--green); }
   .gh-status.err{ color:#ff6b5e; }
+  @media (max-width:1180px){
+    .notes-col{ order:3; max-width:none; flex-basis:100%; }
+  }
 </style>
 </head>
 <body>
 
-<div class="page-head">
-  <div class="eyebrow">ATR-72 · THALES / UNIVERSAL FMS</div>
-  <h1>互動式 ATR FMC 模擬器</h1>
-  <p>比照你上傳的照片重製的 MCDU 面板 — 點擊下方鍵盤輸入資料到 SCRATCHPAD（洋紅色那一行），再按左右兩側對應的 LSK 把資料寫入畫面欄位。這是純前端教學模擬，數值僅供練習操作邏輯用。</p>
-</div>
+<div class="layout">
+  <div class="unit-wrap">
+    <div class="unit">
+      <div class="unit-label">
+        <span class="screw"></span>
+        <b>MCDU &nbsp;·&nbsp; ATR 72-600</b>
+        <span class="screw"></span>
+      </div>
 
-<div class="unit">
-  <div class="unit-label">
-    <span class="screw"></span>
-    <b>MCDU &nbsp;·&nbsp; ATR 72-600</b>
-    <span class="screw"></span>
-  </div>
+      <div class="screen-frame">
+        <div class="lsk-col" id="lskLeft"></div>
+        <div class="screen" id="screen"></div>
+        <div class="lsk-col" id="lskRight"></div>
+      </div>
 
-  <div class="screen-frame">
-    <div class="lsk-col" id="lskLeft"></div>
-    <div class="screen" id="screen"></div>
-    <div class="lsk-col" id="lskRight"></div>
-  </div>
+      <div class="keypad">
+        <div class="krow">
+          <button class="key" onclick="nav('MENU')" id="menuKey">MENU</button>
+          <button class="key" onclick="prevPage()">PREV</button>
+          <button class="key" onclick="nextPage()">NEXT</button>
+          <button class="key" onclick="flash('RMS &mdash; NOT MODELLED')">RMS</button>
+          <button class="key" onclick="nav('FPLN')">FPLN</button>
+          <button class="key" onclick="doDTO()">DTO</button>
+          <button class="key" onclick="nav('PERF')">PERF</button>
+          <button class="key msg" id="msgKey" onclick="nav('MSG')">MSG</button>
+          <button class="key exec" id="execKey" onclick="doExec()">EXEC</button>
+        </div>
+        <div class="krow">
+          <button class="key round" onclick="type('1')">1</button>
+          <button class="key round" onclick="type('2')">2</button>
+          <button class="key round" onclick="type('3')">3</button>
+          <button class="key spacer"></button>
+          <button class="key" onclick="nav('PROG')">PROG</button>
+          <button class="key" onclick="nav('DATA')">DATA</button>
+          <button class="key" onclick="nav('VNAV')">VNAV</button>
+          <button class="key" onclick="nav('MARK')">MRK</button>
+          <div class="brt-stack">
+            <button class="key" onclick="adjustBrightness(1)">BRT&#9650;</button>
+            <button class="key" onclick="adjustBrightness(-1)">BRT&#9660;</button>
+          </div>
+        </div>
 
-  <div class="keypad">
-    <div class="krow fn1">
-      <button class="key" onclick="nav('MENU')" id="menuKey">MENU</button>
-      <button class="key" onclick="prevPage()">PREV</button>
-      <button class="key" onclick="nextPage()">NEXT</button>
-      <button class="key blank" aria-label="blank key" onclick="flash('BLANK KEY &mdash; NOT ASSIGNED')" style="pointer-events:auto; box-shadow:0 3px 0 #8b929b, inset 0 1px 0 rgba(255,255,255,0.7); background:linear-gradient(180deg, var(--key-face), var(--key-face-dark));"></button>
-      <button class="key" onclick="nav('FPLN')">FPLN</button>
-      <button class="key" onclick="doDTO()">DTO</button>
-      <button class="key" onclick="nav('PERF')">PERF</button>
-      <button class="key msg" id="msgKey" onclick="nav('MSG')">MSG</button>
-      <button class="key exec" id="execKey" onclick="doExec()">EXEC</button>
-    </div>
-    <div class="krow fn2">
-      <span class="key blank"></span>
-      <button class="key" onclick="nav('PROG')">PROG</button>
-      <button class="key" onclick="nav('DATA')">DATA</button>
-      <button class="key" onclick="nav('VNAV')">VNAV</button>
-      <button class="key" onclick="nav('MARK')">MRK</button>
-      <div class="brt-stack">
-        <button class="key" onclick="adjustBrightness(1)">&#9650; BRT</button>
-        <button class="key" onclick="adjustBrightness(-1)">&#9660; BRT</button>
+        <div class="krow">
+          <button class="key round" onclick="type('4')">4</button>
+          <button class="key round" onclick="type('5')">5</button>
+          <button class="key round" onclick="type('6')">6</button>
+          <button class="key rect" onclick="type('A')">A</button>
+          <button class="key rect" onclick="type('B')">B</button>
+          <button class="key rect" onclick="type('C')">C</button>
+          <button class="key rect" onclick="type('D')">D</button>
+          <button class="key rect" onclick="type('E')"><span class="ew-ring">E</span></button>
+          <button class="key rect" onclick="type('F')">F</button>
+          <button class="key rect" onclick="type('G')">G</button>
+        </div>
+        <div class="krow">
+          <button class="key round" onclick="type('7')">7</button>
+          <button class="key round" onclick="type('8')">8</button>
+          <button class="key round" onclick="type('9')">9</button>
+          <button class="key rect" onclick="type('H')">H</button>
+          <button class="key rect" onclick="type('I')">I</button>
+          <button class="key rect" onclick="type('J')">J</button>
+          <button class="key rect" onclick="type('K')">K</button>
+          <button class="key rect" onclick="type('L')">L</button>
+          <button class="key rect" onclick="type('M')">M</button>
+          <button class="key rect" onclick="type('N')"><span class="ew-ring">N</span></button>
+        </div>
+        <div class="krow">
+          <button class="key round" onclick="type('.')">.</button>
+          <button class="key round" onclick="type('0')">0</button>
+          <button class="key round" onclick="type('+/-')">+/-</button>
+          <button class="key rect" onclick="type('O')">O</button>
+          <button class="key rect" onclick="type('P')">P</button>
+          <button class="key rect" onclick="type('Q')">Q</button>
+          <button class="key rect" onclick="type('R')">R</button>
+          <button class="key rect" onclick="type('S')"><span class="ew-ring">S</span></button>
+          <button class="key rect" onclick="type('T')">T</button>
+          <button class="key rect" onclick="type('U')">U</button>
+        </div>
+        <div class="krow">
+          <button class="key blank"></button>
+          <button class="key round" onclick="type('/')">/</button>
+          <button class="key round" onclick="type(' ')" style="font-size:9px;">SP</button>
+          <button class="key rect" onclick="type('V')">V</button>
+          <button class="key rect" onclick="type('W')"><span class="ew-ring">W</span></button>
+          <button class="key rect" onclick="type('X')">X</button>
+          <button class="key rect" onclick="type('Y')">Y</button>
+          <button class="key rect" onclick="type('Z')">Z</button>
+          <button class="key blank"></button>
+          <button class="key rect" onclick="clrKey()" style="font-size:9px;">CLR</button>
+        </div>
       </div>
     </div>
+  </div>
 
-    <div class="grid-alpha" style="margin-bottom:5px;">
-      <button class="key round" onclick="type('1')">1</button>
-      <button class="key round" onclick="type('2')">2</button>
-      <button class="key round" onclick="type('3')">3</button>
-      <button class="key round" onclick="type('A')">A</button>
-      <button class="key round" onclick="type('B')">B</button>
-      <button class="key round" onclick="type('C')">C</button>
-      <button class="key round" onclick="type('D')">D</button>
-      <button class="key round" onclick="type('E')"><span class="compass-ring">E</span></button>
-      <button class="key round" onclick="type('F')">F</button>
-      <button class="key round" onclick="type('G')">G</button>
+  <div class="info">
+    <div class="eyebrow">ATR-72 · THALES / UNIVERSAL FMS</div>
+    <h1>互動式 ATR FMC 模擬器</h1>
+    <p class="lead">比照你上傳的照片重製的 MCDU 面板 — 點擊鍵盤輸入資料到 SCRATCHPAD（洋紅色那一行）,再按左右兩側對應的 LSK 把資料寫入畫面欄位。純前端教學模擬,數值僅供練習操作邏輯用。</p>
+    <details id="infoPanel" open>
+      <summary>快速上手 / 操作說明</summary>
+      <div class="hint-body">
+        1. 按 <code>MENU</code> 再按右上角 LSK 進入 INIT 頁,輸入 FROM/TO 機場代碼（如 RCSS 松山 → RCFN 台東）。<br>
+        2. 按 <code>FPLN</code> 建立航線,用鍵盤打航點代碼,再按左側對應 LSK 寫入。<br>
+        3. 按 <code>PERF</code> 設定 V1/VR/V2 與巡航高度;按 <code>VNAV</code> 看 T/C、T/D 預估;按 <code>PROG</code> 查看剩餘距離與 ETA。<br>
+        4. 按 <code>MRK</code> 可回到你截圖那種 MARK 頁面樣式;<code>RMS</code> 在此模擬中未實作,僅顯示提示訊息。<br>
+        5. 右上角 <code>BRT ▲ / BRT ▼</code> 可即時調整螢幕亮度,跟實機一樣。<br>
+        6. SCRATCHPAD（畫面最下方洋紅字）打字後,按<b>對應那一列</b>的 LSK 按鈕（螢幕左右兩側灰色小按鍵）即可把資料寫入欄位;再按一次同一顆 LSK 可把欄位內容叫回 scratchpad 編輯。
+      </div>
+    </details>
+  </div>
+
+  <div class="notes-col">
+    <div class="notes-head">FMS220 · THALES USER'S MANUAL</div>
+    <h2 class="notes-title">Ch.1 SCOPE 筆記</h2>
+
+    <button class="manual-open-btn" onclick="toggleManualPanel()">📖 參考手冊（依目前分頁列出對應章節）</button>
+
+    <div class="ch1-intro">
+      以下是讀完 FMS220 手冊 <b>Chapter 1 · SCOPE</b>（第13–18頁）後,用自己的話重新整理的重點筆記,不是原文逐字翻譯——保留英文關鍵術語（滑鼠移上去可以看中文提示）。每張卡片下方的按鈕會連回原文 PDF 對應頁碼。
     </div>
-    <div class="grid-alpha" style="margin-bottom:5px;">
-      <button class="key round" onclick="type('4')">4</button>
-      <button class="key round" onclick="type('5')">5</button>
-      <button class="key round" onclick="type('6')">6</button>
-      <button class="key round" onclick="type('H')">H</button>
-      <button class="key round" onclick="type('I')">I</button>
-      <button class="key round" onclick="type('J')">J</button>
-      <button class="key round" onclick="type('K')">K</button>
-      <button class="key round" onclick="type('L')">L</button>
-      <button class="key round" onclick="type('M')">M</button>
-      <button class="key round" onclick="type('N')"><span class="compass-ring">N</span></button>
+
+    <div class="note-card">
+      <span class="sec-badge">1.1</span><h3>Document overview</h3>
+      <ul>
+        <li>這份手冊說明 <span class="term" data-zh="飛航管理">flight management</span> 的原理、機組員與系統之間的 <span class="term" data-zh="人機介面">interface</span>,以及正常與異常情況下的操作/維護程序。</li>
+        <li>手冊對應的版本很明確:System = <span class="term" data-zh="這台特定的飛航管理系統">FMS220</span>,Program = <span class="term" data-zh="軟體程式代號">G6225ABB09</span>,機型 = ATR。</li>
+        <li>全書共分 8 章:Scope(範圍)、Operational Principles(運作原理)、Pilot Interface(駕駛員介面)、Flight Phase Related Procedures(飛行階段相關程序)、Multi Phase Related Procedures(跨階段共用程序)、Abnormal Procedures(異常程序)、Maintenance Procedures(維護程序)、Glossary(詞彙表)。</li>
+      </ul>
+      <div class="zh">白話說:這章是「這本書的使用說明」——先確認你讀的是不是正確的版本(FMS220),再知道整本書怎麼分章節找資料,之後查東西才不會找錯地方。</div>
+      <button class="open-orig" onclick="openManualSection(13, '1.1')">開啟原文 PDF 第13頁</button>
     </div>
-    <div class="grid-alpha" style="margin-bottom:5px;">
-      <button class="key round" onclick="type('7')">7</button>
-      <button class="key round" onclick="type('8')">8</button>
-      <button class="key round" onclick="type('9')">9</button>
-      <button class="key round" onclick="type('O')">O</button>
-      <button class="key round" onclick="type('P')">P</button>
-      <button class="key round" onclick="type('Q')">Q</button>
-      <button class="key round" onclick="type('R')">R</button>
-      <button class="key round" onclick="type('S')"><span class="compass-ring">S</span></button>
-      <button class="key round" onclick="type('T')">T</button>
-      <button class="key round" onclick="type('U')">U</button>
+
+    <div class="note-card">
+      <span class="sec-badge">1.2</span><h3>System overview</h3>
+      <ul>
+        <li>FMS 的核心功能包含:多感測器 <span class="term" data-zh="定位">localisation</span>、<span class="term" data-zh="飛行計畫">flight planning</span>、水平與垂直 <span class="term" data-zh="導引">guidance</span>、資料庫管理、無線電導航、性能管理與 <span class="term" data-zh="預測">predictions</span>。</li>
+        <li>系統組成:一套 FMC 軟體(跑在 <span class="term" data-zh="整合航電裝置">IAD</span> 裡)+ 駕駛員介面(<b>雙</b> MCDU 可輸入,MFD/PFD 只能顯示、不能輸入)+ <span class="term" data-zh="CF卡">Compact Flash</span> 資料媒介(載入導航資料庫、次要飛行計畫、磁偏角模型)。</li>
+        <li>系統有明確的<span class="term" data-zh="操作範圍/保證正常運作的邊界">operational domain</span>:</li>
+      </ul>
+      <ul>
+        <li>緯度(導航精度保證範圍):S89° ~ N89°;經度不限制</li>
+        <li>UTM/MGRS 座標:緯度限 S80° ~ N84°</li>
+        <li>最大地速:750 kt</li>
+        <li>高度範圍:-1500 ft ~ 65000 ft</li>
+        <li>溫度範圍:-60°C ~ 99°C</li>
+      </ul>
+      <div class="zh">白話說:這節最值得背——尤其是那組操作範圍數字,很適合拿來出「輸入超過範圍系統會怎麼反應」這種題型。另外要記住 MFD/PFD 只是顯示螢幕,所有輸入都得靠 MCDU。</div>
+      <button class="open-orig" onclick="openManualSection(14, '1.2')">開啟原文 PDF 第14頁</button>
     </div>
-    <div class="grid-alpha" style="margin-bottom:5px;">
-      <button class="key round" onclick="type('.')">.</button>
-      <button class="key round" onclick="type('0')">0</button>
-      <button class="key round" onclick="type('+/-')">+/-</button>
-      <button class="key round" onclick="type('V')">V</button>
-      <button class="key round" onclick="type('W')"><span class="compass-ring">W</span></button>
-      <button class="key round" onclick="type('X')">X</button>
-      <button class="key round" onclick="type('Y')">Y</button>
-      <button class="key round" onclick="type('Z')">Z</button>
-      <button class="key round" onclick="clrKey()" style="font-size:8.5px;">CLR</button>
+
+    <div class="note-card">
+      <span class="sec-badge">1.3</span><h3>System interfaces</h3>
+      <ul>
+        <li><b>1.3.1 General</b> — 雙套 <span class="term" data-zh="座艙(左右各一套)">cockpit</span> 架構,兩顆 FMC 在雙模式下持續同步。座艙開關可設定 <span class="term" data-zh="訊源回復/切換設定">reversion</span> 模式:一般狀況下每顆 FMC 用自己那側的感測器,該側失效才自動切對面;但也可以手動選「兩顆都用1」或「兩顆都用2」,此時兩顆 FMC 會被迫共用同一側訊源,就算那側資料無效也一樣。</li>
+        <li><b>1.3.2 Air Data Unit</b> — 雙 <span class="term" data-zh="大氣資料電腦">ADU</span>,提供空速、大氣溫度、氣壓高度;選源邏輯同上。</li>
+        <li><b>1.3.3 AHRS</b> — 雙 <span class="term" data-zh="姿態航向參考系統">AHRS</span>,提供姿態角與磁航向,選源邏輯同上。</li>
+        <li><b>1.3.4 GPS configuration</b> — 優先用自己那側 GPS,失效才用對面。</li>
+        <li><b>1.3.5 Radio navigation architecture</b> — 配置 2 台 VOR、3 頻道 DME、2 台 ADF;兩顆 FMC 都能管理這些接收器,但只有跟自動駕駛耦合的那顆「<span class="term" data-zh="主控中的那顆FMC">active FMC</span>」才會真的下指令。</li>
+      </ul>
+      <div class="zh">白話說:這節在講「雙套備援」怎麼運作。reversion 這個詞的概念很重要:正常時各用各的、壞了自動切對面;但手動選「都用1/都用2」時就是刻意讓兩顆共用同一側,就算那側是壞的也一樣,這是考試常見的陷阱題。</div>
+      <button class="open-orig" onclick="openManualSection(15, '1.3')">開啟原文 PDF 第15頁</button>
     </div>
-    <div class="grid-alpha">
-      <button class="key round" onclick="type('/')">/</button>
-      <button class="key round" onclick="type(' ')" style="font-size:8.5px;">SP</button>
+
+    <div class="note-card">
+      <span class="sec-badge">1.4</span><h3>Navigation modes</h3>
+      <ul>
+        <li>兩種導航模式:<span class="term" data-zh="最佳計算位置(預設模式)">BCP</span>(Best Computed Position,<b>預設模式</b>)與 GPS 模式。</li>
+        <li>兩種模式都會提供:經緯度、地速、航跡角、風速風向。</li>
+        <li>所有位置運算都以 <span class="term" data-zh="世界大地測量系統1984(全球定位基準)">WGS84</span> 為基準。</li>
+        <li>BCP = 用加權濾波器把 GPS(選定側)與 VOR/DME 訊號融合算出的位置,比單純 GPS 更抗干擾。</li>
+        <li><span class="term" data-zh="航位推算(靠速度/航向/風推算位置)">DR</span>(Dead Reckoning)= 完全沒有地速/位置訊源時的自動備援模式,靠真空速、航向、風去推算位置。</li>
+      </ul>
+      <div class="zh">白話說:很多人直覺以為預設是 GPS,其實預設是 BCP——GPS 只是拿來當作 BCP 濾波器裡的其中一個輸入源,不是唯一依據;真的所有訊源都斷了,才會退到用「用速度跟航向硬推」的 DR 模式。</div>
+      <button class="open-orig" onclick="openManualSection(17, '1.4')">開啟原文 PDF 第17頁</button>
+    </div>
+
+    <div class="note-card">
+      <span class="sec-badge">1.5</span><h3>Conventions</h3>
+      <ul>
+        <li><b>1.5.1.1 Pilot's actions</b> — 手冊寫程序時用三段式標記:<span class="term" data-zh="前提條件">IF</span>(前提)、<span class="term" data-zh="觸發時機">WHEN</span>(時機點)、<span class="term" data-zh="動作(粗體)">DO</span>(動作,用粗體)。</li>
+        <li><b>1.5.1.2 Cautions, notes and cockpit effect</b> — <i>斜體</i> = Note(補充資訊);<span style="color:var(--amber)">琥珀色</span> = CAUTION(警告,提醒錯誤操作的後果);<span style="color:var(--magenta)">洋紅色</span> = 這個步驟會影響座艙(COCKPIT effect)。</li>
+        <li><b>1.5.2 Supplementary information</b> — 各章給的詳細程度不同:Pilot Interface 章＝「知道就好」的完整介紹;Flight/Multi Phase Procedures＝「必須知道」的精簡步驟;Abnormal Procedures＝完整細節;Maintenance Procedures＝給有資格的維修人員的完整細節。</li>
+        <li><b>1.5.3 Foreword</b> — 提醒手冊裡的 MCDU 畫面範例不一定代表實際操作情境;手冊裡的位置一律用地理座標(經緯度)表示。</li>
+        <li><b>1.5.4 Terminology</b> — <span class="term" data-zh="航點">Waypoint</span> 這個詞範圍很廣:不只是資料庫裡真實存在的定位點,也包含 FMC 自己算出來、用來組成航線/垂直剖面的<span class="term" data-zh="虛擬/暫時航點">虛擬航點(pseudo/temporary waypoint)</span>。</li>
+      </ul>
+      <div class="zh">白話說:這節是「怎麼讀這本手冊」的規則書。重點記兩個:顏色語意(琥珀=警告、洋紅=影響座艙),還有 waypoint 的廣義定義——模擬器 VNAV 頁面的 T/C、T/D 就屬於這種「虛擬航點」,不是資料庫裡真的存在的點。</div>
+      <button class="open-orig" onclick="openManualSection(17, '1.5')">開啟原文 PDF 第17頁</button>
     </div>
   </div>
 </div>
 
-<div class="hint">
-  <b>快速上手：</b><br>
-  1. 按 <code>MENU</code> 再按右上角 LSK 進入 INIT 頁,輸入 FROM/TO 機場代碼（如 RCSS 松山 → RCFN 台東）。<br>
-  2. 按 <code>FPLN</code> 建立航線,用鍵盤打航點代碼,再按左側對應 LSK 寫入。<br>
-  3. 按 <code>PERF</code> 設定 V1/VR/V2 與巡航高度;按 <code>VNAV</code> 看 T/C、T/D 預估;按 <code>PROG</code> 查看剩餘距離與 ETA。<br>
-  4. 按 <code>MRK</code> 可回到你截圖那種 MARK 頁面樣式;<code>RMS</code> 在此模擬中未實作,僅顯示提示訊息。<br>
-  5. 右下角 <code>BRT ▲ / BRT ▼</code> 可即時調整螢幕亮度,跟實機一樣。<br>
-  6. SCRATCHPAD（畫面最下方洋紅字）打字後,按<b>對應那一列</b>的 LSK 按鈕（螢幕左右兩側灰色小按鍵）即可把資料寫入欄位;再按一次同一顆 LSK 可把欄位內容叫回 scratchpad 編輯。<br>
-  7. 右下角圓形 <b>📖 手冊</b> 按鈕（只有你自己會用到）會依照目前畫面自動列出對應的 FMS220 手冊章節,這部分還是雛形,細節見程式碼裡的 TODO 註解。
-</div>
-
-<button class="manual-fab" onclick="toggleManualPanel()" title="參考手冊（僅示範，未接上私人資料）">📖</button>
+<button class="manual-open-btn" style="position:fixed; right:18px; bottom:18px; width:auto; margin:0; z-index:40; box-shadow:0 10px 24px -6px rgba(0,0,0,0.6);" onclick="toggleManualPanel()">📖</button>
 <div class="manual-panel" id="manualPanel">
   <button class="manual-close" onclick="toggleManualPanel(false)">✕</button>
   <h2>參考手冊</h2>
   <div class="sub">FMS220 · THALES USER'S MANUAL</div>
 
   <div class="gh-connect">
-    <label for="ghTokenInput">GitHub Token（私人 repo 讀取用）</label>
+    <label for="ghTokenInput">GitHub Token(私人 repo 讀取用,選填)</label>
     <input type="password" id="ghTokenInput" placeholder="貼上 fine-grained PAT..." autocomplete="off">
     <div class="gh-btn-row">
       <button onclick="connectGitHub()">儲存並測試連線</button>
@@ -508,9 +690,10 @@
   <div class="manual-current" id="manualCurrent"></div>
   <div id="manualEntries"></div>
   <div class="manual-note">
-    Token 只會存在這個瀏覽器分頁的 session 裡（關掉分頁就清除,不會寫進程式碼、不會上傳到任何 repo）。建議用 GitHub 的 <b>fine-grained token</b>,只授權 <code>study-private-docs</code> 這個 repo、且只給 <code>Contents: Read-only</code> 權限,不要用有完整 repo 存取的 classic token。
+    Token 只會存在這個瀏覽器分頁的 session 裡(關掉分頁就清除,不會寫進程式碼、不會上傳到任何 repo)。建議用 GitHub 的 <b>fine-grained token</b>,只授權對應 repo、且只給 <code>Contents: Read-only</code> 權限。
   </div>
 </div>
+
 
 <script>
 /* ================= STATE ================= */
@@ -533,171 +716,6 @@ const pages = ['MENU','INIT','FPLN','PERF','VNAV','PROG','DATA','MARK'];
 function adjustBrightness(dir){
   state.brightness = Math.min(1.4, Math.max(0.55, state.brightness + dir*0.12));
   render();
-}
-
-/* ================================================================
-   MANUAL REFERENCE PANEL (step 3 prototype)
-   ----------------------------------------------------------------
-   MANUAL_MAP: 每個模擬器分頁 -> 對應到 FMS220 手冊的章節清單。
-   這份對照表是從你那份 fms220_toc_index.json（自動解析整本手冊
-   目錄產生的 329 筆資料）裡，手動挑出跟目前這幾個分頁相關的條目。
-   之後如果模擬器加新分頁，或是想要更完整的對照，可以直接從那份
-   JSON 裡查 title 找 section/page 補進來，不用重新翻書。
-   ================================================================ */
-const MANUAL_MAP = {
-  MENU: [ { section:'3.1.1', title:'MENU page', page:71 } ],
-  INIT: [
-    { section:'3.3.1.2', title:'INIT page', page:107 },
-    { section:'3.3.1.3', title:'POS INIT page', page:109 }
-  ],
-  FPLN: [
-    { section:'3.3.2.1', title:'FPLN page', page:113 },
-    { section:'3.3.2.2', title:'FPLN INIT page', page:121 }
-  ],
-  PERF: [
-    { section:'3.3.5.1', title:'PERF INIT page', page:162 },
-    { section:'3.3.5.3', title:'TAKE OFF page', page:167 },
-    { section:'3.3.5.4', title:'CRUISE page', page:169 }
-  ],
-  VNAV: [
-    { section:'3.3.3.9', title:'VNAV page 1/2', page:155 },
-    { section:'3.3.3.10', title:'VNAV page 2/2', page:156 }
-  ],
-  PROG: [
-    { section:'3.3.3.1', title:'PROG 1/3 page', page:145 },
-    { section:'3.3.3.2', title:'PROG 2/3 page', page:146 },
-    { section:'3.3.3.3', title:'PROG 3/3 page', page:147 }
-  ],
-  DATA: [ { section:'3.3.9.1', title:'DATA MENU page', page:180 } ],
-  MARK: [ { section:'3.3.8.1', title:'MARK page', page:178 } ]
-};
-
-const MANUAL_PDF_PATH = 'manuals/fms220/FMS-ATR-3.pdf'; // 對應你 repo 截圖裡的實際路徑/檔名
-
-/* ================================================================
-   GitHub 私人 repo 連線（測試用）
-   ----------------------------------------------------------------
-   直接從瀏覽器呼叫 GitHub REST API 讀取私人 repo 裡的檔案。
-   api.github.com 有開放 CORS，靜態頁面（GitHub Pages）不需要
-   後端伺服器就能打這隻 API。
-   Token 只存在 sessionStorage（分頁關閉即清除），不會被寫進
-   任何檔案或上傳到 repo 裡。
-   ================================================================ */
-const GH_OWNER = 'a24626296';
-const GH_REPO = 'study-private-docs';
-
-function ghToken(){ return sessionStorage.getItem('gh_pat') || ''; }
-
-function updateGhStatus(text, cls){
-  const el = document.getElementById('ghStatus');
-  if(!el) return;
-  el.textContent = text;
-  el.className = 'gh-status' + (cls ? ' '+cls : '');
-}
-
-async function connectGitHub(){
-  const input = document.getElementById('ghTokenInput');
-  const token = input.value.trim();
-  if(!token){ updateGhStatus('請先貼上 token', 'err'); return; }
-  updateGhStatus('測試連線中...');
-  try{
-    const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}`, {
-      headers: { 'Authorization': `token ${token}` }
-    });
-    if(res.ok){
-      sessionStorage.setItem('gh_pat', token);
-      updateGhStatus('已連線到 ' + GH_REPO, 'ok');
-      input.value = '';
-    } else if(res.status === 401 || res.status === 403){
-      updateGhStatus('認證失敗（HTTP '+res.status+'）,檢查 token 是否過期或權限不足', 'err');
-    } else if(res.status === 404){
-      updateGhStatus('找不到 repo（HTTP 404）,檢查 repo 名稱或 token 是否有這個 repo 的權限', 'err');
-    } else {
-      updateGhStatus('連線失敗（HTTP '+res.status+'）', 'err');
-    }
-  }catch(e){
-    updateGhStatus('連線錯誤：' + e.message, 'err');
-  }
-}
-
-function disconnectGitHub(){
-  sessionStorage.removeItem('gh_pat');
-  updateGhStatus('尚未連線');
-}
-
-/**
- * 讀取私人 repo 裡的檔案，回傳一個瀏覽器可以打開的 blob URL。
- * 用 Accept: application/vnd.github.raw 直接拿原始檔案內容，
- * 不會卡到 GitHub Contents API 對 JSON+base64 回應的 1MB 限制
- * （這份 PDF 有 4MB 多，一定要用這個 header，不能用預設的 JSON 回應）。
- */
-window.fetchPrivateRepoFile = async function(path){
-  const token = ghToken();
-  if(!token) throw new Error('尚未設定 GitHub token');
-  const encodedPath = path.split('/').map(encodeURIComponent).join('/');
-  const url = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${encodedPath}`;
-  const res = await fetch(url, {
-    headers: {
-      'Authorization': `token ${token}`,
-      'Accept': 'application/vnd.github.raw'
-    }
-  });
-  if(!res.ok) throw new Error('HTTP ' + res.status);
-  const rawBlob = await res.blob();
-  // 強制標示成 application/pdf：GitHub 回傳的原始位元組沒有正確的
-  // Content-Type，瀏覽器看到型別不明的 blob 會觸發下載而不是內嵌開啟。
-  const pdfBlob = new Blob([rawBlob], { type: 'application/pdf' });
-  return URL.createObjectURL(pdfBlob);
-};
-
-function toggleManualPanel(forceOpen){
-  const panel = document.getElementById('manualPanel');
-  const shouldOpen = forceOpen !== undefined ? forceOpen : !panel.classList.contains('open');
-  panel.classList.toggle('open', shouldOpen);
-  if(shouldOpen){
-    renderManualPanel();
-    updateGhStatus(ghToken() ? '已連線到 '+GH_REPO : '尚未連線', ghToken() ? 'ok' : '');
-  }
-}
-
-function renderManualPanel(){
-  const cur = document.getElementById('manualCurrent');
-  const list = document.getElementById('manualEntries');
-  if(!cur || !list) return; // panel not open yet / not in DOM interaction
-
-  cur.textContent = '目前畫面：' + state.page;
-
-  const entries = MANUAL_MAP[state.page] || [];
-  if(entries.length === 0){
-    list.innerHTML = '<div class="manual-entry"><span class="txt">這個分頁還沒有對照到手冊章節。</span></div>';
-    return;
-  }
-  list.innerHTML = entries.map(e => `
-    <div class="manual-entry">
-      <span class="txt">${e.section} ${escapeHtml(e.title)}<small>第 ${e.page} 頁</small></span>
-      <button onclick="openManualSection(${e.page}, '${e.section}')">開啟</button>
-    </div>
-  `).join('');
-}
-
-/**
- * 開啟手冊指定頁面。
- * 會呼叫上面的 window.fetchPrivateRepoFile()：
- *  - 已連線（有 token）→ 抓到 PDF、開新分頁跳到指定頁碼
- *  - 未連線（沒 token，例如別人打開這個公開頁面）→ 顯示提示訊息，不會出錯
- */
-async function openManualSection(pageNum, sectionId){
-  if(!ghToken()){
-    flash('尚未連線 GitHub，請先在📖面板輸入 token');
-    return;
-  }
-  try{
-    const pdfUrl = await window.fetchPrivateRepoFile(MANUAL_PDF_PATH);
-    window.open(pdfUrl + '#page=' + pageNum, '_blank');
-  }catch(e){
-    console.error('fetchPrivateRepoFile failed:', e);
-    flash('讀取私人手冊失敗：' + e.message);
-  }
 }
 
 /* ================= HELPERS ================= */
@@ -990,8 +1008,179 @@ function render(){
   renderManualPanel();
 }
 
+/* ================================================================
+   MANUAL REFERENCE PANEL (added — does not modify FMS/keypad logic above)
+   MANUAL_MAP: 每個模擬器分頁 -> 對應到 FMS220 手冊的章節清單。
+   ================================================================ */
+const MANUAL_MAP = {
+  MENU: [ { section:'3.1.1', title:'MENU page', page:71 } ],
+  INIT: [
+    { section:'3.3.1.2', title:'INIT page', page:107 },
+    { section:'3.3.1.3', title:'POS INIT page', page:109 }
+  ],
+  FPLN: [
+    { section:'3.3.2.1', title:'FPLN page', page:113 },
+    { section:'3.3.2.2', title:'FPLN INIT page', page:121 }
+  ],
+  PERF: [
+    { section:'3.3.5.1', title:'PERF INIT page', page:162 },
+    { section:'3.3.5.3', title:'TAKE OFF page', page:167 },
+    { section:'3.3.5.4', title:'CRUISE page', page:169 }
+  ],
+  VNAV: [
+    { section:'3.3.3.9', title:'VNAV page 1/2', page:155 },
+    { section:'3.3.3.10', title:'VNAV page 2/2', page:156 }
+  ],
+  PROG: [
+    { section:'3.3.3.1', title:'PROG 1/3 page', page:145 },
+    { section:'3.3.3.2', title:'PROG 2/3 page', page:146 },
+    { section:'3.3.3.3', title:'PROG 3/3 page', page:147 }
+  ],
+  DATA: [ { section:'3.3.9.1', title:'DATA MENU page', page:180 } ],
+  MARK: [ { section:'3.3.8.1', title:'MARK page', page:178 } ]
+};
+
+const MANUAL_PDF_PATH = 'manuals/fms220/FMS-ATR-3.pdf';
+
+/* GitHub 私人 repo 連線(選填,讀取你自己上傳的原文 PDF 用)。
+   Token 只存在 sessionStorage(分頁關閉即清除),不會寫進檔案或上傳 repo。 */
+const GH_OWNER = 'a24626296';
+const GH_REPO = 'study-private-docs';
+
+function ghToken(){ return sessionStorage.getItem('gh_pat') || ''; }
+
+function updateGhStatus(text, cls){
+  const el = document.getElementById('ghStatus');
+  if(!el) return;
+  el.textContent = text;
+  el.className = 'gh-status' + (cls ? ' '+cls : '');
+}
+
+async function connectGitHub(){
+  const input = document.getElementById('ghTokenInput');
+  const token = input.value.trim();
+  if(!token){ updateGhStatus('請先貼上 token', 'err'); return; }
+  updateGhStatus('測試連線中...');
+  try{
+    const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}`, {
+      headers: { 'Authorization': `token ${token}` }
+    });
+    if(res.ok){
+      sessionStorage.setItem('gh_pat', token);
+      updateGhStatus('已連線到 ' + GH_REPO, 'ok');
+      input.value = '';
+    } else if(res.status === 401 || res.status === 403){
+      updateGhStatus('認證失敗(HTTP '+res.status+'),檢查 token 是否過期或權限不足', 'err');
+    } else if(res.status === 404){
+      updateGhStatus('找不到 repo(HTTP 404),檢查 repo 名稱或 token 是否有這個 repo 的權限', 'err');
+    } else {
+      updateGhStatus('連線失敗(HTTP '+res.status+')', 'err');
+    }
+  }catch(e){
+    updateGhStatus('連線錯誤:' + e.message, 'err');
+  }
+}
+
+function disconnectGitHub(){
+  sessionStorage.removeItem('gh_pat');
+  updateGhStatus('尚未連線');
+}
+
+window.fetchPrivateRepoFile = async function(path){
+  const token = ghToken();
+  if(!token) throw new Error('尚未設定 GitHub token');
+  const encodedPath = path.split('/').map(encodeURIComponent).join('/');
+  const url = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${encodedPath}`;
+  const res = await fetch(url, {
+    headers: {
+      'Authorization': `token ${token}`,
+      'Accept': 'application/vnd.github.raw'
+    }
+  });
+  if(!res.ok) throw new Error('HTTP ' + res.status);
+  const rawBlob = await res.blob();
+  const pdfBlob = new Blob([rawBlob], { type: 'application/pdf' });
+  return URL.createObjectURL(pdfBlob);
+};
+
+function toggleManualPanel(forceOpen){
+  const panel = document.getElementById('manualPanel');
+  if(!panel) return;
+  const shouldOpen = forceOpen !== undefined ? forceOpen : !panel.classList.contains('open');
+  panel.classList.toggle('open', shouldOpen);
+  if(shouldOpen){
+    renderManualPanel();
+    updateGhStatus(ghToken() ? '已連線到 '+GH_REPO : '尚未連線', ghToken() ? 'ok' : '');
+  }
+}
+
+function renderManualPanel(){
+  const cur = document.getElementById('manualCurrent');
+  const list = document.getElementById('manualEntries');
+  if(!cur || !list) return;
+
+  cur.textContent = '目前畫面:' + state.page;
+
+  const entries = MANUAL_MAP[state.page] || [];
+  if(entries.length === 0){
+    list.innerHTML = '<div class="manual-entry"><span class="txt">這個分頁還沒有對照到手冊章節。</span></div>';
+    return;
+  }
+  list.innerHTML = entries.map(e => `
+    <div class="manual-entry">
+      <span class="txt">${e.section} ${escapeHtml(e.title)}<small>第 ${e.page} 頁</small></span>
+      <button onclick="openManualSection(${e.page}, '${e.section}')">開啟</button>
+    </div>
+  `).join('');
+}
+
+async function openManualSection(pageNum, sectionId){
+  if(!ghToken()){
+    flash('尚未連線 GitHub,請先在📖面板輸入 token');
+    return;
+  }
+  try{
+    const pdfUrl = await window.fetchPrivateRepoFile(MANUAL_PDF_PATH);
+    window.open(pdfUrl + '#page=' + pageNum, '_blank');
+  }catch(e){
+    console.error('fetchPrivateRepoFile failed:', e);
+    flash('讀取私人手冊失敗:' + e.message);
+  }
+}
+
 render();
 setInterval(()=>{ if(state.page==='MARK' || state.page==='PROG') render(); }, 1000);
+
+/* ================= AUTO-FIT SCALING ================= */
+function fitUnit(){
+  const unit = document.querySelector('.unit');
+  const wrap = document.querySelector('.unit-wrap');
+  if(!unit || !wrap) return;
+  unit.style.transform = 'scale(1)';
+  wrap.style.width = '';
+  wrap.style.height = '';
+  const rect = unit.getBoundingClientRect();
+  const naturalW = rect.width, naturalH = rect.height;
+  if(!naturalW || !naturalH) return;
+
+  const isNarrow = window.innerWidth < 860; // matches .layout wrap breakpoint
+  const reserveForInfo = isNarrow ? 0 : 340; // sidebar width + gap when side-by-side
+  const availW = Math.max(280, window.innerWidth - reserveForInfo - 40);
+  const availH = Math.max(280, window.innerHeight - 32);
+
+  let scale = Math.min(availW / naturalW, availH / naturalH);
+  scale = Math.max(0.55, Math.min(scale, 2.0)); // clamp between 0.55x and 2x
+
+  unit.style.transform = 'scale(' + scale + ')';
+  unit.style.transformOrigin = 'top left';
+  wrap.style.width = (naturalW * scale) + 'px';
+  wrap.style.height = (naturalH * scale) + 'px';
+}
+window.addEventListener('resize', fitUnit);
+window.addEventListener('orientationchange', fitUnit);
+if(document.fonts && document.fonts.ready){ document.fonts.ready.then(fitUnit); }
+window.addEventListener('load', fitUnit);
+fitUnit();
 </script>
 </body>
 </html>
