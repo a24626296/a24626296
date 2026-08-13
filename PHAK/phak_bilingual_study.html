@@ -98,7 +98,7 @@
   #collapseAllBtn:hover,#expandAllBtn:hover{ border-color:var(--amber); color:var(--amber); }
   details.section{ margin-bottom:0; }
   details.section > summary{
-    list-style:none; cursor:pointer; display:flex; align-items:baseline; gap:.5rem;
+    list-style:none; cursor:pointer; display:flex; flex-wrap:wrap; align-items:baseline; gap:.5rem;
     margin:2.4rem 0 .9rem; padding-bottom:.4rem; border-bottom:1px solid var(--hair);
     -webkit-tap-highlight-color:transparent;
   }
@@ -109,8 +109,28 @@
     transition:transform .15s; flex:0 0 auto; transform-origin:45% 50%;
   }
   details.section[open] > summary::before{ transform:rotate(90deg); }
-  details.section > summary h2{ margin:0; padding:0; border-bottom:none; font-size:1.35rem; flex:1 1 auto; }
+  details.section > summary h2{ margin:0; padding:0; border-bottom:none; font-size:1.35rem; flex:1 1 auto; min-width:180px; }
   details.section > summary:hover h2{ color:var(--amber-dark); }
+  .yt-tools{ display:flex; align-items:center; gap:.4rem; flex:0 0 auto; margin-left:auto; }
+  .yt-input{ width:180px; max-width:42vw; font-family:'JetBrains Mono',monospace; font-size:.72rem;
+    padding:.4rem .55rem; border:1px solid var(--hair); border-radius:6px; background:#fff; color:var(--ink); }
+  .yt-input::placeholder{ color:#9aa0a3; }
+  .yt-toggle{ appearance:none; border:1px solid #33424D; background:#0D1620; color:#8CA0AB;
+    font-family:'JetBrains Mono',monospace; font-size:.75rem; padding:.4rem .65rem; border-radius:6px;
+    cursor:pointer; flex:0 0 auto; }
+  .yt-toggle:hover{ border-color:var(--amber); color:var(--amber); }
+  .yt-toggle.on{ border-color:#c0533a; color:#e08a76; }
+  .yt-player-box{ margin:-.4rem 0 1.4rem; }
+  .yt-player-box.hidden{ display:none; }
+  .yt-resizable{ resize:vertical; overflow:hidden; min-height:200px; height:380px; max-height:82vh;
+    border:1px solid var(--hair); border-radius:8px; background:#000; }
+  .yt-resizable iframe{ width:100%; height:100%; border:0; display:block; }
+  #backToTopBtn{ position:fixed; right:20px; bottom:22px; z-index:50; width:46px; height:46px;
+    border-radius:50%; background:var(--placard-bg); color:var(--placard-text); border:1px solid var(--amber);
+    font-size:1.3rem; line-height:1; cursor:pointer; box-shadow:0 10px 22px rgba(0,0,0,.3);
+    align-items:center; justify-content:center; display:none; }
+  #backToTopBtn.show{ display:flex; }
+  #backToTopBtn:hover{ background:var(--amber); color:#1B1200; }
   #syncDot{ width:7px; height:7px; border-radius:50%; background:#5a6b74; flex:0 0 auto; }
   #syncDot.ok{ background:#3fae6b; }
   #syncDot.err{ background:#c0533a; }
@@ -196,6 +216,7 @@
 <div id="tooltip"></div>
 <div id="toast"></div>
 <button id="hlFloatBtn" type="button">🖍 標記</button>
+<button id="backToTopBtn" type="button" aria-label="回到頂部" title="回到頂部">↑</button>
 
 <script>
 /* ============================================================
@@ -1982,6 +2003,100 @@ function buildChapterNav(){
   });
 }
 
+/* ============================================================
+   YOUTUBE QUICK-LINK — each h2 heading gets a small "paste link"
+   box on the right. Pasting a YouTube URL and pressing ▶ embeds
+   an inline, resizable player directly under the heading. Links
+   are stored in the same EDITS store (key: "<blockKey>_yt") so
+   they ride along with the existing cloud sync.
+   ============================================================ */
+function extractYouTube(url){
+  let u;
+  try{ u = new URL(url.trim()); }catch(e){ return null; }
+  let id = '';
+  const host = u.hostname.replace(/^www\./,'');
+  if(host==='youtu.be'){
+    id = u.pathname.slice(1).split('/')[0];
+  } else if(host==='youtube.com' || host==='m.youtube.com' || host==='music.youtube.com'){
+    if(u.pathname==='/watch'){ id = u.searchParams.get('v') || ''; }
+    else if(u.pathname.startsWith('/embed/')){ id = u.pathname.split('/')[2] || ''; }
+    else if(u.pathname.startsWith('/shorts/')){ id = u.pathname.split('/')[2] || ''; }
+    else if(u.pathname.startsWith('/live/')){ id = u.pathname.split('/')[2] || ''; }
+  } else {
+    return null;
+  }
+  if(!/^[\w-]{6,20}$/.test(id)) return null;
+  const tRaw = u.searchParams.get('t') || u.searchParams.get('start') || '';
+  let start = 0;
+  if(/^\d+$/.test(tRaw)){ start = parseInt(tRaw,10); }
+  else{
+    const m = tRaw.match(/(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?/);
+    if(m) start = (parseInt(m[1]||0,10)*3600)+(parseInt(m[2]||0,10)*60)+parseInt(m[3]||0,10);
+  }
+  return { id, start };
+}
+
+function buildYtSection(key){
+  const ytKey = `${key}_yt`;
+  const tools = document.createElement('div');
+  tools.className = 'yt-tools';
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'yt-input';
+  input.placeholder = lang==='zh' ? '貼上 YouTube 連結…' : 'Paste YouTube link…';
+  const stored = EDITS[ytKey];
+  if(stored && stored.url) input.value = stored.url;
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'yt-toggle';
+  btn.textContent = '▶';
+  tools.appendChild(input);
+  tools.appendChild(btn);
+
+  const playerBox = document.createElement('div');
+  playerBox.className = 'yt-player-box hidden';
+
+  const persistUrl = ()=>{
+    const url = input.value.trim();
+    if(url){ saveEdit(ytKey, 'url', url); }
+  };
+  input.addEventListener('change', persistUrl);
+  input.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); input.blur(); } });
+
+  btn.addEventListener('click', ()=>{
+    const isOpen = !playerBox.classList.contains('hidden');
+    if(isOpen){
+      playerBox.classList.add('hidden');
+      playerBox.innerHTML = '';
+      btn.classList.remove('on');
+      btn.textContent = '▶';
+      return;
+    }
+    const url = input.value.trim();
+    if(!url){ showToast(lang==='zh' ? '請先貼上 YouTube 連結' : 'Paste a YouTube link first'); return; }
+    const info = extractYouTube(url);
+    if(!info){ showToast(lang==='zh' ? '看不懂這個連結格式' : "Couldn't read that link"); return; }
+    persistUrl();
+    playerBox.innerHTML = '';
+    const box = document.createElement('div');
+    box.className = 'yt-resizable';
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube.com/embed/${info.id}${info.start ? ('?start='+info.start) : ''}`;
+    iframe.title = 'YouTube video player';
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+    iframe.allowFullscreen = true;
+    iframe.loading = 'lazy';
+    box.appendChild(iframe);
+    playerBox.appendChild(box);
+    playerBox.classList.remove('hidden');
+    btn.classList.add('on');
+    btn.textContent = '✕';
+  });
+
+  return { tools, playerBox };
+}
+
 function buildContent(){
   const ch = CHAPTERS[chapterIdx];
   const content = document.getElementById('content');
@@ -2003,7 +2118,10 @@ function buildContent(){
       h2el.dataset.en = escapeHtml(d.en); h2el.dataset.zh = escapeHtml(d.zh);
       applyEdit(h2el, key);
       summary.appendChild(h2el);
+      const yt = buildYtSection(key);
+      summary.appendChild(yt.tools);
       det.appendChild(summary);
+      det.appendChild(yt.playerBox);
       content.appendChild(det);
       currentDetails = det;
       return;
@@ -2192,7 +2310,7 @@ document.getElementById('expandAllBtn').onclick = ()=>{
 // Clicking the heading text itself shouldn't toggle the section (so double-click-to-edit
 // works cleanly); clicking elsewhere on the summary bar (arrow, empty space) still toggles.
 document.addEventListener('click', e=>{
-  if(e.target.closest('summary h2.tr')) e.preventDefault();
+  if(e.target.closest('summary h2.tr') || e.target.closest('summary .yt-tools')) e.preventDefault();
 });
 
 // Floating "🖍 標記" button — appears when the user selects text inside a
@@ -2222,6 +2340,15 @@ document.addEventListener('selectionchange', ()=>{
   hlBtn.style.left = Math.max(8, Math.min(window.innerWidth-76, rect.left + rect.width/2 - 34)) + 'px';
   hlBtn.style.top = placeBelow ? (rect.bottom + 14) + 'px' : Math.max(8, rect.top - 42) + 'px';
   hlBtn.style.display = 'block';
+});
+
+// Back-to-top floating button.
+const backToTopBtn = document.getElementById('backToTopBtn');
+window.addEventListener('scroll', ()=>{
+  backToTopBtn.classList.toggle('show', window.scrollY > 400);
+}, {passive:true});
+backToTopBtn.addEventListener('click', ()=>{
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
 // Silent pull on load so edits made on another device show up automatically.
