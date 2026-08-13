@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHAK 雙語對照筆記</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Inter:wght@400;500;600&family=Noto+Serif+TC:wght@500;700&family=Noto+Sans+TC:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F1F3EE; --paper:#FAFAF6; --ink:#17242E; --ink-soft:#4B5A63; --hair:#D8DCD2;
+    --amber:#C98A2C; --amber-dark:#8C5E17; --amber-tint:#F6E7CC;
+    --teal:#2C6E6B; --teal-tint:#E1EEEC; --placard-bg:#17242E; --placard-text:#F4C978;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--bg); color:var(--ink); font-family:'Inter','Noto Sans TC',sans-serif; line-height:1.75; padding:0 0 6rem; }
+  .zh{font-family:'Noto Sans TC','Inter',sans-serif;}
+  h1,h2,h3{font-family:'Source Serif 4',serif; font-weight:600; letter-spacing:.01em;}
+  .zh h1,.zh h2,.zh h3{font-family:'Noto Serif TC',serif; font-weight:700;}
+
+  .topbar{ position:sticky; top:0; z-index:20; background:var(--placard-bg); color:#fff;
+    border-bottom:2px solid var(--amber); }
+  .topbar-row{ display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.7rem 1.5rem; flex-wrap:wrap; }
+  .topbar .title{ font-family:'JetBrains Mono',monospace; font-size:.78rem; letter-spacing:.08em; color:#B9C4CB; text-transform:uppercase; }
+  .switch{ display:flex; background:#0D1620; border:1px solid #33424D; border-radius:6px; overflow:hidden; }
+  .switch button{ appearance:none; border:none; background:transparent; color:#8CA0AB; font-family:'JetBrains Mono',monospace;
+    font-size:.8rem; font-weight:500; padding:.5rem 1rem; cursor:pointer; letter-spacing:.05em; transition:background .15s, color .15s; }
+  .switch button.active{ background:var(--amber); color:#1B1200; }
+  .hint{ font-size:.72rem; color:#7C8D97; font-family:'JetBrains Mono',monospace; }
+
+  .chapternav{ display:flex; gap:.4rem; padding:0 1.5rem .8rem; overflow-x:auto; scrollbar-width:thin; }
+  .chapternav::-webkit-scrollbar{ height:5px; }
+  .chapternav::-webkit-scrollbar-thumb{ background:#33424D; border-radius:4px; }
+  .chip{ flex:0 0 auto; appearance:none; border:1px solid #33424D; background:#0D1620; color:#9FB0BA;
+    font-family:'JetBrains Mono',monospace; font-size:.74rem; padding:.4rem .8rem; border-radius:999px;
+    cursor:pointer; white-space:nowrap; transition:all .15s; }
+  .chip.active{ background:var(--amber); border-color:var(--amber); color:#1B1200; font-weight:600; }
+  .chip:hover:not(.active){ border-color:var(--amber); color:var(--amber); }
+
+  .wrap{ max-width:760px; margin:0 auto; padding:2.5rem 1.5rem 0; }
+  .masthead{ text-align:left; margin-bottom:2.5rem; padding-bottom:1.5rem; border-bottom:1px solid var(--hair); }
+  .masthead .eyebrow{ font-family:'JetBrains Mono',monospace; font-size:.75rem; color:var(--amber-dark); letter-spacing:.12em; text-transform:uppercase; margin:0 0 .5rem; }
+  .masthead h1{ font-size:2.1rem; margin:0 0 .4rem; }
+  .masthead .sub{ color:var(--ink-soft); font-size:.95rem; }
+  section{ margin-bottom:2.2rem; }
+  h2{ font-size:1.35rem; margin:2.4rem 0 .9rem; padding-bottom:.4rem; border-bottom:1px solid var(--hair); }
+  h3{ font-size:1.05rem; margin:1.5rem 0 .6rem; color:var(--teal); }
+  p.tr, li.tr{ position:relative; cursor:help; padding:.15rem .3rem; margin:0 0 .9rem -.3rem; border-radius:4px; transition:background .12s; }
+  li.tr{ margin-bottom:.45rem; }
+  p.tr:hover, li.tr:hover{ background:var(--amber-tint); }
+  p.tr:hover::before, li.tr:hover::before{ content:""; position:absolute; left:-2px; top:0; bottom:0; width:3px; background:var(--amber); border-radius:2px; }
+  ul{ padding-left:1.3rem; margin:.6rem 0 1rem; }
+  strong{ font-weight:600; color:var(--ink); }
+  .zh strong{ font-weight:700; }
+  table{ width:100%; border-collapse:collapse; margin:1rem 0 1.4rem; font-size:.9rem; }
+  th,td{ border:1px solid var(--hair); padding:.55rem .7rem; text-align:left; vertical-align:top; }
+  figure.fig{ margin:1.4rem 0; padding:0; }
+  figure.fig img{ width:100%; height:auto; display:block; border:1px solid var(--hair); border-radius:6px; background:#fff; }
+  figure.fig figcaption{ margin-top:.5rem; font-size:.85rem; color:var(--ink-soft); cursor:help; padding:.15rem .3rem; border-radius:4px; }
+  figure.fig figcaption:hover{ background:var(--amber-tint); }
+  figure.fig figcaption .tag{ font-family:'JetBrains Mono',monospace; font-size:.7rem; color:var(--amber-dark); margin-right:.4rem; }
+  th{ background:var(--teal-tint); color:var(--teal); font-weight:600; font-size:.8rem; text-transform:uppercase; letter-spacing:.03em; }
+  td.tr{ cursor:help; }
+  td.tr:hover{ background:var(--amber-tint); }
+  #tooltip{ position:fixed; z-index:50; max-width:340px; background:var(--placard-bg); color:var(--placard-text);
+    border:1px solid var(--amber); border-radius:6px; padding:.65rem .8rem; font-size:.85rem; line-height:1.55;
+    box-shadow:0 6px 18px rgba(0,0,0,.22); pointer-events:none; opacity:0; transform:translateY(4px); transition:opacity .1s, transform .1s; }
+  #tooltip.show{ opacity:1; transform:translateY(0); }
+  #tooltip .tag{ display:block; font-family:'JetBrains Mono',monospace; font-size:.65rem; color:var(--amber); letter-spacing:.1em; margin-bottom:.3rem; text-transform:uppercase; }
+  #tooltip.zh-font{ font-family:'Noto Sans TC',sans-serif; }
+  .navfoot{ max-width:760px; margin:2rem auto 0; padding:0 1.5rem; display:flex; justify-content:space-between; gap:1rem; }
+  .navfoot button{ appearance:none; border:1px solid var(--hair); background:var(--paper); color:var(--ink);
+    font-family:'JetBrains Mono',monospace; font-size:.78rem; padding:.55rem 1rem; border-radius:6px; cursor:pointer; }
+  .navfoot button:hover{ border-color:var(--amber); color:var(--amber-dark); }
+  .navfoot button:disabled{ opacity:.35; cursor:default; }
+  footer{ max-width:760px; margin:2rem auto 0; padding:1.2rem 1.5rem 0; border-top:1px solid var(--hair); font-size:.8rem; color:var(--ink-soft); font-family:'JetBrains Mono',monospace; }
+  @media (max-width:600px){ .masthead h1{ font-size:1.6rem; } }
+</style>
+</head>
+<body class="zh">
+
+<div class="topbar">
+  <div class="topbar-row">
+    <span class="title">FAA-H-8083-25C</span>
+    <div class="switch">
+      <button id="btn-zh" class="active">中文</button>
+      <button id="btn-en">EN</button>
+    </div>
+    <span class="hint" id="hoverHint">滑鼠停在文字上看英文原文</span>
+  </div>
+  <div class="chapternav" id="chapternav"></div>
+</div>
+
+<div class="wrap">
+  <div class="masthead">
+    <p class="eyebrow tr" data-en="Pilot's Handbook of Aeronautical Knowledge" data-zh="飛行員航空知識手冊">Pilot's Handbook of Aeronautical Knowledge</p>
+    <h1 id="chapterTitle"></h1>
+    <p class="sub" id="chapterSub"></p>
+  </div>
+  <section id="content"></section>
+  <div class="navfoot">
+    <button id="prevBtn">← 上一章</button>
+    <button id="nextBtn">下一章 →</button>
+  </div>
+</div>
+
+<footer class="tr" data-en="Source: FAA-H-8083-25C (2023), U.S. Department of Transportation / Federal Aviation Administration — public domain U.S. Government work." data-zh="來源：FAA-H-8083-25C（2023），美國交通部／聯邦航空總署 — 美國政府著作，屬公版。">來源：FAA-H-8083-25C（2023），美國交通部／聯邦航空總署 — 美國政府著作，屬公版。</footer>
+
+<div id="tooltip"></div>
+
+<script>
+/* ============================================================
+   CHAPTERS ARRAY — append new chapter objects here as they're
+   produced. Each chapter: { id, titleEn, titleZh, subEn, subZh, blocks:[...] }
+   Block types: h2 / h3 / p / li / table
+   ============================================================ */
+const CHAPTERS = [
+{
+  id:'ch1', num:1,
+  titleEn:'Chapter 1 — Introduction To Flying',
+  titleZh:'第一章 — 飛行導論',
+  subEn:'Original pages 1-1 to 1-24. Hover any paragraph for the English source text.',
+  subZh:'原文頁碼 1-1 至 1-24。滑鼠移到任一段落上可看英文原文。',
+  blocks:[
+{t:'h2', en:'History of Flight', zh:'飛行的歷史'},
+{t:'p', en:'From prehistoric times, humans watched birds and longed to imitate flight, but lacked the power to do so. During the 1500s, Leonardo da Vinci sketched proposed flying machines based on birdlike wings, but the ideas were flawed. By 1655, Robert Hooke concluded the human body lacks the strength to power artificial wings and that flight would require artificial propulsion.',
+ zh:'自史前時代起，人類就觀察鳥類飛行並渴望模仿，卻缺乏達成的能力。1500年代，達文西在筆記本畫滿仿鳥翼的飛行器草圖，但構想有根本缺陷。到了1655年，羅伯特·虎克（Robert Hooke）得出結論：人體肌力不足以驅動人工翅膀，飛行必須依賴人工推進動力。'},
+{t:'p', en:'In 1783, the first manned hot air balloon (Joseph and Étienne Montgolfier) flew for 23 minutes; ten days later Jacques Charles flew the first gas balloon. Balloons solved lift but not control of speed and direction — that answer came from the kite, introduced to the West in the 13th century.',
+ zh:'1783年，第一次載人熱氣球飛行（由蒙格菲兄弟 Joseph 與 Étienne 執行）持續了23分鐘；十天後 Jacques Charles 完成第一次氣體氣球飛行。氣球解決了升力問題，卻無法控制速度與方向——答案來自風箏，這項工具在13世紀傳入西方。'},
+{t:'p', en:'Sir George Cayley ("Father of Aerial Navigation") studied kite-shaped wings, discovered the basic principles of modern aeronautics, built the first successful flying model, and tested the first full-size man-carrying glider.',
+ zh:'喬治·凱萊爵士（Sir George Cayley，「航空之父」）研究風箏狀機翼，發現了現代航空學的基本原理，建造出第一具成功的飛行模型，並試飛了第一架全尺寸載人滑翔機。'},
+{t:'p', en:'Wilbur and Orville Wright achieved powered, controlled flight at Kitty Hawk, NC, on December 17, 1903, after 4 years of experimenting with kites, a homemade wind tunnel, and various engines. By the afternoon of the 17th they had flown a total of 98 seconds across four flights.',
+ zh:'萊特兄弟（Wilbur 與 Orville）在歷經4年的風箏、自製風洞與各種引擎實驗後，於1903年12月17日在北卡羅來納州小鷹鎮（Kitty Hawk）完成有動力、可操控的飛行。到當天下午為止，四次飛行累計飛行時間達98秒。'},
+
+{t:'h2', en:'History of the Federal Aviation Administration (FAA)', zh:'聯邦航空總署（FAA）沿革'},
+{t:'p', en:'Early aviation had no government oversight; flights were mostly for sport. The St. Petersburg–Tampa Airboat Line (1914) proved commercial passenger air travel was viable — the first scheduled airline flight in the U.S., 21 miles, 23 minutes, first paying passenger A. C. Pheil ($400 winning bid).',
+ zh:'早期航空業沒有政府監管，飛行多半是為了運動娛樂。聖彼得堡—坦帕水上飛機航線（1914年）證明了商業客運航空的可行性——這是美國第一條定期航班，全程21英里、飛行23分鐘，第一位付費乘客是以400美元標得座位的 A. C. Pheil。'},
+{t:'h3', en:'Transcontinental Air Mail Route', zh:'橫貫大陸航空郵路'},
+{t:'li', en:'First airmail flight: May 15, 1918 (New York–Washington, DC)', zh:'第一次航空郵件飛行：1918年5月15日（紐約—華盛頓特區）'},
+{t:'li', en:'USPS took control of airmail routes in August 1918', zh:'美國郵政署於1918年8月接管航空郵路'},
+{t:'li', en:'Transcontinental Mail Route: San Francisco–New York, 2,612 miles, 13 stops', zh:'橫貫大陸郵路：舊金山—紐約，全長2,612英里，設13個停靠站'},
+{t:'li', en:'Air Commerce Act (May 20, 1926) — cornerstone of U.S. aviation law; charged the Secretary of Commerce with fostering air commerce, air traffic rules, licensing pilots, certificating aircraft, and airways/navaids', zh:'《航空商業法》（1926年5月20日）——美國航空法的基石，授權商務部長負責促進航空商業、訂定飛航規則、發放飛行員執照、飛機適航認證與航路／助航設施'},
+{t:'li', en:'Created the Aeronautics Branch of the Dept. of Commerce', zh:'成立商務部航空處（Aeronautics Branch）'},
+{t:'h3', en:'Federal Certification of Pilots and Mechanics', zh:'飛行員與機工的聯邦證照制度'},
+{t:'li', en:'First pilot license issued April 6, 1927 to William P. MacCracken, Jr.', zh:'1927年4月6日核發第一張飛行員執照，由 William P. MacCracken, Jr. 取得'},
+{t:'li', en:'First federal aircraft mechanic license issued ~3 months later', zh:'約3個月後核發第一張聯邦飛機機工執照'},
+{t:'li', en:'First airworthiness type certificate: March 29, 1927 (Buhl Airster CA-3)', zh:'第一張適航型別證書：1927年3月29日（Buhl Airster CA-3型機）'},
+{t:'li', en:'1934: Aeronautics Branch renamed Bureau of Air Commerce', zh:'1934年：航空處更名為航空商業局（Bureau of Air Commerce）'},
+{t:'h3', en:'The Civil Aeronautics Act of 1938', zh:'1938年《民航法》'},
+{t:'p', en:'Created the Civil Aeronautics Authority (CAA), later split by FDR into: Civil Aeronautics Administration (CAA) — ATC, airman/aircraft certification, rule enforcement, new airways; and Civil Aeronautics Board (CAB) — rulemaking, accident investigation, economic regulation of airlines.',
+ zh:'成立民航局（Civil Aeronautics Authority, CAA），後經羅斯福總統拆分為兩個機構：民航管理處（CAA）——負責航管、飛行員／飛機證照、法規執行、新航路；以及民航委員會（CAB）——負責訂定法規、事故調查、航空公司經濟監管。'},
+{t:'h3', en:'The Federal Aviation Act of 1958', zh:'1958年《聯邦航空法》'},
+{t:'p', en:'Created the independent Federal Aviation Agency (FAA), absorbing CAA\'s roles and CAB\'s rulemaking authority. Gave FAA full control of the common civil-military air navigation/ATC system. First Administrator: Gen. Elwood "Pete" Quesada (1959–1961).',
+ zh:'成立獨立的聯邦航空署（Federal Aviation Agency, FAA），接收CAA的職責與CAB的法規制定權，並賦予FAA對軍民共用飛航導航／航管系統的完全控制權。首任署長為 Elwood「Pete」Quesada 將軍（任期1959–1961年）。'},
+{t:'h3', en:'Department of Transportation (DOT)', zh:'交通部（DOT）'},
+{t:'li', en:'Established Oct 15, 1966; began operations April 1, 1967', zh:'1966年10月15日成立；1967年4月1日開始運作'},
+{t:'li', en:'Federal Aviation Agency renamed Federal Aviation Administration (FAA)', zh:'聯邦航空署更名為聯邦航空總署（FAA）'},
+{t:'li', en:'CAB\'s accident-investigation role moved to the new NTSB', zh:'CAB的事故調查職責移交新成立的國家運輸安全委員會（NTSB）'},
+{t:'li', en:'Post-9/11: security duties transferred to the new Department of Homeland Security (DHS)', zh:'911事件後：安全職責移交新成立的國土安全部（DHS）'},
+{t:'h3', en:'ATC Automation', zh:'航管自動化'},
+{t:'li', en:'Mid-1970s: semi-automated ATC (radar + computer)', zh:'1970年代中期：半自動化航管系統（雷達＋電腦）'},
+{t:'li', en:'National Airspace System (NAS) Plan unveiled January 1982', zh:'1982年1月公布國家空域系統（NAS）計畫'},
+{t:'h3', en:'The PATCO Strike', zh:'PATCO 罷工事件'},
+{t:'li', en:'Illegal strike, August 1981 → government dismissed 11,000+ controllers, decertified PATCO', zh:'1981年8月非法罷工 → 政府解雇逾11,000名航管員，並取消PATCO工會資格'},
+{t:'h3', en:'The Airline Deregulation Act of 1978', zh:'1978年《航空公司解除管制法》'},
+{t:'li', en:'Removed CAB\'s control of fares, routes, and schedules', zh:'撤除CAB對票價、航線與班表的管制權'},
+{t:'li', en:'CAB formally abolished in 1984', zh:'CAB於1984年正式廢止'},
+
+{t:'h2', en:'The Role of the FAA', zh:'FAA 的職能'},
+{t:'h3', en:'The Code of Federal Regulations (CFR)', zh:'聯邦法規彙編（CFR）'},
+{t:'p', en:'FAA regulations sit under Title 14 CFR — "Aeronautics and Space."', zh:'FAA的法規歸類於 Title 14 CFR——「航空與太空」篇。'},
+{t:'li', en:'14 CFR Part 61 — certification of pilots, flight instructors, ground instructors (eligibility, knowledge, flight proficiency, training/testing requirements)', zh:'14 CFR Part 61——飛行員、飛行教官、地面教官證照（資格條件、知識、飛行熟練度、訓練／測驗要求）'},
+{t:'li', en:'14 CFR Part 91 — general flight rules, VFR, IFR', zh:'14 CFR Part 91——一般飛航規則、目視飛行規則（VFR）、儀器飛行規則（IFR）'},
+{t:'li', en:'14 CFR Part 43 — maintenance, preventive maintenance, rebuilding, alterations', zh:'14 CFR Part 43——維修、預防性維修、重建、改裝'},
+{t:'h3', en:'Primary Locations / Field Offices', zh:'主要據點／地方辦事處'},
+{t:'li', en:'HQ: Washington, DC; 9 regional offices', zh:'總部位於華盛頓特區；設有9個區域辦事處'},
+{t:'li', en:'Mike Monroney Aeronautical Center (MMAC) — Oklahoma City, OK (training/logistics)', zh:'Mike Monroney 航空中心（MMAC）——位於奧克拉荷馬市（負責訓練與後勤）'},
+{t:'li', en:'William J. Hughes Technical Center (WJHTC) — Atlantic City, NJ (R&D/test)', zh:'William J. Hughes 技術中心（WJHTC）——位於紐澤西州大西洋城（負責研發與測試）'},
+{t:'li', en:'Flight Standards District Office (FSDO) — ~80 offices, main public-facing contact point; staffed by Aviation Safety Inspectors (ASIs)', zh:'飛航標準地區辦事處（FSDO）——約80處，是對外服務的主要窗口，由航空安全檢查員（ASI）負責'},
+{t:'h3', en:'FAA Safety Team (FAASTeam)', zh:'FAA安全團隊（FAASTeam）'},
+{t:'p', en:'Replaced the older Aviation Safety Program (ASP); coordinated effort to reduce accidents via harder-to-fix causes. Managed regionally by the Regional FAASTeam Manager (RFM). Resources at faasafety.gov.',
+ zh:'取代舊有的航空安全計畫（ASP），以協調方式針對更難根除的事故成因進行改善，由各區域的FAASTeam經理（RFM）負責管理，相關資源可見 faasafety.gov。'},
+{t:'h3', en:'FAA Reference Material', zh:'FAA 參考資料'},
+{t:'table', head:['Document','Purpose'], headZh:['文件','用途'], rows:[
+  {en:'AIM (Aeronautical Information Manual)', zh:'AIM（航空資訊手冊）', en2:'Official guide to flight info & ATC procedures', zh2:'飛航資訊與航管程序的官方指南'},
+  {en:'Handbooks', zh:'各類手冊', en2:'Aircraft / aviation / examiner-inspector categories', zh2:'分為飛機、航空、考官／檢查員三大類'},
+  {en:'Advisory Circulars (ACs)', zh:'諮詢通告（AC）', en2:'Informational, non-regulatory guidance', zh2:'提供資訊性質的非強制性指引'},
+  {en:'POH (Pilot Operating Handbook)', zh:'POH（飛行員操作手冊）', en2:'Manufacturer-specific, FAA-approved, per aircraft serial number', zh2:'由製造商提供、經FAA核准，依飛機序號個別對應'}
+]},
+{t:'p', en:'AC numbering example: 61-65E — first part = subject area (matches CFR part), dash number = sequence within subject, trailing letter = revision (no letter = original).',
+ zh:'AC編號範例：61-65E——前段數字代表主題領域（對應CFR篇章），破折號後數字代表該主題內的序號，末尾字母代表修訂版次（無字母即為原始版本）。'},
+{t:'h3', en:'NOTAMs (Notices to Airmen)', zh:'飛航公告（NOTAM）'},
+{t:'p', en:'Time-critical aeronautical info not known early enough for normal charts/publications.', zh:'指來不及編入正常航圖或出版品、具時效性的重要飛航資訊。'},
+{t:'p', en:'4 categories: NOTAM (D), FDC NOTAMs, Pointer NOTAMs, Military NOTAMs', zh:'共4大類：NOTAM (D)、FDC NOTAM、指標型NOTAM、軍方NOTAM'},
+{t:'p', en:'NOTAM (D) required keywords: RWY, TWY, RAMP, APRON, AD, OBST, NAV, COM, SVC, AIRSPACE, (U), (O)', zh:'NOTAM (D) 必要關鍵字：RWY、TWY、RAMP、APRON、AD、OBST、NAV、COM、SVC、AIRSPACE、(U)、(O)'},
+{t:'p', en:'FDC NOTAMs = regulatory in nature: interim IFR procedures, airway/airspace changes, TFRs, presidential TFRs, Part 139 airport condition changes, snow/glideslope, air defense emergencies, laser activity, etc.',
+ zh:'FDC NOTAM 屬於法規性質：包含臨時儀器飛行程序、航路／空域變更、暫時飛航限制（TFR）、總統維安TFR、Part 139機場狀況變更、積雪／滑降台狀況、防空緊急狀況、雷射活動等。'},
+{t:'p', en:'Composition order: ! → accountability location → affected location → KEYWORD → surface ID (optional) → condition → time (UTC, 10-digit: YYMMDDHHmm)',
+ zh:'組成順序：驚嘆號(!) → 責任地點 → 受影響地點 → 關鍵字 → 表面代碼（選填） → 狀況內容 → 時間（UTC，10位數：年月日時分）'},
+{t:'h3', en:'Safety Program Airmen Notification System (SPANS)', zh:'安全計畫飛行員通知系統（SPANS）'},
+{t:'p', en:'Online seminar/event notification system (launched 2004), replacing the old paper mail system — faasafety.gov/spans.',
+ zh:'線上研討會／活動通知系統（2004年上線），取代舊有的紙本郵寄通知方式——網址為 faasafety.gov/spans。'},
+
+{t:'h2', en:'Aircraft Classifications and Ultralight Vehicles', zh:'航空器分類與超輕型載具'},
+{t:'p', en:'Aircraft (14 CFR 1.1): device used/intended for flight in the air. Ultralight vehicle (14 CFR 103): powered <254 lb empty weight; unpowered <155 lb. Separate, simpler cert/registration rules; no pilot certificate required.',
+ zh:'「航空器」（14 CFR 1.1定義）：指用於或意圖用於空中飛行的裝置。「超輕型載具」（14 CFR 103定義）：有動力者空機重量須低於254磅、無動力者須低於155磅，適用較簡化的認證／註冊規則，且不需飛行員執照。'},
+{t:'p', en:'Key category definitions (14 CFR 1.1): Airplane, Glider, Lighter-than-air (Airship, Balloon), Powered-lift, Powered parachute, Rocket, Rotorcraft (Gyroplane, Helicopter), Weight-shift-control.',
+ zh:'主要類別定義（14 CFR 1.1）：飛機、滑翔機、輕於空氣航空器（飛船、氣球）、動力升力機、動力降落傘、火箭、旋翼機（自轉旋翼機、直升機）、重心操控式飛行器。'},
+{t:'p', en:'Size/weight groupings: Large aircraft — >12,500 lb max certificated takeoff weight; Small aircraft — ≤12,500 lb; Light-sport aircraft (LSA) — per 14 CFR 1.1 definition.',
+ zh:'依尺寸／重量分類：大型航空器——最大認證起飛重量超過12,500磅；小型航空器——12,500磅以下；輕型運動航空器（LSA）——依14 CFR 1.1定義認定。'},
+
+{t:'h2', en:'Pilot Certifications', zh:'飛行員證照'},
+{t:'p', en:'Certificates carry privileges (where/when/with whom/what aircraft) and limitations (imposed if not all skills demonstrated). Endorsements are written/signed authorizations (usually by a CFI) certifying specific training was received.',
+ zh:'每種證照都附帶「權限」（可在何時何地、與誰同行、駕駛何種航空器）與「限制」（若未能展現全部技能，主管機關可能施加限制）。「背書」（endorsement）則是書面簽署的授權文件（通常由CFI簽發），證明持證人已接受特定訓練。'},
+{t:'h3', en:'Sport Pilot', zh:'運動飛行員'},
+{t:'li', en:'Min hours: Airplane 20 · Powered Parachute 12 · Weight-Shift 20 · Glider 10 · Gyroplane 20 · Airship 20 · Balloon 7', zh:'最低時數：飛機20小時・動力降落傘12小時・重心操控式20小時・滑翔機10小時・自轉旋翼機20小時・飛船20小時・氣球7小時'},
+{t:'li', en:'Age: 16 to solo (14 for glider/balloon); 17 to test (16 for glider/balloon)', zh:'年齡：單飛需滿16歲（滑翔機／氣球14歲）；考證需滿17歲（滑翔機／氣球16歲）'},
+{t:'li', en:'Medical: valid driver\'s license suffices', zh:'體格檢定：持有效駕照即可'},
+{t:'li', en:'Limits: no Class A; no Class B/C/D without training+endorsement; no international without foreign permission; no towing; no compensation/hire; no business use',
+ zh:'限制：不得飛入A類空域；未經訓練及背書不得飛入B/C/D類空域；未經外國航空主管機關許可不得飛出美國；不得拖曳物體；不得收費載客；不得用於商業用途'},
+{t:'li', en:'Certificate issued without category/class ratings — CFI endorsement in logbook covers authorized category/class instead',
+ zh:'證照本身不列類別／等級——改由CFI在飛行紀錄簿中背書授權的類別／等級'},
+{t:'h3', en:'Recreational Pilot', zh:'休閒飛行員'},
+{t:'li', en:'Age 17+; 3rd-class medical', zh:'年滿17歲；須持第三級體格檢定證明'},
+{t:'li', en:'30 hrs min: 15 dual + 2 en route + 3 test-prep + 3 solo', zh:'最低30小時：15小時雙飛＋2小時航路訓練＋3小時考前準備＋3小時單飛'},
+{t:'li', en:'Cross-country limited to 50 NM from departure (extendable with training, 61.101(c)); no night flying; no airspace requiring ATC comms',
+ zh:'越野飛行限制在起飛機場50浬範圍內（經額外訓練可放寬，見61.101(c)）；不得夜航；不得飛入須與航管通話的空域'},
+{t:'li', en:'Limit: may not be PIC of aircraft certificated for >4 occupants or >1 powerplant; max 1 passenger',
+ zh:'限制：不得擔任核定乘員數超過4人或動力裝置超過1具之航空器的機長；最多可載1名乘客'},
+{t:'h3', en:'Private Pilot', zh:'私人飛行員'},
+{t:'p', en:'Flies for pleasure/personal business, not compensated (with narrow exceptions); pro-rata expense sharing with passengers OK. Part 61 minimum: 40 hrs (20 dual + 10 solo).',
+ zh:'以娛樂／個人事務為目的飛行，不得因飛行收取報酬（僅少數例外情形除外）；可與乘客按比例分攤飛行費用。依Part 61規定最低時數為40小時（20小時雙飛＋10小時單飛）。'},
+{t:'h3', en:'Commercial Pilot', zh:'職業飛行員'},
+{t:'p', en:'May be compensated for flying. Cannot fly IMC without instrument rating; without instrument rating, limited to daytime flight within 50 NM for hire. Must be able to operate a complex aircraft (retractable gear, movable flaps, controllable-pitch prop) — 61.31(e).',
+ zh:'可因飛行收取報酬。未持有儀器等級不得於IMC（儀器氣象條件）下飛行；若無儀器等級，收費飛行僅限白天且距離不超過50浬。須具備操作「複雜航空器」（可收放起落架、可動襟翼、可調變距螺旋槳）的能力——見61.31(e)。'},
+{t:'h3', en:'Airline Transport Pilot (ATP)', zh:'航線運輸駕駛員（ATP）'},
+{t:'p', en:'Highest certification level; prerequisite for PIC/SIC of scheduled airline ops (and PIC for select charter/fractional). Min 1,500 hrs; age 23+; restricted-privilege ATP (SIC only) available at reduced hours, min age 21.',
+ zh:'最高等級的證照；是擔任定期航班機長／副機長（及部分包機／分時共有營運機長）的必要條件。最低時數1,500小時；年齡須滿23歲；另有限制權限ATP（僅限副機長），可依較少時數取得，最低年齡21歲。'},
+
+{t:'h2', en:'Selecting a Flight School', zh:'選擇飛行學校'},
+{t:'p', en:'Training conducted under 14 CFR Part 142 (training centers/flight academies — voluntary FAA cert, mainly airline/commercial contract training), Part 141 (certificated schools, approved curriculum/TCO, can shorten required hours — e.g., Private Pilot min 35 hrs vs. 40 under Part 61), or Part 61 (individual instructors/non-certificated schools — flexible but less structured).',
+ zh:'飛行訓練依循三種規範：14 CFR Part 142（訓練中心／飛行學院——自願申請FAA認證，主要承接航空公司／商業合約訓練）、Part 141（經認證學校，須採用經核准的課程／TCO，可縮短所需時數，例如私人飛行員最低時數為35小時，比Part 61的40小時少）、或Part 61（個別教官／未認證學校——較有彈性但結構性較弱）。'},
+{t:'p', en:'National average: most private pilots actually need 60–75 hrs regardless of minimums.', zh:'全國平均而言，大多數私人飛行員實際所需時數落在60至75小時之間，並非只達到最低門檻。'},
+{t:'p', en:'Choosing a CFI — responsibilities include: orienting the student to scenario-based training, building the student into a confident planner/self-evaluator, diagnosing learning difficulties, evaluating progress/records, continuous review.',
+ zh:'選擇CFI（合格飛行教官）——其職責包含：引導學生熟悉情境式訓練、培養學生成為有自信的飛行規劃者／自我評估者、診斷學習困難、評估學習進度並保存紀錄、持續複習。'},
+
+{t:'h2', en:'The Student Pilot', zh:'學生飛行員'},
+{t:'h3', en:'Basic Requirements', zh:'基本資格'},
+{t:'li', en:'Age 16+ (14+ for glider/balloon)', zh:'年滿16歲（滑翔機／氣球為14歲）'},
+{t:'li', en:'Read/speak/write/understand English', zh:'能夠閱讀、說、寫及理解英語'},
+{t:'li', en:'Student Pilot Certificate required before solo; issued via IACRA, plastic card, no expiration (old paper certs expire on their printed date and can\'t be renewed — must reapply under new process)',
+ zh:'單飛前須取得學生飛行員證；透過IACRA系統核發，為塑膠卡片形式且無到期日（舊式紙本證照按印製日期到期且不得展延——須依新流程重新申請）'},
+{t:'li', en:'Solo authorization now goes in the logbook endorsement, not on the certificate itself', zh:'單飛授權現改為記錄在飛行紀錄簿的背書欄位，而非直接寫在證照上'},
+{t:'h3', en:'Medical Certification', zh:'體格檢定證明'},
+{t:'li', en:'Required for airplane/helicopter/gyroplane/airship; not required for glider/balloon (statement of no medical defect instead)',
+ zh:'飛機／直升機／自轉旋翼機／飛船須具備；滑翔機／氣球則不需要（改以聲明無醫療缺陷取代）'},
+{t:'li', en:'Sport pilot: driver\'s license suffices, no medical exam', zh:'運動飛行員：持駕照即可，不需體檢'},
+{t:'li', en:'Issued by an FAA-Authorized AME (~6,000 nationwide)', zh:'由FAA授權的航空體檢醫師（AME）核發（全美約6,000位）'},
+{t:'li', en:'Classes: 1st (ATP) · 2nd (Commercial) · 3rd (Student/Recreational/Private)', zh:'等級：第一級（ATP用）・第二級（職業飛行員用）・第三級（學生／休閒／私人飛行員用）'},
+{t:'li', en:'Apply via MedXPress', zh:'透過MedXPress系統申請'},
+{t:'h3', en:'Student Pilot Solo Requirements', zh:'學生飛行員單飛條件'},
+{t:'p', en:'No minimum hours/knowledge just to get the Student Pilot Certificate — but minimum aeronautical knowledge/experience is required before a CFI can endorse for solo.',
+ zh:'取得學生飛行員證本身沒有最低時數／知識門檻——但CFI要背書允許單飛前，學生仍須具備最低限度的航空知識與飛行經驗。'},
+
+{t:'h2', en:'Becoming a Pilot', zh:'成為飛行員的歷程'},
+{t:'p', en:'Governed by 14 CFR Part 61: Recreational (Subpart D) · Private (Subpart E) · Sport (Subpart J).', zh:'依循14 CFR Part 61規範：休閒飛行員（Subpart D）・私人飛行員（Subpart E）・運動飛行員（Subpart J）。'},
+{t:'p', en:'4 steps to learning a maneuver: 1) CFI introduces/demonstrates 2) CFI talks student through it 3) Student practices under supervision 4) CFI authorizes solo practice',
+ zh:'學習一項飛行動作的四個步驟：1）CFI講解並示範 2）CFI口頭引導學生操作 3）學生在CFI監督下練習 4）CFI授權學生自行單飛練習'},
+
+{t:'h2', en:'Knowledge and Skill Tests', zh:'學科與術科測驗'},
+{t:'h3', en:'Knowledge Test', zh:'學科測驗'},
+{t:'p', en:'Computer-based, multiple-choice. FAA recommends taking it after the solo cross-country flight, so real operational experience helps. CFI decides readiness.',
+ zh:'採電腦化多重選擇題形式。FAA建議在完成單飛越野飛行後再應試，讓實際操作經驗有助於作答。是否已準備好應試由CFI判斷。'},
+{t:'h3', en:'Practical Test', zh:'術科測驗'},
+{t:'p', en:'Standards: PTS (older) being replaced by ACS (Airman Certification Standards) — ACS adds task-specific knowledge + risk-management elements to each PTS Area of Operation/Task.',
+ zh:'測驗標準：舊有的PTS（術科測驗標準）正逐步由ACS（飛行員能力標準）取代——ACS在PTS原有的每個作業領域／項目中，加入了特定任務知識與風險管理要素。'},
+{t:'p', en:'Documents applicant must present: FAA Form 8710-1 (8710.11 for sport pilot) with CFI recommendation; Airman Knowledge Test Report (passing grade); Medical certificate (n/a glider/balloon) + Student Pilot Certificate + endorsed logbook; Logbook records; Part 141 graduation certificate (if applicable).',
+ zh:'應試人須出示的文件：FAA表格8710-1（運動飛行員為8710.11），並附CFI推薦；學科測驗成績報告（須達及格標準）；體格檢定證明（滑翔機／氣球免附）＋學生飛行員證＋已背書的飛行紀錄簿；飛行紀錄簿本身；Part 141結業證書（如適用）。'},
+{t:'p', en:'Aircraft documents to produce: registration, airworthiness certificate, operating limitations/AFM, equipment list, weight & balance data, maintenance records, applicable ADs.',
+ zh:'須提供的航空器文件：登記證、適航證、操作限制／飛航手冊、裝備清單、重量平衡資料、維修紀錄、適用的適航指令（AD）。'},
+{t:'p', en:'Administered by: FAA ASIs or DPEs (Designated Pilot Examiners) — DPEs handle the majority of private/commercial practical tests; may charge a reasonable fee (no charge if administered by an FAA inspector directly).',
+ zh:'施測單位：FAA航空安全檢查員（ASI）或指定考官（DPE）——大多數私人／職業飛行員的術科測驗由DPE施測，可收取合理費用（若由FAA檢查員直接施測則不收費）。'},
+{t:'h3', en:'Role of the CFI', zh:'CFI（合格飛行教官）的角色'},
+{t:'p', en:'Full responsibility for student training; "cornerstone of aviation safety." Must model correct habits — students consciously/unconsciously imitate their instructor\'s flying.',
+ zh:'對學生訓練負全責，被視為「航空安全的基石」。教官必須樹立正確的飛行習慣典範——學生會有意或無意地模仿教官的飛行方式。'},
+{t:'h3', en:'Role of the DPE', zh:'DPE（指定考官）的角色'},
+{t:'p', en:'Appointed under 14 CFR 183.23; must be technically qualified, hold relevant ratings, current per 61.56/61.57/61.58, valid medical, current CFI (if required). Administers tests to the same standard as an FAA ASI.',
+ zh:'依14 CFR 183.23指派；須具備技術資格、持有相關等級、符合61.56／61.57／61.58的最新規定、持有效體檢證明、視需要保有CFI資格。施測標準須與FAA ASI一致。'},
+
+{t:'h2', en:'Chapter Summary', zh:'本章摘要'},
+{t:'p', en:'FAA safety approach = "safety is a learned behavior." Emphasis on flight instructor responsibility for safe habits (collision avoidance/scanning, checklists, runway incursion avoidance, positive transfer of controls, workload management) and Scenario-Based Training (SBT), tied into ADM, risk management, and CRM — covered in Chapter 2.',
+ zh:'FAA的安全理念認為「安全是後天習得的行為」。本章強調飛行教官在建立安全習慣上的責任（防撞／目視掃描、檢查表使用、跑道侵入防範、操縱權正確交接、工作負荷管理），並帶出「情境式訓練」（SBT），並與航空決策（ADM）、風險管理、機組資源管理（CRM）相互連結——這些主題將在第二章進一步說明。'}
+  ]
+},
+{
+  id:'ch2', num:2,
+  titleEn:'Chapter 2 — Aeronautical Decision-Making',
+  titleZh:'第二章 — 航空決策（ADM）',
+  subEn:'Original pages 2-1 to 2-32. High relevance to CRM / risk management interview scenarios.',
+  subZh:'原文頁碼 2-1 至 2-32。與CRM／風險管理面試情境題高度相關。',
+  blocks:[
+{t:'p', en:'ADM = a systematic approach to the mental process pilots use to consistently determine the best course of action given a set of circumstances — what a pilot intends to do based on the latest available information.',
+ zh:'ADM（航空決策）＝飛行員在特定情境下，用來持續判斷最佳行動方案的系統化思考流程——也就是飛行員根據當下最新資訊所打算採取的行動。'},
+{t:'p', en:'~80% of aviation accidents relate to human factors. Highest-risk phases: landing (24.1%) and takeoff (23.4%), despite these being a small % of total flight time. Reference: AC 60-22, "Aeronautical Decision-Making."',
+ zh:'約80%的航空事故與人為因素有關。風險最高的階段是落地（24.1%）與起飛（23.4%），儘管這兩階段僅佔總飛行時間的一小部分。參考資料：AC 60-22《航空決策》。'},
+
+{t:'h2', en:'History of ADM', zh:'ADM 的發展沿革'},
+{t:'li', en:'Airline industry developed the first ADM-based training, motivated by reducing human-factor accidents', zh:'航空業界為降低人為因素事故，率先開發以ADM為基礎的訓練課程'},
+{t:'li', en:'CRM (Crew Resource Management) = effective use of all available resources (human, hardware, information) to support ADM and improve crew decision-making', zh:'CRM（機組資源管理）＝有效運用所有可用資源（人力、硬體、資訊）以支持ADM並提升機組決策品質'},
+{t:'li', en:'FAA ADM research culminated in 1987: six manuals published for different pilot ratings', zh:'FAA的ADM研究於1987年達到高峰：針對不同等級飛行員出版了六本手冊'},
+{t:'li', en:'Validated results: ADM-trained pilots made 10–50% fewer judgment errors; one operator (~400,000 hrs/yr) saw a 54% accident-rate reduction after using ADM materials for recurrency training',
+ zh:'驗證結果：接受過ADM訓練的飛行員判斷錯誤減少10–50%；某營運商（年飛行時數約40萬小時）在複訓使用ADM教材後，事故率降低54%'},
+{t:'li', en:'Good judgment can be taught — not purely a byproduct of experience', zh:'良好的判斷力是可以被教導的——並非單純由經驗自然產生'},
+{t:'p', en:'6 steps for good decision-making: 1) Identifying personal attitudes hazardous to safe flight 2) Learning behavior modification techniques 3) Learning how to recognize and cope with stress 4) Developing risk assessment skills 5) Using all resources 6) Evaluating the effectiveness of one\'s ADM skills',
+ zh:'良好決策的六個步驟：1）辨識對飛安有害的個人態度 2）學習行為修正技巧 3）學習辨識與應對壓力 4）培養風險評估能力 5）運用所有資源 6）評估自己ADM技巧的成效'},
+
+{t:'h2', en:'Risk Management', zh:'風險管理'},
+{t:'p', en:'Goal: proactively identify hazards and mitigate risk. 4 fundamental principles: 1) Accept no unnecessary risk 2) Make risk decisions at the appropriate level (PIC decides, never ATC or passengers) 3) Accept risk when benefits outweigh dangers/costs 4) Integrate risk management into planning at all levels — not just preflight, throughout the flight',
+ zh:'目標：主動辨識危害並降低風險。四大基本原則：1）不承擔不必要的風險 2）在適當層級做出風險決策（由機長決定，絕非航管或乘客） 3）當效益大於代價時可接受風險 4）將風險管理融入所有階段的規劃——不只是飛行前，整個飛行過程都要持續進行'},
+{t:'p', en:'6-step risk management process: Identify Hazards → Assess Risks → Analyze Controls → Make Control Decisions → Use Controls → Monitor Results',
+ zh:'六步驟風險管理流程：辨識危害 → 評估風險 → 分析管控措施 → 做出管控決策 → 執行管控措施 → 監控結果'},
+
+{t:'h2', en:'CRM and Single-Pilot Resource Management (SRM)', zh:'CRM 與單一飛行員資源管理（SRM）'},
+{t:'p', en:'SRM = the art and science of managing all resources (onboard + external) available to a single pilot (before and during flight) to ensure successful flight outcome. SRM includes: ADM, Risk Management (RM), Task Management (TM), Automation Management (AM), CFIT awareness, Situational Awareness (SA).',
+ zh:'SRM＝管理單一飛行員在飛行前與飛行中所能運用的一切資源（機上與機外）的藝術與科學，以確保飛行順利完成。SRM涵蓋：ADM、風險管理（RM）、任務管理（TM）、自動化管理（AM）、可控飛行撞地（CFIT）意識、情境警覺（SA）。'},
+
+{t:'h2', en:'Hazard and Risk', zh:'危害與風險'},
+{t:'li', en:'Hazard = a real or perceived condition/event/circumstance a pilot encounters (e.g., a nick in a prop blade)', zh:'危害＝飛行員遭遇的真實或感知狀況／事件／情境（例如螺旋槳葉片上的一個缺口）'},
+{t:'li', en:'Risk = the pilot\'s assessment of that hazard\'s potential impact — different pilots assess the same hazard differently (experience-dependent)', zh:'風險＝飛行員對該危害潛在影響的評估——不同飛行員對同一危害的評估會不同（取決於經驗）'},
+{t:'li', en:'Human factors (education, experience, health, physiological state) profoundly affect risk assessment', zh:'人為因素（教育程度、經驗、健康、生理狀態）會深刻影響風險評估的結果'},
+{t:'p', en:'Case example: King Air pilot flew into forecast-from-the-surface icing (previously experienced only icing forecast 2,000 ft above surface) while rushed — misjudged the altitude difference, assigned low risk, died.',
+ zh:'案例：一位King Air飛行員在趕時間的情況下飛入預報「自地面起」即有結冰的天氣（過往經驗只飛過預報「地面以上2000呎」才有結冰的狀況）——誤判了高度差異的意義，將風險評為偏低，最終墜機身亡。'},
+
+{t:'h2', en:'Hazardous Attitudes and Antidotes', zh:'危險態度與其解藥'},
+{t:'table', head:['Attitude','Thought pattern','Antidote'], headZh:['態度','思考模式','解藥'], rows:[
+  {en:'Anti-authority', zh:'反權威', en2:'"Don\'t tell me." — resents rules/being told what to do', zh2:'「不用你說。」——反感被規定或被要求該怎麼做', en3:'Follow the rules. They are usually right.', zh3:'遵守規則，規則通常是對的。'},
+  {en:'Impulsivity', zh:'衝動', en2:'"Do it quickly." — acts on the first idea without evaluating alternatives', zh2:'「快點做。」——不評估其他選項，直接採取第一個想到的做法', en3:'Not so fast. Think first.', zh3:'別急，先想清楚。'},
+  {en:'Invulnerability', zh:'自認不會出事', en2:'"It won\'t happen to me."', zh2:'「這種事不會發生在我身上。」', en3:'It could happen to me.', zh3:'這種事也可能發生在我身上。'},
+  {en:'Macho', zh:'逞強', en2:'"I can do it." — takes risks to impress others (applies equally to men and women)', zh2:'「我辦得到。」——為了讓別人刮目相看而冒險（男女皆有此傾向）', en3:'Taking chances is foolish.', zh3:'冒險是愚蠢的。'},
+  {en:'Resignation', zh:'聽天由命', en2:'"What\'s the use?" — feels unable to make a difference, defers to others', zh2:'「有什麼用？」——覺得自己無法改變結果，任由他人決定', en3:'I\'m not helpless. I can make a difference.', zh3:'我不是無能為力，我能做出改變。'}
+]},
+{t:'p', en:'Process: recognize the thought as hazardous → label it → state the antidote (memorize antidotes so they\'re automatic).',
+ zh:'處理流程：察覺該想法屬於危險態度 → 為它貼標籤 → 說出對應的解藥（解藥須背熟，才能在需要時自動浮現）。'},
+
+{t:'h2', en:'Risk', zh:'風險評估'},
+{t:'h3', en:'Assessing Risk', zh:'評估風險'},
+{t:'li', en:'Single pilots are their own quality control — tendency to deny personal limitations under goal-orientation (e.g., EMS helicopter pilots over-weighting patient welfare vs. actual hazards like fatigue/weather)',
+ zh:'單飛飛行員必須自己做品質把關——在目標導向心態下容易否認自身限制（例如救護直升機飛行員常過度看重病患福祉，而低估疲勞或天氣等實際危害）'},
+{t:'li', en:'Night VFR accident rate drops ~50% after first 100 hrs, continues improving to 1,000 hrs → consider higher personal minimums for first 500 hrs of night VFR',
+ zh:'夜間VFR事故率在累積100小時後降低約50%，並持續改善至1000小時→建議在夜間VFR前500小時採取更嚴格的個人最低標準'},
+{t:'p', en:'Risk Matrix — two factors: Likelihood: Probable (will occur several times) · Occasional (will probably occur sometime) · Remote (unlikely but possible) · Improbable (highly unlikely). Severity: Catastrophic (fatalities/total loss) · Critical (severe injury/major damage) · Marginal (minor injury/minor damage) · Negligible (less than minor)',
+ zh:'風險矩陣——兩項因子：可能性：機率高（會發生多次）・偶發（可能會發生一次）・罕見（不太可能但仍有可能）・極不可能（幾乎不會發生）。嚴重度：災難性（造成死亡／全損）・重大（嚴重傷害／重大損害）・輕微（輕傷／輕微損害）・可忽略（低於輕微程度）'},
+{t:'h3', en:'Mitigating Risk', zh:'降低風險'},
+{t:'p', en:'Example (MVFR flight, 50nm): wait for better weather · take an instrument-rated pilot · delay · cancel · drive.',
+ zh:'範例（50浬的MVFR飛行）：等天氣好轉・找一位持儀器等級的飛行員同行・延後出發・取消飛行・改開車前往。'},
+{t:'p', en:'IMSAFE checklist (physical/mental readiness): Illness — sick? Medication — affecting judgment/drowsy? Stress — job/money/health/family pressure (not a regulatory grounding condition, but affects performance). Alcohol — within 8/24 hrs (even small amounts can impair). Fatigue — inadequately rested (often not apparent until errors occur). Emotion — emotionally upset?',
+ zh:'IMSAFE檢查表（生理／心理準備度）：疾病（Illness）——是否生病？藥物（Medication）——是否影響判斷力或引起嗜睡？壓力（Stress）——工作／金錢／健康／家庭壓力（雖非法規上須停飛的條件，但仍會影響表現）。酒精（Alcohol）——過去8小時／24小時內是否飲酒（即使少量也可能影響飛行能力）。疲勞（Fatigue）——是否休息不足（往往要到出錯才會察覺）。情緒（Emotion）——是否情緒不穩？'},
+
+{t:'h2', en:'The PAVE Checklist', zh:'PAVE 檢查表'},
+{t:'p', en:'Divides flight risk into 4 categories: Pilot-in-command, Aircraft, enVironment, External pressures.',
+ zh:'將飛行風險分為四大類：機長（Pilot）、航空器（Aircraft）、環境（enVironment）、外部壓力（External pressures）。'},
+{t:'p', en:'Key distinction: what\'s "legal" (regulations) vs. what\'s "smart/safe" (pilot\'s actual experience/proficiency) — set personal minimums below aircraft/regulatory limits based on your own current experience level.',
+ zh:'重要區別：法規上「合法」與依飛行員實際經驗／熟練度而定的「明智／安全」是兩回事——應根據自己目前的經驗水準，設定低於飛機或法規限制的個人最低標準。'},
+{t:'h3', en:'P = Pilot in Command', zh:'P＝機長'},
+{t:'p', en:'"Am I ready for this trip?" — experience, recency, currency, physical/emotional condition → use IMSAFE.',
+ zh:'「我準備好進行這趟飛行了嗎？」——考量經驗、近期飛行紀錄、資格有效性、生理與情緒狀態 → 運用IMSAFE檢查表。'},
+{t:'h3', en:'A = Aircraft', zh:'A＝航空器'},
+{t:'p', en:'Right aircraft for the flight? Familiar/current in it? AFM performance figures assume a brand-new aircraft flown by a professional test pilot — adjust expectations. Adequately equipped (instruments/lights/nav-comm)? Runway margin adequate? Load/altitude/fuel capacity sufficient? Fuel delivered matches fuel ordered?',
+ zh:'這架飛機適合這趟任務嗎？我對它熟悉且保持現行資格嗎？飛航手冊（AFM）上的性能數據，是以全新飛機、由專業試飛員駕駛為基礎——實際評估時需相應調整期望值。裝備是否充足（儀表／燈光／導航通訊設備）？跑道餘裕是否足夠？可承載的重量／可飛的高度／油量是否足夠？加油量是否與訂購量相符？'},
+{t:'h3', en:'V = EnVironment', zh:'V＝環境'},
+{t:'p', en:'Weather: current ceiling/visibility, possible forecast error, crosswind strength, mountain winds aloft (severe turbulence/downdrafts risk even without other weather), thunderstorms, icing (current/forecast, aircraft\'s icing rating, deicing equipment familiarity).',
+ zh:'天氣：目前雲底高與能見度、預報可能有誤、側風強度、山區高空風（即使沒有其他天氣現象，強風仍可能導致嚴重亂流與下降氣流）、雷雨、結冰（現況／預報、飛機的結冰認證、對除冰設備的熟悉度）。'},
+{t:'p', en:'Terrain: use VFR/IFR chart altitudes and Maximum Elevation Figures (MEFs) in preflight planning. Airport: available lighting (VASI/PAPI/ILS glideslope), check NOTAMs for closed runways/inop lights, route choice re: engine-failure options, shorter/obstructed fields at destination/alternate.',
+ zh:'地形：飛行前規劃時應參考VFR／IFR航圖上的高度資訊與最大高程數值（MEF）。機場：可用的燈光系統（VASI／PAPI／ILS下滑道）、查詢NOTAM確認跑道關閉或燈光故障狀況、選擇航線時考量引擎失效時的備降選項、目的地與備降機場是否跑道較短或有障礙物。'},
+{t:'p', en:'Airspace: remote-area survival gear if applicable, be IFR-prepared if losing horizon reference over water/unpopulated areas, check TFRs. Nighttime: be IFR-prepared for night over water/unpopulated terrain; verify safe emergency-landing options at night; preflight-check all lights; carry 2 flashlights.',
+ zh:'空域：若飛越偏遠地區，須攜帶適當服裝、水與求生裝備以備迫降；若飛越水面或無人區有失去地平線視覺參考的可能，須做好IFR準備；並確認航路上的暫時飛航限制（TFR）。夜間：夜間飛越水面或無人區時須做好IFR準備；確認夜間是否有安全的緊急落地選項；起飛前檢查所有燈光；隨身攜帶兩支手電筒。'},
+{t:'h3', en:'E = External Pressures', zh:'E＝外部壓力'},
+{t:'p', en:'Influences pushing to complete a flight at the expense of safety: someone waiting at destination, not wanting to disappoint a passenger, desire to demonstrate qualifications, desire to impress ("Watch this!" — probably the two most dangerous words in aviation), "get-home-itis"/"get-there-itis"/"let\'s-go-itis," general goal-completion orientation, pride about acknowledging lower skill/experience than desired.',
+ zh:'指以犧牲飛安為代價、驅使飛行員完成飛行的各種外在影響：有人在目的地等候、不想讓乘客失望、想證明自己的能力、想讓人刮目相看（「你看我的！」可能是航空界最危險的一句話）、「急著回家症」／「急著抵達症」／「非走不可症」、一般性的「一定要完成任務」心態、以及不願承認自己技術或經驗不如預期的自尊心。'},
+{t:'p', en:'Managing external pressure (single most important risk-management key — it\'s the one category that can cause a pilot to ignore all other risk factors) via personal SOPs: build in time for extra fuel stops/weather diversions, have backup travel plans, leave early enough that driving is still an option for critical trips, notify people at destination of possible delay in advance, manage passenger expectations about schedule certainty, carry a small overnight kit even on casual day flights to remove pressure to return home same day.',
+ zh:'管理外部壓力（風險管理中最重要的一環——因為這是唯一可能導致飛行員忽視所有其他風險因子的類別）可透過個人標準作業程序（SOP）達成：預留額外加油或因天氣落地的時間、準備備用行程方案、對重要行程提早出發以保留開車前往的選項、提前告知目的地相關人員可能延誤、妥善管理乘客對行程時間的期待、即使是輕鬆的當日往返也隨身攜帶簡易過夜包（藥物、隱形眼鏡藥水、盥洗用品），以消除當日必須返家的壓力。'},
+{t:'p', en:'Key mindset: "The pilot\'s goal is to manage risk, not create hazards" — be ready to accept delays, same as any traveler.',
+ zh:'核心心態：「飛行員的目標是管理風險，而不是製造危害」——要像任何一般旅行者一樣，做好接受延誤的心理準備。'},
+
+{t:'h2', en:'Human Factors', zh:'人為因素'},
+{t:'p', en:'Human factors documented as a primary contributor to >70% of aircraft accidents. Field is multidisciplinary (psychology, engineering, industrial design, statistics, ops research, anthropometry) — broader than CRM/MRM (Maintenance Resource Management).',
+ zh:'人為因素被記錄為超過70%飛機事故的主要成因。這是一個跨領域學門（涵蓋心理學、工程學、工業設計、統計學、作業研究、人體計測學）——範疇比CRM或MRM（維修資源管理）更為廣泛。'},
+{t:'h3', en:'Human Behavior', zh:'人類行為'},
+{t:'p', en:'1951 Univ. of Minnesota study (Fuller & Baune): "accident-repeater" 2nd-graders were more aggressive/impulsive/rebellious/attention-seeking vs. accident-free peers who were safety-conscious/cooperative — but concluding pilots should only come from one personality type is both inaccurate and impossible; good decision-making must be taught to all pilots regardless of personality.',
+ zh:'1951年明尼蘇達大學研究（Fuller與Baune）：發現「反覆出事」的小學二年級學生較具攻擊性、衝動、叛逆且愛出風頭，相對地無事故組則較有安全意識且合作——但若因此推論飛行員只應由單一人格特質的人組成，這樣的結論既不精確也不可行；良好的決策能力必須教導給所有飛行員，無論其人格特質為何。'},
+{t:'p', en:'"Pilot error" reframed more broadly as "human factors related" — accidents are usually a chain of decisions, not one single bad choice (Dr. Patrick Veillette\'s "Captain Everyman" case studies: repeated checklist-skipping across multiple incidents).',
+ zh:'「飛行員錯誤」一詞已被更廣泛地重新定義為「人為因素相關」——事故通常源自一連串的決策鏈，而非單一一次的錯誤選擇（Patrick Veillette 博士的「Everyman機長」案例研究中，同一位機長在多起事件中反覆跳過檢查表步驟）。'},
+{t:'p', en:'5 traits found in accident-prone pilots (FAA study, 4,000+ pilots surveyed): disdain toward rules; high correlation between flying accidents and driving safety violations; fall into "thrill and adventure seeking" personality category; impulsive rather than methodical/disciplined (both in info-gathering and action selection); disregard or under-utilize outside information sources (copilots, FAs, flight service, instructors, ATC).',
+ zh:'FAA針對4000多名飛行員的研究發現，「容易出事的飛行員」具有五項共同特質：輕視規則；飛行事故紀錄與駕車違規紀錄高度相關；屬於「追求刺激與冒險」的人格類型；資訊蒐集與行動選擇上偏向衝動而非有條理與紀律；忽視或未充分利用外部資訊來源（副機師、空服員、飛航服務人員、教官、航管）。'},
+
+{t:'h2', en:'The Decision-Making Process — Structured Models', zh:'結構化決策模型'},
+{t:'p', en:'Three frameworks: 5P, 3P (using PAVE, CARE, TEAM), and DECIDE.', zh:'三大架構：5P模型、3P模型（結合PAVE、CARE、TEAM檢查表）、以及DECIDE模型。'},
+{t:'h3', en:'The 5 Ps Check', zh:'5P 檢查'},
+{t:'p', en:'The Plan · The Plane · The Pilot · The Passengers · The Programming', zh:'計畫（Plan）・飛機（Plane）・飛行員（Pilot）・乘客（Passengers）・程式設定（Programming）'},
+{t:'p', en:'Reviewed at 5 key decision points: preflight → pretakeoff → hourly/midpoint → pre-descent → just before final approach fix (or entering traffic pattern for VFR). If flight >2 hrs, review hourly.',
+ zh:'應在五個關鍵決策點進行檢視：飛行前 → 起飛前 → 每小時或飛行中點 → 下降前 → 最終進場定位點之前（VFR則為進入航機起降場空層之前）。若飛行時間超過2小時，應每小時檢視一次。'},
+{t:'li', en:'Plan — cross-country planning, weather, route, fuel, pub currency; continuously updated (maintenance delays, fast-moving weather, short-notice TFRs)', zh:'計畫——越野飛行規劃、天氣、航線、油量、出版品時效性；應持續更新（維修延誤、快速移動的天氣系統、臨時發布的TFR皆可能改變計畫）'},
+{t:'li', en:'Plane — mechanical/cosmetic issues + (advanced avionics era) database currency, automation status, emergency backup systems', zh:'飛機——機械／外觀問題，加上（先進航電時代）資料庫時效性、自動化系統狀態、緊急備用系統'},
+{t:'li', en:'Pilot — fatigue, altitude effects (sustained flight above 5,000 ft), late nights → less discerning/more compliant right when the flight gets most critical → use IMSAFE', zh:'飛行員——疲勞、高空效應（持續飛行於5000呎以上）、熬夜——這些都會導致判斷力下降、更傾向順從，而這往往正好發生在飛行最關鍵的時刻→運用IMSAFE檢查表'},
+{t:'li', en:'Passengers — unlike CRM, SRM passengers are often close (arm\'s reach); their onward-travel needs enter the pilot\'s decision loop; briefing passengers on real risk removes self-induced pressure', zh:'乘客——與CRM不同，SRM中的乘客通常近在咫尺（伸手可及）；他們後續行程的需求會進入飛行員的決策考量；如實向乘客說明風險，可消除飛行員自我施加的壓力'},
+{t:'li', en:'Programming — advanced avionics (GPS/autopilot) reduces workload but can also capture attention for long periods; plan in advance when/where programming should (and shouldn\'t) happen', zh:'程式設定——先進航電（GPS／自動駕駛）能降低工作負荷，但也可能長時間佔據飛行員的注意力；應事先規劃何時、何地該（或不該）進行設定操作'},
+
+{t:'h3', en:'Perceive, Process, Perform (3P) Model', zh:'感知・處理・執行（3P）模型'},
+{t:'p', en:'Continuous loop: Perceive circumstances → Process (evaluate impact on flight safety) → Perform (implement best course of action) → re-evaluate.',
+ zh:'持續循環的流程：感知（Perceive）當下情境 → 處理（Process，評估其對飛安的影響） → 執行（Perform，採取最佳行動方案） → 重新評估。'},
+{t:'p', en:'3 timeframes for risk management processing: Strategic (complex ops, formal analysis) · Deliberate (experience/brainstorming, planning) · Time-Critical (on-the-fly mental/verbal review — most flight training activities use this).',
+ zh:'風險管理處理的三種時間架構：策略型（複雜作業、正式分析）・審慎型（依經驗與腦力激盪進行規劃）・時效急迫型（飛行中即時的心理或口頭複核——大多數飛行訓練活動採用此種）。'},
+{t:'p', en:'Step 1 — Perceive hazards: PAVE checklist (Pilot / Aircraft / enVironment / External pressures) — ask "what could hurt me, my passengers, or my aircraft?" for each. Pay special attention to the pilot-aircraft team combination (e.g., experienced pilot + no-weather-gear old aircraft = still limited; new TAA aircraft + inexperienced pilot with the gear = can\'t rely on the plane to compensate for lack of experience).',
+ zh:'第一步——感知危害：運用PAVE檢查表（飛行員／航空器／環境／外部壓力），針對每一項自問「什麼可能傷害到我、我的乘客或我的飛機？」須特別注意「飛行員—飛機」的組合關係（例如：經驗豐富的飛行員搭配沒有天氣迴避裝備的老舊飛機，天氣飛行能力仍然受限；反之，全新的先進航電飛機搭配缺乏經驗的飛行員，也不能指望飛機的性能來彌補飛行員經驗的不足）。'},
+{t:'p', en:'Step 2 — Process: CARE checklist — Consequences, Alternatives, Reality, External pressures. Rule of thumb: if you catch yourself saying it\'ll "probably" be okay, that\'s exactly when you need a reality check.',
+ zh:'第二步——處理：運用CARE檢查表——後果（Consequences）、替代方案（Alternatives）、現實（Reality）、外部壓力（External pressures）。經驗法則：如果你發現自己說「應該」沒問題，那正是你最需要做現實檢核的時候。'},
+{t:'p', en:'Step 3 — Perform: TEAM checklist — Transfer (hand the risk decision to someone else, e.g., chief flight instructor), Eliminate (remove the hazard entirely), Accept (do benefits outweigh cost), Mitigate (what can reduce the risk).',
+ zh:'第三步——執行：運用TEAM檢查表——轉移（Transfer，是否可將此風險決策交由他人，例如首席飛行教官）、消除（Eliminate，是否有辦法完全排除該危害）、接受（Accept，效益是否大於代價）、降低（Mitigate，有什麼方法可以降低該風險）。'},
+{t:'p', en:'(Worked example in the source: "Gayle," a 300-hr private pilot flying a hazy mountain cross-country in a C182 without weather-avoidance gear, to visit family — walks through PAVE/CARE/TEAM for Pilot/Aircraft/Environment/External-pressures. Result: hires a CFI for the trip, mitigates via careful preflight planning, VFR flight following, Flight Watch updates, and a pre-agreed "either pilot can veto continuing" rule with her co-pilot.)',
+ zh:'（原文案例：「Gayle」是一位擁有300小時經驗的私人飛行員，計畫駕駛沒有天氣迴避裝備的C182，在濛霧天氣下飛越山區探望親戚——依序以PAVE／CARE／TEAM檢視飛行員／飛機／環境／外部壓力四個層面。結果：她決定聘請一位CFI隨行，並透過周詳的飛行前規劃、VFR飛航追蹤服務、Flight Watch即時天氣更新，以及與同行飛行員事先約定「任一方均可否決繼續飛行」的規則來降低風險。）'},
+{t:'p', en:'Building "mental muscle" for follow-through on safe decisions: personal minimums checklist (developed before any specific trip, no pressure); preflight risk assessment checklist (numeric scoring); pre-identify alternative airports every 25–30 NM of route; preflight passengers on possibility of delay/diversion; post-flight analysis (often overlooked) — review/analyze objectively after securing the aircraft.',
+ zh:'鍛鍊「貫徹安全決策的心理素質」：預先制定個人最低標準檢查表（在沒有特定行程壓力的情況下事先擬定）；使用飛行前風險評估檢查表（以數字評分）；每隔25–30浬預先找好備降機場；出發前向乘客說明延誤或轉降的可能性；以及常被忽略的「飛行後分析」——安全落地後客觀地檢討整趟飛行。'},
+
+{t:'h3', en:'The DECIDE Model', zh:'DECIDE 模型'},
+{t:'p', en:'Detect → Estimate (need to react) → Choose (desired outcome) → Identify (solutions) → Do (necessary actions) → Evaluate (effect of the action)',
+ zh:'偵測（Detect）→ 評估反應必要性（Estimate）→ 選擇期望結果（Choose）→ 找出解決方案（Identify）→ 執行必要行動（Do）→ 評估行動效果（Evaluate）'},
+{t:'p', en:'(Worked example: twin-engine (Piper Apache) simulated right-engine failure during a checkride. Pilot skipped the "detect which engine failed" step and feathered the wrong (left) engine — the classic "dead foot, dead engine" identification error. Highlights: acting without forethought is as dangerous as not acting; decisions made under pressure with limited experience can be wrong even with time available.)',
+ zh:'（原文案例：一次雙發飛機（Piper Apache）考核飛行中模擬右發動機失效。飛行員跳過了「先辨識是哪具發動機失效」的步驟，錯誤地順槳（feather）了左發動機——這正是典型的「無舵壓側＝失效發動機」辨識錯誤。此案例凸顯：未經思考就採取行動，與完全不採取行動一樣危險；即使有充裕時間，經驗有限者在壓力下做出的決策仍可能是錯的。）'},
+{t:'p', en:'Detect — recognizing a change occurred (or expected change didn\'t). Estimate — same problem can warrant very different urgency depending on context (e.g., open cabin door on a clear VFR climb = low risk / same door open during IMC climb-out with an amended ATC clearance = high risk — the problem hasn\'t changed, the task-loading context has).',
+ zh:'偵測——察覺發生了變化（或預期中的變化並未發生）。評估——同一個問題，會因情境不同而需要截然不同的緊急處置程度（例如：晴朗VFR爬升時艙門突然打開＝低風險／同樣的艙門在IMC爬升、且正在接收航管修正許可時打開＝高風險——問題本身沒有改變，改變的是當下的任務負荷情境）。'},
+{t:'p', en:'Choose → Identify → Do → Evaluate — determine desired outcome, find solution(s), act, then evaluate whether the result was correct (repeat if not).',
+ zh:'選擇 → 找出方案 → 執行 → 評估——確定期望的結果、找出解決方案、採取行動，然後評估結果是否正確（若不正確則重複此流程）。'},
+
+{t:'h2', en:'Decision-Making in a Dynamic Environment', zh:'動態環境中的決策'},
+{t:'p', en:'Analytical decision-making (5P/3P/DECIDE) — used when time allows. Automatic / naturalistic decision-making — experts facing time pressure and a familiar-feeling situation skip pros/cons comparison and take the first workable option; improves with training/experience; used by firefighters, chess players, and experienced pilots alike in emergencies.',
+ zh:'分析型決策（5P／3P／DECIDE）——適用於時間充裕的情況。自動型／自然型決策——當專家面對時間壓力、且情境感覺熟悉時，會跳過利弊比較，直接採用第一個可行的方案；這種能力會隨訓練與經驗而提升；消防員、西洋棋手與經驗豐富的飛行員在緊急狀況下都會運用這種決策方式。'},
+
+{t:'h3', en:'Operational Pitfalls', zh:'常見操作陷阱'},
+{t:'table', head:['Pitfall','Description'], headZh:['陷阱','說明'], rows:[
+  {en:'Peer pressure', zh:'同儕壓力', en2:'Emotional response to peers over objective evaluation', zh2:'受同儕情緒影響而非客觀評估情況'},
+  {en:'Mindset', zh:'固定心態', en2:'Inability to recognize/cope with changing circumstances', zh2:'無法察覺或應對情境的變化'},
+  {en:'Get-there-itis', zh:'非到不可症', en2:'Fixation on original goal/destination, ignoring alternatives', zh2:'固執於原訂目標／目的地，忽視其他替代方案'},
+  {en:'Duck-under syndrome', zh:'低鑽症候群', en2:'Descending below minimums on approach, assuming a built-in margin', zh2:'進場時擅自降到最低標準以下，誤以為程序內建有安全餘裕'},
+  {en:'Scud running', zh:'貼雲飛行', en2:'Maintaining visual terrain contact at low altitude in instrument conditions', zh2:'在儀器天氣條件下，試圖以低空飛行維持地形目視接觸'},
+  {en:'Continuing VFR into IMC', zh:'VFR誤入IMC', en2:'Risk of spatial disorientation/CFIT, worse if not instrument current', zh2:'有空間迷向／可控飛行撞地的風險，若儀器資格未保持現行則更危險'},
+  {en:'Getting behind the aircraft', zh:'落後於飛機', en2:'Letting events control pilot actions instead of the reverse', zh2:'讓局勢主導飛行員的行動，而非飛行員主導局勢'},
+  {en:'Loss of positional/situational awareness', zh:'喪失方位／情境警覺', en2:'Extreme case of the above — losing track of geographic location or deteriorating conditions', zh2:'上一項的極端情況——喪失對地理位置或惡化狀況的掌握'},
+  {en:'Operating without adequate fuel reserves', zh:'油量儲備不足', en2:'Overconfidence/poor planning/regulation disregard', zh2:'源自過度自信、規劃不周或無視法規要求'},
+  {en:'Descent below minimum en route altitude', zh:'低於最低航路高度下降', en2:'"Duck-under" applied to the en route IFR segment', zh2:'即「低鑽症候群」發生在IFR航路階段的版本'},
+  {en:'Flying outside the envelope', zh:'超出飛行包線', en2:'Overestimating own skill relative to aircraft capability', zh2:'高估自身技術相對於飛機性能的能耐'},
+  {en:'Neglect of flight planning/preflight/checklists', zh:'忽略飛行規劃／飛行前檢查／檢查表', en2:'Relying on memory and familiar routes instead of procedures — especially common in experienced pilots', zh2:'依賴記憶與熟悉航線而非既定程序——在資深飛行員中特別常見'}
+]},
+
+{t:'h2', en:'Stress Management', zh:'壓力管理'},
+{t:'p', en:'Some stress is beneficial (alertness); performance rises then falls sharply once stress exceeds coping capacity. 2 categories: acute and chronic (detailed in Ch.17 Aeromedical Factors).',
+ zh:'適度壓力有其正面作用（維持警覺性）；表現會隨壓力上升，但一旦壓力超出負荷能力，便會急遽下滑。壓力分為兩類：急性與慢性（詳見第17章航空醫學因素）。'},
+{t:'p', en:'Stressor types — Environmental: temperature/humidity extremes, noise, vibration, lack of oxygen. Physiological: fatigue, poor fitness, sleep loss, missed meals (low blood sugar), illness. Psychological: social/emotional (death in family, divorce, sick child, demotion) — also includes mental workload itself (analyzing a problem, navigating, deciding).',
+ zh:'壓力源類型——環境性：極端溫度／濕度、噪音、震動、缺氧。生理性：疲勞、體能不佳、睡眠不足、未進食（導致低血糖）、生病。心理性：社會或情感因素（家人過世、離婚、孩子生病、職場降職）——也包含心智工作負荷本身（例如分析問題、導航、做決策）。'},
+{t:'p', en:'Management: stop, think, analyze before concluding; daily relaxation time; physical fitness program; better time management to avoid schedule pressure.',
+ zh:'管理方式：在下結論前先停下來思考與分析；每天安排放鬆時間；維持體能訓練計畫；改善時間管理以避免行程壓力。'},
+
+{t:'h2', en:'Use of Resources', zh:'資源運用'},
+{t:'h3', en:'Internal Resources', zh:'機內資源'},
+{t:'li', en:'Passengers — even non-pilots can watch for traffic, confirm gear-down, watch altimeter in descent, "listen to logic or lack of logic"', zh:'乘客——即使不是飛行員，也能協助注意交通、確認起落架放下、下降時留意高度表，並「聽出是否合理」'},
+{t:'li', en:'Verbal briefing to a passenger can itself prompt the pilot to re-examine a changed forecast', zh:'向乘客口頭簡報這個動作本身，就能促使飛行員重新檢視已改變的天氣預報'},
+{t:'li', en:'Solo verbal checklist reading + touching the control reinforces confirmation of critical items (e.g., touch the gear handle while confirming gear down)', zh:'單飛時大聲朗讀檢查表並實際觸碰控制項，能加強對關鍵項目的確認（例如確認起落架放下時同時觸摸把手）'},
+{t:'li', en:'Deep equipment/systems knowledge (e.g., is the oil pressure gauge direct-reading or sensor-based) is the difference between a wise decision and a tragic error', zh:'對機上系統的深入了解（例如油壓表是直接讀值還是感測器讀值），往往是明智決策與悲劇性失誤之間的分界'},
+{t:'li', en:'Checklists — essential; POH must be carried onboard', zh:'檢查表——不可或缺；飛行員操作手冊（POH）須隨機攜帶'},
+{t:'li', en:'Most valuable resource overall: the ability to manage workload', zh:'整體而言最寶貴的資源：管理工作負荷的能力'},
+{t:'h3', en:'External Resources', zh:'機外資源'},
+{t:'p', en:'ATC — traffic advisories, radar vectors, emergency assistance; can decrease workload and become "part of the crew."',
+ zh:'航管（ATC）——提供交通諮詢、雷達導引、緊急情況協助；能降低飛行員工作負荷，並如同「機組的一份子」。'},
+{t:'p', en:'Flight Service Stations (FSS) — pilot briefing, en route comms, VFR search & rescue, lost-aircraft assistance, relay ATC clearances, issue NOTAMs, broadcast weather/NAS info, process IFR flight plans, monitor NAVAIDs; select locations also provide Flight Watch (En Route Flight Advisory Service), airport advisories, Customs/Immigration advisories for transborder flights; select Alaska FSSs also do TWEB and weather observations.',
+ zh:'飛航服務站（FSS）——提供飛行員簡報、航路通訊、VFR搜救、迷航機協助、轉發航管許可、發布NOTAM、廣播天氣與國家空域系統資訊、處理IFR飛航計畫、監控助航設施；部分據點另提供Flight Watch（航路飛航諮詢服務）、機場諮詢、以及跨境飛行的海關／移民資訊；阿拉斯加部分FSS另提供TWEB播報與氣象觀測服務。'},
+
+{t:'h2', en:'Situational Awareness', zh:'情境警覺'},
+{t:'p', en:'Accurate perception/understanding of all factors within the 5 fundamental risk elements: flight, pilot, aircraft, environment, type of operation.',
+ zh:'指對「五大基本風險要素」——飛行本身、飛行員、航空器、環境、作業型態——中所有因素的正確感知與理解。'},
+{t:'h3', en:'Obstacles', zh:'維持情境警覺的障礙'},
+{t:'p', en:'Fatigue, stress, work overload → fixation on one perceived item → reduced overall awareness. Common accident contributor: minor distraction (e.g., a misreading gauge) diverting attention from proper aircraft control.',
+ zh:'疲勞、壓力、工作超載→導致固著於某一項認為重要的事物→整體情境警覺下降。常見的事故成因：一項微小的分心事件（例如一個讀數異常的儀表）分散了飛行員對正確操控飛機的注意力。'},
+{t:'h3', en:'Workload Management', zh:'工作負荷管理'},
+{t:'p', en:'Plan/prioritize/sequence tasks to avoid overload; review charts and set radio frequencies well in advance of need. Listen to ATIS/ASOS/AWOS then monitor tower/CTAF before entering high-density airspace (e.g., Class B).',
+ zh:'透過規劃、排定優先順序與任務排序來避免超載；應提前檢視航圖並設定無線電頻率。進入高密度空域（例如B類空域）前，應先聽取ATIS／ASOS／AWOS，再監聽塔台或CTAF頻率。'},
+{t:'p', en:'First sign of overload: working harder but accomplishing less; task saturation → decisions made on incomplete information. When overloaded: stop, think, slow down, prioritize; contextualize the situation (e.g., open cabin door in VFR ≈ insignificant workload impact; same event in IMC ≈ significant).',
+ zh:'超載的第一個徵兆：越努力卻完成得越少；任務飽和會導致基於不完整資訊做決策。當發生超載時：停下來、思考、放慢步調、排定優先順序；並將情境放入正確的脈絡中判斷（例如VFR時艙門打開對工作負荷影響不大；同樣的事件發生在IMC時則影響顯著）。'},
+{t:'p', en:'SAFETY passenger briefing mnemonic — S: Seat belts/shoulder harness/seat position. A: Air vents, environmental controls, passenger-discomfort actions. F: Fire extinguisher location/operation. E: Exit doors (secure/open), evacuation plan, survival kit. T: Traffic (scanning/spotting/notifying), "sterile flight deck" expectations. Y: Your questions? (Speak up!)',
+ zh:'SAFETY乘客簡報口訣——S：安全帶／肩帶／座椅位置。A：通風口、環境控制裝置、乘客不適時的處置方式。F：滅火器位置與使用方式。E：艙門（如何固定／打開）、緊急撤離計畫、求生裝備。T：交通狀況（掃視、發現、通報飛行員）、「安靜駕駛艙」規範說明。Y：你有任何問題嗎？（有問題請直說！）'},
+{t:'p', en:'Also brief: smoking policy, route altitudes, time en route, destination/enroute weather, control functions, aircraft capabilities/limitations. Use a sterile flight deck during departure (to first intermediate altitude/clearance) and arrival (from first approach vector). Consider using the right-seat passenger for simple tasks (e.g., holding the chart).',
+ zh:'也應說明：是否可吸菸、航路高度、預計飛行時間、目的地／航路天氣、機上各操縱裝置的功能、飛機的性能與限制。起飛階段（至第一個中間高度／取得許可為止）與進場階段（從第一次進場導引開始）建議採用「安靜駕駛艙」規範。可考慮讓右座乘客協助簡單任務（例如拿著航圖）。'},
+
+{t:'h2', en:'Automation', zh:'自動化'},
+{t:'p', en:'TAA (Technically Advanced Aircraft) = integrated PFD + MFD (with certified GPS, traffic/terrain graphics) + fully integrated autopilot.',
+ zh:'TAA（技術先進航空器）＝整合式主飛行顯示器（PFD）＋多功能顯示器（MFD，含經認證GPS、交通與地形圖像）＋全整合式自動駕駛系統。'},
+{t:'li', en:'Automation = single most important advance in aviation tech; reduces flight-deck clutter via electronic databases', zh:'自動化＝航空科技中最重要的一項進展；透過電子資料庫大幅減少駕駛艙內的雜亂'},
+{t:'li', en:'Risk: MFD moving maps are so good many pilots over-rely on them for navigation alone; never a substitute for a VFR sectional or low-altitude en route chart', zh:'風險：MFD移動地圖功能過於便利，許多飛行員因此過度依賴它作為唯一導航依據；它絕不能取代VFR地區圖或低空航路圖'},
+{t:'li', en:'1995 British Airline Pilots Association concern: reliance on automation → erosion of "basic flying skills," worse ability to cope with sudden mechanical failure', zh:'1995年英國航空飛行員協會提出的疑慮：對自動化的依賴會導致「基本飛行技能」退化，降低應對突發機械故障的能力'},
+{t:'p', en:'Study finding (analog vs. EFIS/FMS crews): EFIS crews showed greater deviations in normal maneuvers without flight director; bigger gap during abnormal maneuvers ("slam-dunk" descents — analog crews did mental math better; EFIS crews went "heads down" trying to reprogram the FMS); gap widest in emergencies (analog crews handled raw-data flying better).',
+ zh:'研究發現（類比儀表機組 vs. EFIS／FMS機組）：在無飛行導引儀的正常操作中，EFIS機組偏差較大；在異常操作（如「急速下降」進場）中差距更明顯——類比機組較擅長心算，EFIS機組則傾向「低頭」試圖重新編寫FMS程式；在緊急狀況下差距最為顯著（類比機組更擅長依原始資料手動操控飛機）。'},
+{t:'p', en:'Takeaway: pilots must periodically hand-fly to maintain stick-and-rudder proficiency; moving map is a supplement, never primary navigation.',
+ zh:'結論：飛行員必須定期手動操控飛機，以維持基本操縱技能；移動地圖只能作為輔助工具，絕不能作為主要導航依據。'},
+{t:'h3', en:'Managing Aircraft Automation — 3 key skills', zh:'管理航空器自動化的三項關鍵技能'},
+{t:'p', en:'1) Information management — understand the system conceptually (not just knob sequences); "stop, look, and read" before pushing/pulling/twisting; configure displays to personal preference (e.g., map orientation north-up/track-up/heading-up); tailor info display per phase of flight (e.g., terrain awareness page for night/IMC mountain flying, nearest-airport inset over inhospitable terrain).',
+ zh:'1）資訊管理——從概念層面理解系統（而非只記旋鈕操作順序）；在按、拉、轉動任何裝置前「先停、先看、先讀」；依個人偏好設定顯示畫面（例如地圖方向設為北方朝上／航跡朝上／航向朝上）；依飛行階段調整顯示內容（例如夜間或IMC山區飛行使用地形警示頁面、飛越荒涼地形時顯示最近機場資訊）。'},
+{t:'p', en:'2) Automation management — know at all times which autopilot modes are engaged vs. armed; verify armed functions actually engage when expected; understand mode interactions (e.g., changing nav source from GPS to LOC/VOR while autopilot is in NAV mode can disengage NAV mode, defaulting to wings-level ROL).',
+ zh:'2）自動化管理——隨時掌握自動駕駛目前處於「已接合」還是「已預備接合」的模式；確認已預備接合的功能確實在預期時機啟動；理解各模式之間的互動關係（例如在自動駕駛處於NAV模式時，將導航來源從GPS切換為LOC或VOR，可能導致NAV模式解除接合，並自動切回翼平模式ROL）。'},
+{t:'p', en:'3) Risk management — humans are poor passive monitors of reliable automated systems (the more reliable, the worse human vigilance gets); EFDs don\'t replace basic flight knowledge — risk rises when a pilot believes gadgets compensate for lack of skill.',
+ zh:'3）風險管理——人類對於高度可靠的自動化系統，其被動監控能力其實很差（系統越可靠，人類的警覺性反而越低）；電子飛行顯示器（EFD）並不能取代基本飛行知識——當飛行員誤以為設備能彌補自身技術不足時，風險便會升高。'},
+{t:'p', en:'Situational-awareness safeguards for automated flight: double-check the system, use verbal callouts, verify programming before departure, cross-check the planned route against a paper log, verify waypoints, cross back up GPS with VOR (and vice versa), plan realistic routes (don\'t assume direct-to is actually flyable, e.g., restricted airspace), stay ready to catch keystroke errors.',
+ zh:'維持自動化飛行情境警覺的保護措施：養成雙重確認系統設定的習慣、使用口頭覆誦、起飛前確認所有程式設定、將計畫航路與紙本航行記錄互相比對、確認每個航點、用VOR與GPS互相交叉確認（反之亦然）、規劃切合實際的航路（勿假設直飛航段一定可行，例如可能穿越限制空域）、隨時做好抓出按鍵輸入錯誤的準備。'},
+{t:'p', en:'1999 Colombia CFIT accident (cited case): crew entered a waypoint one degree off in the FMS → 60 NM off course → flew into terrain despite having correct paper charts/nav log on board — crew let automation fly and monitor itself instead of cross-checking; a fully preventable accident from complacency, not equipment failure.',
+ zh:'1999年哥倫比亞可控飛行撞地事故（原文引用案例）：機組在FMS中輸入航點時偏差了一度→導致航線偏離預定路線達60浬→儘管機上備有正確的紙本航圖與航行記錄，仍撞山身亡——機組讓自動化系統自行飛行並自我監控，而未進行交叉確認；這是一起完全可以避免的事故，肇因於自滿心態，而非設備故障。'},
+
+{t:'h2', en:'Chapter Summary', zh:'本章摘要'},
+{t:'p', en:'Chapter goal: help pilots improve ADM skills to mitigate risk in both classic and automated aircraft. Core point: this isn\'t really about aircraft — it\'s about the people who fly them.',
+ zh:'本章目標：協助飛行員精進ADM技巧，以降低無論是傳統型或自動化航空器上的風險因子。核心重點：這一切終究不是關於飛機，而是關於駕駛飛機的人。'}
+  ]
+},
+{
+  id:'ch3', num:3,
+  titleEn:'Chapter 3 — Aircraft Construction',
+  titleZh:'第三章 — 飛機構造',
+  subEn:'Original pages 3-1 to 3-13.',
+  subZh:'原文頁碼 3-1 至 3-13。',
+  blocks:[
+{t:'h2', en:'Aircraft Design, Certification, and Airworthiness', zh:'飛機設計、認證與適航性'},
+{t:'li', en:'FAA certifies three types of aviation products: aircraft, aircraft engines, propellers — each designed to airworthiness standards under 14 CFR', zh:'FAA對三類航空產品進行認證：飛機、飛機引擎、螺旋槳——各自依14 CFR的適航標準設計'},
+{t:'li', en:'Standards by category: Normal/Utility/Acrobatic/Commuter Airplanes — Part 23 · Transport Category Airplanes — Part 25 · Normal Category (rotorcraft) — Part 27 · Transport Category Rotorcraft — Part 29 · Manned Free Balloons — Part 31 · Aircraft Engines — Part 33 · Propellers — Part 35',
+ zh:'依類別適用的標準：正常／效用／特技／通勤類飛機——Part 23・運輸類飛機——Part 25・正常類（旋翼機）——Part 27・運輸類旋翼機——Part 29・載人自由氣球——Part 31・飛機引擎——Part 33・螺旋槳——Part 35'},
+{t:'li', en:'"Special classes" (e.g., gliders, powered-lift) use a combination of Parts 23/25/27/29 as agreed between FAA and designer', zh:'「特殊類別」（例如滑翔機、動力升力機）採用Part 23／25／27／29的組合，由FAA與設計者共同議定'},
+{t:'li', en:'Type Certificate (TC) issued once FAA is satisfied of compliance → generates a Type Certificate Data Sheet (TCDS) (publicly available on faa.gov) specifying key design/operational characteristics', zh:'FAA確認符合規定後核發型別證書（TC）→產生型別證書資料表（TCDS，可於faa.gov公開查詢），載明關鍵設計／操作特性'},
+{t:'li', en:'Light Sport Aircraft (LSA) are not built to FAA airworthiness standards — built to industry consensus standards FAA has agreed are acceptable; TC covers the whole aircraft (airframe+engine+prop) rather than certifying components individually', zh:'輕型運動航空器（LSA）並非依FAA適航標準打造——而是依業界共識標準（FAA已認可其可接受性）；TC涵蓋整架飛機（機身＋引擎＋螺旋槳），而非個別元件分開認證'},
+{t:'li', en:'Manufacturing: each part inspected against approved design = conformity inspection', zh:'製造過程：每個零件都會依核准設計進行比對檢查，稱為「符合性檢查」'},
+{t:'p', en:'Airworthiness certificate issued once complete aircraft passes inspection; must be carried onboard; stays valid as long as maintenance/inspections are current. Standard (white) — normal/utility/acrobatic/commuter/transport category, manned free balloons, "Special Class" aircraft. Special (pink) — primary/restricted/limited category, LSA, provisional certificates, special flight permits (ferry permits), experimental aircraft.',
+ zh:'飛機完成並通過檢查後核發適航證；須隨機攜帶；只要維修與檢查持續保持有效，證書即持續有效。標準適航證（白色）——正常／效用／特技／通勤／運輸類、載人自由氣球、「特殊類別」飛機。特殊適航證（粉紅色）——初級／限用／限制類、LSA、臨時證書、特殊飛航許可（換場許可）、實驗類飛機。'},
+{t:'p', en:'More detail: Chapter 9, 14 CFR Parts 175–225', zh:'詳見第9章、14 CFR Part 175–225'},
+
+{t:'h2', en:'Lift and Basic Aerodynamics (brief intro — full detail in Ch.5)', zh:'升力與基本空氣動力學（簡介，詳見第5章）'},
+{t:'p', en:'4 forces in straight-and-level unaccelerated flight: Thrust — forward force from powerplant/propeller; opposes drag. Drag — rearward retarding force from airflow disruption; opposes thrust. Lift — opposes weight; acts perpendicular to flight path through the wing\'s center of lift (CL). Weight — combined load of aircraft+crew+fuel+cargo; acts downward through the center of gravity (CG).',
+ zh:'水平等速直線飛行中的四種作用力：推力——由動力系統／螺旋槳產生的前向力；對抗阻力。阻力——由氣流受擾動產生的後向阻滯力；對抗推力。升力——對抗重量；沿飛行路徑垂直方向作用，通過機翼的升力中心（CL）。重量——飛機本體＋機組＋燃油＋貨物的總負荷；沿重心（CG）垂直向下作用。'},
+{t:'p', en:'Center of Gravity (CG): the point around which the aircraft would balance if suspended; determines aircraft stability. CG moving aft → increasingly dynamically unstable. For aircraft with fuel tanks forward of CG: CG should be set with tank empty — otherwise aircraft becomes unstable as fuel burns off. CG too far aft → insufficient elevator nose-down authority for stall recovery. CG too far forward → insufficient elevator nose-up authority to flare for landing.',
+ zh:'重心（CG）：若將飛機懸掛起來能維持平衡的那個點；決定了飛機的穩定性。重心後移→動態穩定性逐漸變差。若燃油箱位於重心之前：設定重心時應以油箱「空」的狀態為準——否則隨著燃油消耗，飛機會變得不穩定。重心過於偏後→升降舵的低頭操縱權不足，無法有效改出失速。重心過於偏前→升降舵的抬頭操縱權不足，無法在落地時順利拉平。'},
+{t:'p', en:'Axes (all pass through the CG): Longitudinal (roll) axis — nose to tail. Lateral (pitch) axis — wingtip to wingtip. Vertical (yaw) axis — vertical through the aircraft.',
+ zh:'三軸（均通過重心）：縱軸（滾轉軸）——從機首到機尾。橫軸（俯仰軸）——從翼尖到翼尖。垂直軸（偏航軸）——垂直貫穿機身。'},
+
+{t:'h2', en:'Major Components', zh:'主要組件'},
+{t:'p', en:'Most airplanes share: fuselage, wings, empennage, landing gear, powerplant.', zh:'大多數飛機共有的組件：機身、機翼、尾翼組、起落架、動力系統。'},
+{t:'h3', en:'Fuselage', zh:'機身'},
+{t:'p', en:'Central body — houses crew/passengers/cargo, structural connection for wings/tail. Older designs: open truss (wood/steel/aluminum tubing). Most common today: monocoque ("single shell", French) and semimonocoque.',
+ zh:'飛機的中央本體——容納機組員／乘客／貨物，並提供機翼與尾翼的結構連接。較舊的設計：開放式桁架結構（木材／鋼／鋁管）。目前最常見的是：硬殼式（monocoque，法文意為「單一外殼」）與半硬殼式（semimonocoque）。'},
+{t:'h3', en:'Wings', zh:'機翼'},
+{t:'p', en:'Airfoils attached to the fuselage; main lifting surfaces. Mounting position: high-wing / mid-wing / low-wing. Count: monoplane (1 set) vs. biplane (2 sets).',
+ zh:'附著於機身上的翼型構造；是主要的升力面。安裝位置分為：高單翼／中單翼／低單翼。依數量分為：單翼機（一組機翼）與雙翼機（兩組機翼）。'},
+{t:'p', en:'High-wing often uses wing struts (semi-cantilever — struts transmit loads to fuselage, typically attached ~halfway out); most low-wing (and some high-wing) use full cantilever (no external struts).',
+ zh:'高單翼機常使用翼支柱（半懸臂式——支柱將負載傳遞至機身，通常安裝在機翼約一半的位置）；大多數低單翼機（及部分高單翼機）採用全懸臂式設計（無外部支柱）。'},
+{t:'p', en:'Structural parts: spars, ribs, stringers (reinforced by trusses/I-beams/tubing/skin); ribs determine airfoil shape/thickness; fuel tanks often integral to wing structure or flexible bladders inside it.',
+ zh:'結構組件：翼樑、翼肋、翼條（並以桁架／工字樑／管材／蒙皮加強）；翼肋決定了翼型的形狀與厚度；油箱通常是機翼結構的一部分，或是安裝在機翼內部的軟式油囊。'},
+{t:'p', en:'Trailing-edge control surfaces: ailerons (~midpoint to tip, move opposite directions → roll) and flaps (fuselage to near midpoint, move down together → more lift for takeoff/landing; flush with wing in cruise).',
+ zh:'後緣操縱面：副翼（大約自機翼中點延伸至翼尖，兩側朝相反方向偏轉→產生滾轉）與襟翼（自機身延伸至機翼中點附近，同步向下偏轉→增加起飛／降落時的升力；巡航時與機翼齊平收起）。'},
+{t:'p', en:'Alternate wing designs (e.g., weight-shift control aircraft\'s highly-swept wing for drag reduction + weight-shift control) covered in Ch.5', zh:'其他機翼設計（例如重心操控式飛行器高後掠角的機翼，用以減阻並配合重心轉移操控）詳見第5章'},
+{t:'h3', en:'Empennage', zh:'尾翼組'},
+{t:'p', en:'Tail group — fixed surfaces (vertical stabilizer, horizontal stabilizer) + movable surfaces (rudder, elevator, trim tabs). Rudder (back of vertical stabilizer) — nose left/right. Elevator (back of horizontal stabilizer) — nose up/down.',
+ zh:'尾翼組——固定翼面（垂直安定面、水平安定面）＋可動翼面（方向舵、升降舵、配平片）。方向舵（位於垂直安定面後緣）——控制機首左右偏轉。升降舵（位於水平安定面後緣）——控制機首上下俯仰。'},
+{t:'p', en:'Trim tabs — small movable sections of a control surface\'s trailing edge, flight-deck controlled, reduce control pressures; can be on ailerons/rudder/elevator.',
+ zh:'配平片——操縱面後緣上一小塊可動部位，由駕駛艙內操控，用以降低操縱桿力；可裝設於副翼／方向舵／升降舵上。'},
+{t:'p', en:'Stabilator — alternate design, no separate elevator; one-piece horizontal stabilizer pivoting on a central hinge, moved directly by the control wheel; has an antiservo tab (moves same direction as stabilator trailing edge) that reduces sensitivity and also acts as a trim tab.',
+ zh:'全動平尾（stabilator）——另一種設計，沒有獨立的升降舵；水平安定面為一體式，繞中央鉸鏈樞轉，由操縱盤直接帶動；配有「反隨動片」（與全動平尾後緣同方向偏轉），可降低操縱靈敏度，同時也具有配平片的功能。'},
+{t:'h3', en:'Landing Gear', zh:'起落架'},
+{t:'p', en:'Supports the aircraft when parked/taxiing/takeoff/landing. Wheels most common; floats (water) or skis (snow) also used. Conventional gear (tailwheel) — two main wheels + rear wheel. Tricycle gear — two main wheels + nosewheel.',
+ zh:'在停放／滑行／起飛／降落時支撐飛機。輪式起落架最常見；也有用於水上的浮筒或用於雪地的雪橇。傳統式起落架（尾輪式）——兩個主輪＋一個後輪。三點式起落架——兩個主輪＋一個前輪。'},
+{t:'p', en:'Steering: typically rudder pedals (nosewheel or tailwheel), some aircraft use differential braking.', zh:'轉向方式：通常透過方向舵踏板（不論前輪或尾輪式），部分飛機則採用差動煞車。'},
+{t:'h3', en:'The Powerplant', zh:'動力系統'},
+{t:'p', en:'Engine + propeller. Engine: turns the propeller; also generates electrical power, provides vacuum source for some instruments, and (most single-engine aircraft) cabin heat source. Cowling/nacelle — covered housing that streamlines airflow and ducts cooling air around cylinders.',
+ zh:'動力系統＝引擎＋螺旋槳。引擎：帶動螺旋槳轉動；同時也產生電力、為部分儀表提供真空來源，並（大多數單引擎飛機）作為機艙暖氣的來源。整流罩／發動機艙罩——包覆式外殼，用以整流空氣並將冷卻氣流導引至汽缸周圍。'},
+{t:'p', en:'Propeller: rotating airfoil — high pressure behind, low pressure at the face (same principle as wing lift) → generates thrust; can be mounted as puller (front) or pusher (rear).',
+ zh:'螺旋槳：一種旋轉翼型——後方為高壓、前方為低壓（與機翼產生升力的原理相同）→因而產生推力；可安裝於機首作為「拉進式」，或安裝於機尾作為「推進式」。'},
+{t:'p', en:'Two key design factors: blade angle (keeps AOA roughly constant along the span, reduces/eliminates stall risk) and pitch (distance a prop would travel in one revolution through a solid) — combine to determine propeller efficiency; props are matched to specific aircraft/powerplant combos for best efficiency at a given power setting.',
+ zh:'兩個關鍵設計因素：槳葉角（讓攻角沿槳葉展長方向大致保持一致，降低或消除失速風險——攻角在飛行中會持續變化）與槳距（螺旋槳若在固體中旋轉一圈所前進的距離）——兩者共同決定螺旋槳效率；螺旋槳通常會與特定的機身／動力系統組合搭配，以在特定功率設定下達到最佳效率。'},
+
+{t:'h2', en:'Subcomponents', zh:'次系統元件'},
+{t:'li', en:'Airframe — basic structure, withstands aerodynamic forces + weight stresses (fuel/crew/payload)', zh:'機體結構——基本構造，須承受空氣動力負荷與燃油／機組員／載重帶來的應力'},
+{t:'li', en:'Electrical system — generates/regulates/distributes power; sources include engine-driven AC generators, APUs, external power; powers flight instruments, essential systems (e.g., anti-icing), passenger services (cabin lighting)',
+ zh:'電力系統——產生、調節並分配電力；電源來源包含引擎驅動的交流發電機、輔助動力單元（APU）、外部電源；供應飛航儀表、必要系統（例如防除冰）、乘客服務（如機艙照明）用電'},
+{t:'li', en:'Flight controls — govern attitude/flight path; conventional primary controls: elevators (pitch), ailerons (roll), rudder (yaw) — hinged trailing-edge surfaces, operated by pilot or autopilot',
+ zh:'飛行操縱系統——控制姿態與飛行路徑；傳統主操縱面：升降舵（俯仰）、副翼（滾轉）、方向舵（偏航）——皆為鉸接式後緣翼面，由飛行員或自動駕駛操作'},
+{t:'li', en:'Brakes — modern aircraft: multiple caliper pads hydraulically squeeze a rotating disk (rotor); steel or carbon material (carbon = lighter, absorbs more energy); brake life measured in landings, not miles (huge energy absorbed per use)',
+ zh:'煞車系統——現代飛機：多組卡鉗來令片透過液壓夾緊旋轉的煞車碟盤；材質為鋼或碳纖維（碳纖維較輕、吸能較高）；煞車壽命以「落地次數」而非里程計算（每次使用需吸收極大能量）'},
+
+{t:'h2', en:'Types of Aircraft Construction', zh:'飛機構造類型'},
+{t:'p', en:'Evolution: wood truss → monocoque shell → semimonocoque (current standard).', zh:'演進過程：木製桁架 → 硬殼式外殼 → 半硬殼式（目前的主流標準）。'},
+{t:'h3', en:'Truss Structure', zh:'桁架結構'},
+{t:'p', en:'Drawback: not streamlined. Longerons (welded tubing lengths) form the braced framework; vertical/horizontal struts welded on give a square/rectangular cross-section. Stringers and bulkheads/formers shape the fuselage and support the covering. Originally enclosed with cloth fabric, later lightweight metals (aluminum) → led to stressed skin structures.',
+ zh:'缺點：外型不夠流線化。縱樑（焊接的長管材）構成加強的骨架；焊接上去的垂直與水平支柱使橫截面呈方形或矩形。翼條與隔框（成形框）則用來塑造機身外形並支撐蒙皮。最初以布質蒙皮包覆，後改用鋁等輕質金屬→進而發展出應力蒙皮結構。'},
+{t:'h3', en:'Monocoque', zh:'硬殼式結構'},
+{t:'p', en:'Stressed skin supports almost all loads (like an aluminum beverage can). Very strong but not tolerant of surface deformation — a dented/deformed section collapses easily.',
+ zh:'應力蒙皮承受幾乎所有的負荷（如同一個鋁製飲料罐）。非常堅固，但不耐受表面變形——一旦局部凹陷或變形，很容易整體潰陷。'},
+{t:'p', en:'Historical note: Jack Northrop\'s 1918 monocoque fuselage technique for the Lockheed S-1 Racer — molded plywood half-shells glued together, each half less than ¼ inch thick; monocoque didn\'t reemerge for decades due to complexity; modern analog = automobile unibody construction.',
+ zh:'歷史小知識：Jack Northrop 於1918年為 Lockheed S-1 Racer 開發的硬殼式機身技術——以膠合的模製夾板半殼組成，每一半殼厚度不到四分之一英吋；由於製程複雜，這種技術之後數十年未再被廣泛採用；現代的類似應用則是汽車的承載式車身（unibody）結構。'},
+{t:'h3', en:'Semimonocoque', zh:'半硬殼式結構'},
+{t:'p', en:'Uses a substructure (bulkheads/formers + stringers) the skin attaches to, taking some bending stress off the stressed skin. Main fuselage section also includes wing attachment points and a firewall (heat-resistant material, e.g. stainless steel — protects flight deck/cabin from engine fire).',
+ zh:'採用一套次結構（隔框／成形框＋翼條），蒙皮附著其上，可分擔部分原本由應力蒙皮承受的彎曲應力。機身主要段落也包含機翼接合點與防火牆（耐熱材質，例如不鏽鋼——用以保護駕駛艙／機艙不受引擎火警波及）。'},
+
+{t:'h3', en:'Composite Construction — History', zh:'複合材料構造——發展歷史'},
+{t:'p', en:'WWII B-29 fiberglass insulation → late 1950s European sailplanes used fiberglass as primary structure → 1965: FAA type-certified first all-fiberglass normal-category aircraft (Diamant HBV, Swiss sailplane) → 1969: Windecker Eagle (4-seat single-engine) certified normal category → by 2005, >35% of new aircraft used composite materials.',
+ zh:'二戰時期B-29轟炸機使用玻璃纖維隔熱材 → 1950年代末歐洲高性能滑翔機開始以玻璃纖維作為主結構 → 1965年：FAA首次核准全玻璃纖維飛機的正常類型別證書（瑞士滑翔機Diamant HBV） → 1969年：Windecker Eagle（四人座單引擎機）取得正常類認證 → 到2005年，超過35%的新飛機採用複合材料製造。'},
+{t:'p', en:'"Composite" = fiberglass, carbon fiber cloth, Kevlar™, or mixtures — a fiber-reinforced matrix system: matrix ("glue," commonly epoxy resin) holds fibers and gives shape; fibers carry most of the load.',
+ zh:'「複合材料」泛指玻璃纖維、碳纖維布、克維拉（Kevlar™）或以上材料的混合物——本質是「纖維強化基材系統」：基材（也就是「膠」，常見為環氧樹脂）將纖維黏合並塑形；纖維則承受絕大部分的負荷。'},
+{t:'p', en:'Fiberglass: good tensile/compressive strength, good impact resistance, easy to work with, inexpensive — but relatively heavy. Carbon fiber: stronger and stiffer than fiberglass, lighter — but poor impact resistance (brittle); more expensive but well-designed structures can be ~30% lighter than equivalent aluminum.',
+ zh:'玻璃纖維：具良好的抗拉／抗壓強度、良好的抗衝擊性、易於加工、價格便宜——但相對較重。碳纖維：抗拉／抗壓強度與剛性均優於玻璃纖維、重量更輕——但抗衝擊性較差（質脆易碎）；價格較高，但設計良好的碳纖維結構可比同等鋁製結構輕約30%。'},
+{t:'h3', en:'Advantages of Composites', zh:'複合材料的優點'},
+{t:'p', en:'Lighter weight is often cited, but not automatic. Smooth, compound-curved aerodynamic shapes → reduced drag. Reduces radar signature (stealth aircraft). Corrosion resistance. Good flex performance (e.g., helicopter rotor blades) — doesn\'t suffer metal fatigue.',
+ zh:'常被提及的優點是重量較輕，但這並非必然（取決於結構設計與所用複合材料種類）。表面平滑、可做出複雜曲面的空氣動力外形→降低阻力。降低雷達反射截面（用於匿蹤機設計）。抗腐蝕性佳。良好的撓曲特性（例如直升機旋翼葉片）——不會像金屬一樣產生疲勞裂紋。'},
+{t:'h3', en:'Disadvantages of Composites', zh:'複合材料的缺點'},
+{t:'p', en:'Lack of visual proof of damage is the big one. Low energy impact → may show no visible surface sign, but can cause a cone-shaped spread of delamination underneath. Medium energy impact → visible local crushing, repair needed. High energy impact (bird strike, hail) → visible puncture, severe damage.',
+ zh:'最主要的缺點是「損傷難以從外觀判斷」。低能量撞擊→表面可能完全看不出痕跡，但內部可能已出現錐狀擴散的分層損傷。中能量撞擊→會出現可見的局部凹陷，須進行修復。高能量撞擊（鳥擊、冰雹）→會出現明顯穿孔，損傷嚴重。'},
+{t:'p', en:'If delamination/crushing/puncture occurs → repair mandatory; cover/protect from rain while awaiting repair. Speed tape can protect from water short-term but is not a structural repair, nor is paste filler.',
+ zh:'一旦出現分層、凹陷或穿孔→必須進行修復；等待維修期間應加以覆蓋、防止淋雨。「速修膠帶」可短暫防水，但並非結構性修復，補土填料同樣不算結構性修復。'},
+{t:'p', en:'Heat sensitivity: many epoxies weaken above 150°F; black-painted composite surface on hot asphalt can reach ~220°F vs. ~140°F if painted white → composite aircraft often have specific approved paint-color guidance.',
+ zh:'耐熱性限制：許多環氧樹脂在超過華氏150度時會開始弱化；黑色塗裝的複合材料表面停在炎熱柏油地面上，溫度可能高達約220°F，若為白色塗裝則通常不超過約140°F→因此複合材料飛機通常對可使用的塗裝顏色有特定規範。'},
+{t:'p', en:'Chemical paint strippers are harmful — must not be used; only mechanical removal (gentle grit blasting/sanding). Fluid spills (fuel/oil/hydraulic) generally not a problem with modern epoxy-resin composites, unless using cheaper polyester resin fuel tanks with ethanol-blended auto gas.',
+ zh:'化學脫漆劑具有破壞性——絕對不可使用；僅能以機械方式去除塗裝（輕度噴砂或砂磨）。燃油／機油／液壓油噴濺，對現代環氧樹脂複合材料通常不構成問題，除非是使用較便宜的聚酯樹脂油箱、又加了含乙醇的車用汽油。'},
+{t:'h3', en:'Lightning Strike Protection', zh:'雷擊防護'},
+{t:'p', en:'Goal: spread strike energy over a large surface area to keep amps/sq-inch to a safe level. Composite aircraft: fiberglass is an electrical insulator; carbon fiber conducts but not as well as aluminum → metal mesh (aluminum mesh on fiberglass, copper mesh on carbon fiber) bonded to the outer skin adds conductivity.',
+ zh:'目標：將雷擊能量分散至大面積表面，將每平方英吋的安培數降到安全範圍。複合材料飛機：玻璃纖維是電絕緣體；碳纖維雖能導電但不如鋁材佳→因此外層蒙皮會黏貼金屬網（玻璃纖維上貼鋁網、碳纖維上貼銅網）以增加導電性。'},
+{t:'p', en:'Aircraft with internal radio antennas need "windows" (gaps) in the lightning mesh over the antenna — fiberglass is radio-transparent, carbon fiber is not.',
+ zh:'裝有內建式無線電天線的飛機，須在天線上方的防雷網中留出「窗口」——因為玻璃纖維對無線電波是透明的，碳纖維則不是。'},
+
+{t:'h2', en:'Instrumentation: Moving into the Future', zh:'儀表系統：邁向未來'},
+{t:'p', en:'Electronic Flight Display (EFD) replaces individual analog instruments with LCD screens: Primary Flight Display (PFD) (in front of pilot) + Multi-Function Display (MFD) (center of panel) — reduces clutter, improves safety via solid-state instruments with far lower failure rates than analog.',
+ zh:'電子飛行顯示器（EFD）以LCD螢幕取代個別的類比儀表：主飛行顯示器（PFD，位於飛行員正前方）＋多功能顯示器（MFD，位於儀表板中央）——減少儀表板雜亂，並透過故障率遠低於類比儀表的固態儀表提升安全性。'},
+{t:'p', en:'Regardless of analog or digital/glass, instruments fall into 3 categories: performance, control, navigation.',
+ zh:'無論是類比或數位（玻璃座艙）儀表，儀表都可分為三大類：性能儀表、操縱儀表、導航儀表。'},
+{t:'h3', en:'Performance Instruments', zh:'性能儀表'},
+{t:'p', en:'Show actual aircraft performance — altimeter, airspeed indicator, VSI, heading indicator, turn-and-slip indicator, AOA indicator, slip-skid indicator.',
+ zh:'顯示飛機實際的性能表現——高度表、空速表、垂直速度表（VSI）、航向指示器、轉彎側滑儀、攻角指示器、側滑儀。'},
+{t:'h3', en:'Control Instruments', zh:'操縱儀表'},
+{t:'p', en:'Show immediate attitude/power changes in precise increments — the attitude indicator is the key one. Control instruments do not show speed or altitude (need performance instruments for that).',
+ zh:'以精確的增量顯示即時的姿態／動力變化——姿態指示器是其中最關鍵的一項。操縱儀表本身不顯示速度或高度（需依靠性能儀表才能得知）。'},
+{t:'h3', en:'Navigation Instruments', zh:'導航儀表'},
+{t:'p', en:'Show aircraft position relative to a selected navigation facility/fix — course indicators, range indicators, glideslope indicators, bearing pointers; display GPS/VOR/NDB/ILS information; modern aircraft blend these sources for more accurate positional info.',
+ zh:'顯示飛機相對於所選定導航設施／定位點的位置——包含航道指示器、距離指示器、下滑道指示器、方位指針；顯示GPS／VOR／NDB／ILS資訊；現代飛機會混合多種資訊來源，提供更精確的位置資訊。'},
+{t:'h3', en:'Global Positioning System (GPS)', zh:'全球定位系統（GPS）'},
+{t:'p', en:'Satellite-based navigation, DOD-operated constellation; originally military, opened to civilian use in the 1980s. Works in all weather, anywhere, 24 hours a day.',
+ zh:'以衛星為基礎的導航系統，由美國國防部（DOD）操作的衛星星系；最初僅供軍事用途，1980年代起開放民間使用。可在任何天候、任何地點、全天24小時運作。'},
+{t:'p', en:'3 satellites minimum → 2D position (lat/long) + track; 4+ satellites → 3D position (lat/long/altitude); additional satellites help offset signal loss/ambiguity. More detail: Chapter 16 (Navigation) and the AIM.',
+ zh:'至少須鎖定3顆衛星→可算出二維位置（經緯度）與航跡；4顆以上衛星→可算出三維位置（經緯度＋高度）；額外的衛星有助於補償訊號中斷或模糊的問題。詳見第16章（導航）與AIM（航空資訊手冊）。'},
+
+{t:'h2', en:'Chapter Summary', zh:'本章摘要'},
+{t:'p', en:'Overview of aircraft structures; deeper understanding available via flight-sim software, online interactive programs (e.g., AOPA), aviation periodicals, and free NASA/FAA resources (as noted in Ch.1).',
+ zh:'本章概略介紹了飛機結構；若想更深入了解，可透過飛行模擬軟體、線上互動課程（例如AOPA提供的資源）、航空期刊，以及第一章提過的NASA／FAA免費資源進一步學習。'}
+  ]
+},
+{
+  id:'ch4', num:4,
+  titleEn:'Chapter 4 — Principles of Flight',
+  titleZh:'第四章 — 飛行原理',
+  subEn:'Original pages 4-1 to 4-9.',
+  subZh:'原文頁碼 4-1 至 4-9。',
+  blocks:[
+{t:'h2', en:'Air is a Fluid', zh:'空氣是一種流體'},
+{t:'p', en:'Gases (including air) are fluids — they take the shape of their container and generally don\'t strongly resist deformation. Viscosity — a fluid\'s resistance to flowing; high-viscosity = "thick"/resists flow (grease > motor oil > gasoline); air has low viscosity, flows easily.',
+ zh:'氣體（包含空氣）也是一種流體——會呈現容器的形狀，且通常不太抗拒變形。黏度——流體抵抗流動的特性；高黏度＝「濃稠」、抗拒流動（黃油＞機油＞汽油）；空氣的黏度很低，流動非常容易。'},
+{t:'p', en:'Friction — resistance between two contacting surfaces; even a "smooth" wing surface has microscopic roughness that slows airflow near it; the layer of air molecules that adheres to the wing surface (near-zero relative velocity) = the boundary layer. Drag = boundary-layer friction + air\'s viscosity acting together to resist airflow over a wing.',
+ zh:'摩擦——兩個接觸表面之間的阻力；即使機翼表面看似「光滑」，在微觀層面仍有粗糙度，會減緩貼近表面的氣流速度；黏附在機翼表面上（相對速度接近零）的那層空氣分子，稱為邊界層。阻力＝邊界層摩擦力＋空氣本身的黏性，兩者共同作用，阻礙氣流通過機翼。'},
+
+{t:'h2', en:'Pressure', zh:'壓力'},
+{t:'p', en:'Pressure = force per unit area, perpendicular to a surface. Atmospheric pressure matters most to pilots — drives weather, helps generate lift, and actuates the altimeter, airspeed indicator, VSI, and manifold pressure gauge.',
+ zh:'壓力＝垂直作用於表面單位面積上的力。大氣壓力對飛行員最為重要——驅動天氣變化、有助於產生升力，並驅動高度表、空速表、垂直速度表與歧管壓力表等儀表運作。'},
+{t:'p', en:'Standard sea-level pressure: 14.70 psi ≈ 29.92"Hg ≈ 1,013.2 mb. Standard atmosphere (ISA / ICAO Standard Atmosphere): sea-level temp 59°F/15°C, pressure 29.92"Hg/1,013.2 mb. Standard temperature lapse rate: ~3.5°F (2°C) per 1,000 ft up to 36,000 ft, then constant to 80,000 ft. Standard pressure lapse rate: ~1"Hg per 1,000 ft up to 10,000 ft.',
+ zh:'標準海平面壓力：14.70 psi≈29.92吋汞柱（"Hg）≈1,013.2毫巴（mb）。標準大氣（ISA／ICAO標準大氣）：海平面溫度59°F／15°C，壓力29.92"Hg／1,013.2 mb。標準溫度遞減率：每1,000呎約下降3.5°F（2°C），至36,000呎後維持恆定，直到80,000呎。標準氣壓遞減率：每1,000呎約下降1"Hg，適用至10,000呎。'},
+{t:'h3', en:'Pressure Altitude', zh:'壓力高度'},
+{t:'p', en:'Height above the Standard Datum Plane (SDP) — the theoretical level where atmospheric weight = 29.92"Hg. = indicated altitude when altimeter is set to 29.92. Basis for aircraft performance calcs and flight-level assignment at/above 18,000 ft.',
+ zh:'標準基準面（SDP）之上的高度——即大氣重量等於29.92"Hg的理論高度層。當高度表撥定為29.92時的指示高度，即為壓力高度。它是計算飛機性能與18,000呎以上飛航空層指派的依據。'},
+{t:'h3', en:'Density Altitude', zh:'密度高度'},
+{t:'p', en:'= pressure altitude corrected for nonstandard temperature. Lower air density (higher density altitude) reduces power (engine takes in less air), thrust (prop less efficient), and lift (thin air exerts less force). High density altitude = thin air (high elevation/low pressure/high temp/high humidity); low density altitude = dense air (opposite conditions). Aircraft performs as though at an altitude equal to its density altitude, regardless of actual altitude.',
+ zh:'密度高度＝依非標準溫度修正後的壓力高度。空氣密度較低（密度高度較高）會降低動力（引擎吸入的空氣較少）、推力（螺旋槳在稀薄空氣中效率較差）以及升力（稀薄空氣施加的作用力較小）。高密度高度＝空氣稀薄（高海拔／低氣壓／高溫／高濕度）；低密度高度＝空氣濃密（相反條件）。無論實際高度為何，飛機的表現都會如同在其密度高度所對應的高度上飛行。'},
+{t:'p', en:'Effect of pressure on density: density ∝ pressure (at constant temp). Effect of temperature: density ∝ 1/temperature (at constant pressure) — pressure\'s drop with altitude usually dominates overall, so density decreases with altitude. Effect of humidity: water vapor is lighter than air, so moist air is less dense than dry air → higher humidity = higher density altitude = reduced performance.',
+ zh:'壓力對密度的影響：在溫度不變的情況下，密度與壓力成正比。溫度的影響：在壓力不變的情況下，密度與溫度成反比——但整體而言，隨高度上升壓力下降的效應通常佔主導，因此密度整體隨高度增加而降低。濕度的影響：水蒸氣比空氣輕，因此潮濕空氣的密度低於乾燥空氣→濕度越高，密度高度越高，飛機性能也隨之下降。'},
+{t:'img', src:'figs/ch4/fig4-3.png', en:'Figure 4-3. Properties of standard atmosphere.', zh:'圖4-3。標準大氣的特性。'},
+
+{t:'h2', en:'Theories in the Production of Lift', zh:'升力產生的理論'},
+{t:'h3', en:'Newton\'s Basic Laws of Motion', zh:'牛頓運動定律'},
+{t:'p', en:'1st Law (inertia): an object at rest/in uniform motion stays that way unless acted on by an outside force. 2nd Law: force = mass × acceleration. 3rd Law: every action has an equal and opposite reaction — e.g., propeller pushes air back → air pushes aircraft forward; jet engine pushes hot gas backward → aircraft pushed forward.',
+ zh:'第一定律（慣性）：靜止或等速運動的物體會維持該狀態，除非受到外力作用。第二定律：力＝質量×加速度。第三定律：每個作用力都有一個大小相等、方向相反的反作用力——例如螺旋槳將空氣往後推，空氣便將飛機向前推；噴射引擎將熱氣往後噴，飛機便被向前推動。'},
+{t:'h3', en:'Bernoulli\'s Principle of Differential Pressure', zh:'白努利壓差原理'},
+{t:'p', en:'As the velocity of a moving fluid increases, the pressure within it decreases. Demonstrated by a venturi tube: air speeds up through the constricted throat (to keep mass flow constant) → pressure drops there; slows and pressure rises again past the constriction. Explains why air passing over a wing\'s curved top accelerates → pressure there drops.',
+ zh:'流動流體的速度增加時，其內部壓力會下降。可用文氏管（venturi tube）示範：空氣通過收縮的喉部時加速（以維持質量流量不變）→該處壓力隨之下降；通過收縮段之後氣流減速，壓力又再度回升。這解釋了為什麼氣流通過機翼上方彎曲表面時會加速→該處壓力因此下降。'},
+{t:'img', src:'figs/ch4/fig4-4.png', en:'Figure 4-4. Air pressure decreases in a venturi tube.', zh:'圖4-4。文氏管內的空氣壓力下降。'},
+
+{t:'h2', en:'Airfoil Design', zh:'翼型設計'},
+{t:'p', en:'Airfoil: a structure shaped to get a useful aerodynamic reaction from air moving past it. Key features: camber (curvature — upper surface more pronounced than lower), leading edge (rounded, forward) and trailing edge (narrow, tapered), chord line (leading to trailing edge, straight reference line), mean camber line (equidistant from upper/lower surfaces).',
+ zh:'翼型：一種經過設計的結構，能從流經其表面的空氣中獲得有用的空氣動力反應。主要特徵包括：翼弧（曲度——上表面的弧度比下表面明顯）、前緣（圓潤、朝前）與後緣（狹窄、漸尖）、翼弦線（連接前緣與後緣的直線參考線）、平均彎度線（與上下表面等距的線）。'},
+{t:'img', src:'figs/ch4/fig4-5.png', en:'Figure 4-5. Typical airfoil section.', zh:'圖4-5。典型翼型剖面。'},
+{t:'img', src:'figs/ch4/fig4-6.png', en:'Figure 4-6. Airfoil designs.', zh:'圖4-6。各種翼型設計。'},
+{t:'p', en:'Lift comes from two combined actions: positive-pressure lift from air striking the relatively flat lower surface, and negative-pressure (suction) lift from accelerated air over the curved upper surface — the upper-surface contribution is the larger share. No single airfoil satisfies every flight requirement — shape is a tradeoff dictated by weight, speed, and mission.',
+ zh:'升力來自兩種力量的結合：氣流撞擊相對平坦的下表面所產生的正壓升力，以及氣流加速通過彎曲上表面所產生的負壓（吸力）升力——上表面所貢獻的部分較大。沒有任何一種翼型能滿足所有飛行需求——形狀的選擇取決於重量、速度與任務需求之間的取捨。'},
+{t:'h3', en:'Low Pressure Above / High Pressure Below', zh:'上表面低壓／下表面高壓'},
+{t:'p', en:'Air over the upper surface must move faster than air along the bottom → by Bernoulli, pressure above the airfoil drops → contributes to lift. Underneath: airflow nearly stops at a stagnation point near the leading edge, then speeds back up — this net slowing beneath the airfoil creates positive pressure below. Both Newton\'s laws and Bernoulli\'s principle operate together whenever an airfoil generates lift.',
+ zh:'上表面的氣流速度必須比下表面快→依白努利原理，翼型上方的壓力因此下降→有助於產生升力。下表面：氣流在靠近前緣的滯止點幾乎完全停止，之後再重新加速——這種下表面整體較慢的氣流，形成了正壓。翼型產生升力時，牛頓定律與白努利原理其實是同時運作的。'},
+{t:'p', en:'Note: the pressure difference between upper/lower surfaces alone does not fully account for total lift — symmetrical airfoils (common on high-speed aircraft, many helicopter rotor blades, even a flat paper airplane) still produce lift through "flow turning"/angle relative to the oncoming airstream, not just camber-driven pressure differential.',
+ zh:'補充說明：僅靠上下表面的壓差並不能完全解釋總升力——對稱翼型（常見於高速飛機、許多直升機旋翼葉片，甚至一架平坦的紙飛機）仍能產生升力，靠的是氣流相對來流角度的「轉向」效應，而不只是翼弧造成的壓差。'},
+{t:'h3', en:'Pressure Distribution', zh:'壓力分布'},
+{t:'p', en:'Pressure varies along the airfoil surface at different AOAs — the average for a given AOA = center of pressure (CP), through which aerodynamic force acts. CP moves forward at high AOA, aft at low AOA — this matters a lot for wing structural design and governs the aircraft\'s aerodynamic balance/controllability.',
+ zh:'在不同攻角下，翼型表面的壓力分布會有所變化——某一攻角下的平均值即為壓力中心（CP），空氣動力即透過此點作用。攻角越大，CP越往前移；攻角越小，CP越往後移——這對機翼結構設計影響很大，也決定了飛機的空氣動力平衡與操控性。'},
+{t:'img', src:'figs/ch4/fig4-7.png', en:'Figure 4-7. Pressure distribution on an airfoil and CP changes with AOA.', zh:'圖4-7。翼型上的壓力分布，以及CP隨攻角變化的情形。'},
+
+{t:'h2', en:'A Third Dimension', zh:'第三維度'},
+{t:'p', en:'Beyond the 2D upper/lower surface picture, the wingtip also has an aerodynamic effect: high pressure from below pushes around the tip to the low-pressure area above → creates a rotating tip vortex, trailing behind as a downwash → reduces lift for the outer portion of the wing. Countermeasures: winglets (act as a dam preventing the vortex) or a tapered wingtip (smooths airflow around the tip).',
+ zh:'除了上下表面這個二維的觀點之外，翼尖也具有空氣動力效應：下方的高壓氣流會繞過翼尖流向上方的低壓區→形成旋轉的翼尖渦流，並在機翼後方拖曳出下洗流→降低機翼外側部分的升力。因應對策：翼尖小翼（如同一道屏障防止渦流形成）或漸縮式翼尖（讓氣流繞過翼尖時更為平順）。'},
+{t:'img', src:'figs/ch4/fig4-8.png', en:'Figure 4-8. Tip vortex.', zh:'圖4-8。翼尖渦流。'},
+
+{t:'h2', en:'Chapter Summary', zh:'本章摘要'},
+{t:'p', en:'Modern GA aircraft have high-performance characteristics, making it increasingly important for pilots to understand these underlying principles. Further reading: NASA\'s Beginner\'s Guide to Aerodynamics.',
+ zh:'現代通用航空飛機具備高性能特性，因此飛行員理解這些基本原理變得日益重要。延伸閱讀：NASA的《空氣動力學入門指南》。'}
+  ]
+},
+{
+  id:'ch6', num:6,
+  titleEn:'Chapter 6 — Flight Controls',
+  titleZh:'第六章 — 飛行操縱系統',
+  subEn:'Original pages 6-1 to 6-12.',
+  subZh:'原文頁碼 6-1 至 6-12。',
+  blocks:[
+{t:'h2', en:'Flight Control System Evolution', zh:'飛行操縱系統的演進'},
+{t:'p', en:'Started mechanical (cables/pulleys/push rods). Hydromechanical — mechanical circuit + hydraulic circuit — reduced complexity/weight/limitations as aircraft got larger/faster. Fly-by-wire — physical linkage replaced by electrical interface; boosted controls feed back simulated "feel" to the pilot.',
+ zh:'最初為機械式（纜線／滑輪／推桿）。液壓機械式——結合機械迴路與液壓迴路——隨著飛機日益龐大、快速，用以降低系統的複雜度、重量與限制。線傳飛控（Fly-by-wire）——以電子介面取代實體連桿；助力操縱系統會回饋模擬的「手感」給飛行員。'},
+{t:'p', en:'NASA Dryden research: Intelligent Flight Control Systems (IFCS) — adaptive neural-network flight control, helps maintain control/land safely after a control surface failure or airframe damage.',
+ zh:'NASA Dryden研究中心的研究：智慧飛行操縱系統（IFCS）——採用自適應神經網路的飛控系統，能在操縱面失效或機身受損時，協助飛行員維持操控並安全落地。'},
+
+{t:'h2', en:'Flight Controls — Primary vs. Secondary', zh:'主操縱與次操縱'},
+{t:'p', en:'Primary: ailerons, elevator (or stabilator), rudder — required for safe control. Secondary: wing flaps, leading edge devices, spoilers, trim systems — improve performance or relieve excess control forces.',
+ zh:'主操縱面：副翼、升降舵（或全動平尾）、方向舵——為安全操控所必需。次操縱面：襟翼、前緣裝置、擾流板、配平系統——用於提升性能或減輕過大的操縱桿力。'},
+{t:'table', head:['Surface','Movement / Axis'], headZh:['操縱面','運動方向／軸線'], rows:[
+  {en:'Aileron', zh:'副翼', en2:'Roll — Longitudinal axis — Lateral stability', zh2:'滾轉——縱軸——側向穩定性'},
+  {en:'Elevator / Stabilator', zh:'升降舵／全動平尾', en2:'Pitch — Lateral axis — Longitudinal stability', zh2:'俯仰——橫軸——縱向穩定性'},
+  {en:'Rudder', zh:'方向舵', en2:'Yaw — Vertical axis — Directional stability', zh2:'偏航——垂直軸——方向穩定性'}
+]},
+
+{t:'h2', en:'Ailerons', zh:'副翼'},
+{t:'p', en:'Attached to outboard trailing edge of each wing, move opposite directions. Right control input → right aileron up (lift decreases) + left aileron down (lift increases) → roll right.',
+ zh:'安裝於左右機翼的外側後緣，兩側朝相反方向偏轉。向右操縱→右副翼向上偏（升力減少）＋左副翼向下偏（升力增加）→產生向右滾轉。'},
+{t:'h3', en:'Adverse Yaw', zh:'不利偏航'},
+{t:'p', en:'Down-deflected aileron produces more lift AND more drag → that wing slows slightly → aircraft yaws toward the wing with increased lift/drag (opposite the bank direction, from the pilot\'s view). Worse at low airspeed. Rudder counteracts it. Coordinated turn = aileron (bank) + rudder (counter adverse yaw) + elevator back-pressure (more lift needed in a turn).',
+ zh:'下偏的副翼會產生更多升力「也」產生更多阻力→該側機翼因而略微減速→飛機朝升力／阻力增加的那側偏航（從飛行員角度看，方向與坡度相反）。低速時此現象更明顯。方向舵可用來抵銷此效應。協調轉彎＝副翼（控制坡度）＋方向舵（抵銷不利偏航）＋升降舵拉桿力（轉彎時需要更多升力）。'},
+{t:'p', en:'4 manufacturer solutions to reduce adverse yaw: Differential ailerons (up aileron deflects more than down); Frise-type ailerons (raised aileron\'s leading edge projects into airflow, creating balancing drag); Coupled ailerons and rudder (interconnect springs auto-deflect rudder with aileron input); Flaperons (combine flap+aileron function via a mixer).',
+ zh:'廠商減少不利偏航的四種方案：差動式副翼（上偏角度大於下偏角度）；Frise型副翼（上偏副翼的前緣會凸入氣流中，產生平衡用的阻力）；副翼／方向舵連動系統（連動彈簧會隨副翼輸入自動偏轉方向舵）；襟副翼（透過混合器結合襟翼與副翼的功能）。'},
+
+{t:'h2', en:'Elevator', zh:'升降舵'},
+{t:'p', en:'Aft column movement → elevator trailing edge up ("up-elevator") → downward aerodynamic force on tail → tail down, nose pitches up. Forward column movement → opposite effect.',
+ zh:'操縱柱向後拉→升降舵後緣向上偏（「升降舵上偏」）→尾翼產生向下的空氣動力→尾部下沉、機首抬起。操縱柱向前推則產生相反效果。'},
+{t:'h3', en:'T-Tail', zh:'T型尾翼'},
+{t:'p', en:'Elevator sits above prop downwash/fuselage-wing airflow disturbance → more consistent control response; popular on aft-fuselage-engine aircraft and seaplanes. Needs greater elevator deflection (higher control forces) at slow speed vs. conventional tail. Needs extra structural design against flutter.',
+ zh:'升降舵位於螺旋槳下洗流／機身機翼氣流擾動之上→控制反應更為一致；常用於尾部裝發動機的飛機及水上飛機。低速時所需的升降舵偏轉量（及操縱桿力）比傳統尾翼更大。須額外加強結構設計以防止顫振。'},
+{t:'p', en:'Deep stall risk: at very high AOA + low airspeed + aft CG, the wing\'s turbulent wake can blanket the tail, drastically reducing elevator/stabilator effectiveness → hard to recover. Mitigations: control stops, elevator down springs, (on transport jets) stick pushers.',
+ zh:'深度失速風險：在極高攻角＋低空速＋重心偏後的情況下，機翼產生的紊流尾流可能籠罩尾翼，大幅降低升降舵／全動平尾的效能→難以改出。因應措施：操縱行程限制器、升降舵下偏彈簧、（運輸類噴射機上的）推桿裝置。'},
+
+{t:'h2', en:'Stabilator', zh:'全動平尾'},
+{t:'p', en:'One-piece horizontal stabilizer pivoting on a central hinge — pull back → nose up; push forward → nose down. Very sensitive to control inputs → antiservo tab on trailing edge increases required control force, reducing overcontrol tendency; a balance weight is also typically used.',
+ zh:'一體式水平安定面，繞中央鉸鏈樞轉——向後拉→機首上仰；向前推→機首下俯。對操縱輸入非常敏感→後緣的反隨動片會增加所需操縱力，降低過度操縱的傾向；通常也會搭配配重使用。'},
+
+{t:'h2', en:'Canard', zh:'鴨翼'},
+{t:'p', en:'A forward horizontal lifting surface ahead of the main wings — the canard actually generates lift and holds the nose up (vs. an aft-tail\'s downward force). Used on the Wright Flyer; regained popularity in modern designs (e.g., Piaggio P180).',
+ zh:'位於主機翼前方的水平升力面——鴨翼本身會產生升力並用以撐住機首（相對地，傳統尾翼是靠向下的力來達成同樣效果）。曾用於萊特飛行者號，並在現代設計中重新受到青睞（例如Piaggio P180）。'},
+
+{t:'h2', en:'Rudder', zh:'方向舵'},
+{t:'p', en:'Controls yaw about the vertical axis; hinged to the vertical stabilizer, controlled by rudder pedals. Left pedal → rudder moves left → nose yaws left. Effectiveness increases with airspeed; propeller slipstream over the rudder increases its effectiveness.',
+ zh:'控制繞垂直軸的偏航運動；鉸接於垂直安定面上，由方向舵踏板操控。踩左踏板→方向舵向左偏→機首向左偏航。舵效隨空速增加而提升；螺旋槳滑流吹過方向舵也會增加其舵效。'},
+
+{t:'h2', en:'V-Tail', zh:'V型尾翼'},
+{t:'p', en:'Two slanted surfaces (ruddervators) combine elevator + rudder function. Control wheel moves both surfaces together (pitch); rudder pedals move them differentially (yaw). More complex control system, more susceptible to Dutch roll; drag reduction is minimal (e.g., Beechcraft Bonanza V35).',
+ zh:'兩片傾斜的翼面（稱為「方向升降舵」ruddervator）結合了升降舵與方向舵的功能。操縱盤同步驅動兩片翼面（控制俯仰）；方向舵踏板則差動驅動（控制偏航）。控制系統較複雜，也更容易發生荷蘭滾；實際減阻效果有限（例如Beechcraft Bonanza V35）。'},
+
+{t:'h2', en:'Secondary Flight Controls', zh:'次要操縱面'},
+{t:'h3', en:'Flaps', zh:'襟翼'},
+{t:'table', head:['Type','Notes'], headZh:['類型','說明'], rows:[
+  {en:'Plain', zh:'簡單式', en2:'Simplest; ↑camber →↑CL; also ↑drag significantly, moves CP aft → nose-down moment', zh2:'最簡單的類型；增加翼弧→提升升力係數；同時大幅增加阻力，並使壓力中心後移→產生機首下俯力矩'},
+  {en:'Split', zh:'開裂式', en2:'Deflects from lower surface only; slightly more lift than plain, more drag', zh2:'僅下表面偏轉；升力略高於簡單式，阻力也較大'},
+  {en:'Slotted', zh:'開縫式', en2:'Most popular today; ducts high-energy air to upper surface, delays flow separation → much higher CL-MAX', zh2:'目前最常見的類型；將高能量氣流導引至上表面，延遲氣流分離→大幅提升最大升力係數'},
+  {en:'Fowler', zh:'佛勒式', en2:'A slotted-flap variant; slides backward on tracks (increases wing area, not just camber)', zh2:'開縫式襟翼的一種變體；沿軌道向後滑出（增加機翼面積，不只是翼弧）'}
+]},
+{t:'h3', en:'Leading Edge Devices', zh:'前緣裝置'},
+{t:'p', en:'Fixed slots — direct airflow to upper surface, delay separation. Movable slats — leading-edge segments on tracks, admit under-wing air over the upper surface at high AOA. Leading edge flaps — increase CL-MAX and camber, often paired with trailing-edge flaps. Leading edge cuffs — fixed devices, improve upper-surface airflow attachment at high AOA (lowers stall speed) at some cruise-speed cost.',
+ zh:'固定式縫翼——將氣流導引至上表面，延遲氣流分離。可動式前緣縫翼——沿軌道移動的前緣分段構造，在高攻角時讓下表面氣流流向上表面。前緣襟翼——增加最大升力係數與翼弧，常與後緣襟翼搭配使用。前緣翼刀（固定式）——為固定式裝置，改善高攻角時上表面氣流的附著性（降低失速速度），但會犧牲部分巡航速度。'},
+{t:'h3', en:'Spoilers', zh:'擾流板'},
+{t:'p', en:'High-drag devices deployed from the wing to spoil smooth airflow → reduce lift, increase drag. Gliders: control descent rate. Other aircraft: roll control (no adverse yaw) or descend without gaining speed, or reduce ground roll after landing (transfer weight to wheels, improve braking).',
+ zh:'從機翼展開的高阻力裝置，用以破壞平順氣流→降低升力、增加阻力。滑翔機：用於控制下降速率。其他飛機：可用於滾轉操縱（不產生不利偏航），或在不增加速度的情況下下降，也可用於落地後縮短滑行距離（將重量轉移至機輪、提升煞車效能）。'},
+{t:'h3', en:'Trim Systems', zh:'配平系統'},
+{t:'p', en:'Relieve the pilot from holding constant control pressure. Trim tabs (most common — single tab on elevator trailing edge). Balance tabs (auto-move opposite the primary surface, reducing pilot force). Servo tabs (mainly large aircraft — tab moves with input, airflow force on tab moves the primary surface). Antiservo tabs (move same direction as the stabilator — reduce sensitivity + function as trim). Ground adjustable tabs (fixed rudder tab, bent on the ground by trial and error). Adjustable stabilizer (jackscrew pivots the whole horizontal stabilizer — used on most jet transports).',
+ zh:'讓飛行員不必持續施加操縱桿力。配平片（最常見——單一配平片位於升降舵後緣）。平衡片（會自動朝主操縱面相反方向移動，降低所需操縱力）。伺服片（主要用於大型飛機——配平片隨輸入移動，氣流作用於配平片上的力再帶動主操縱面）。反隨動片（與全動平尾同方向移動——降低敏感度並兼具配平功能）。地面可調式配平片（固定式方向舵配平片，於地面透過試誤法彎折調整）。可調式安定面（透過絲桿樞轉整片水平安定面——大多數噴射客機採用此設計）。'},
+
+{t:'h2', en:'Autopilot', zh:'自動駕駛'},
+{t:'p', en:'Automatic flight control system keeping the aircraft level or on a set course; reduces pilot workload, increases safety; common features: altitude hold, heading hold. Single-axis autopilot controls the longitudinal axis only; three-axis controls all three axes. Includes a disconnect safety feature; can always be manually overridden.',
+ zh:'自動維持飛機水平或依設定航向飛行的自動飛行操縱系統；能降低飛行員工作負荷、提升安全性；常見功能包含高度保持與航向保持。單軸自動駕駛僅控制縱軸；三軸自動駕駛則同時控制三個軸向。系統內建解除安全裝置；且飛行員隨時可手動接管操控。'},
+
+{t:'h2', en:'Chapter Summary', zh:'本章摘要'},
+{t:'p', en:'Flight control systems and aerodynamic characteristics vary a lot between aircraft — pilots must become familiar with the primary/secondary flight control systems of the specific aircraft flown, primarily via the AFM/POH.',
+ zh:'不同飛機的操縱系統與空氣動力特性差異很大——飛行員必須熟悉所駕駛飛機的主／次操縱系統，主要依據為飛航手冊（AFM）或飛行員操作手冊（POH）。'}
+  ]
+},
+{
+  id:'ch9', num:9,
+  titleEn:'Chapter 9 — Flight Manuals and Other Documents',
+  titleZh:'第九章 — 飛航手冊與其他文件',
+  subEn:'Original pages 9-1 to 9-13.',
+  subZh:'原文頁碼 9-1 至 9-13。',
+  blocks:[
+{t:'h2', en:'AFM vs. POH vs. Owner/Information Manual', zh:'AFM 與 POH 及一般使用手冊的差異'},
+{t:'p', en:'Owner/information manual — general info only, not FAA-approved, not aircraft-specific, not kept current — cannot substitute for the AFM/POH. AFM (Airplane Flight Manual) — FAA-approved, aircraft-specific (usually by serial number); 14 CFR Part 91 requires compliance with its limits. POH (Pilot\'s Operating Handbook) — contains FAA-approved AFM info; for most light aircraft built after 1975, the POH IS the designated AFM.',
+ zh:'使用者／資訊手冊——僅提供一般性資訊，未經FAA核准，也非針對特定飛機，內容也不會持續更新——不能取代AFM／POH。AFM（飛機飛航手冊）——經FAA核准、針對特定飛機（通常依序號區分）；14 CFR Part 91規定須遵守其中的限制。POH（飛行員操作手冊）——內含經FAA核准的AFM資訊；對於1975年後製造的大多數輕型飛機，POH本身就是經指定的AFM。'},
+{t:'p', en:'Each individual AFM/POH is unique to that aircraft (serial number + registration on title page) — a manual without a specific registration/serial is for general study only.',
+ zh:'每一份AFM／POH都是針對特定飛機的獨立文件（標題頁會列出序號與登記號）——若手冊未標明特定的登記號與序號，則僅供一般學習參考用。'},
+{t:'p', en:'Standard 9 sections: General (dimensions, definitions); Limitations (only regulatory/safety-required limits, instrument markings, placards); Emergency Procedures (checklists, often red-tabbed); Normal Procedures (airspeeds + phase-by-phase checklists); Performance; Weight and Balance/Equipment List; Systems Description; Handling/Service/Maintenance; Supplements (optional equipment). Optional 10th section: Safety Tips.',
+ zh:'標準九大章節：一般說明（尺寸、定義）；限制（僅列出法規／安全所需的限制、儀表標示、標牌）；緊急程序（檢查表，通常以紅色分隔標籤標示）；正常程序（空速資料＋各飛行階段的檢查表）；性能；重量與平衡／裝備清單；系統說明；操作、維護與保養；補充資料（選配裝備）。選填的第十章節：安全提示。'},
+{t:'h3', en:'Airspeed Indicator Markings', zh:'空速表標示'},
+{t:'p', en:'Red line = VNE (never-exceed speed). Yellow arc = between VNO and VNE (smooth air only). Green arc = normal operating range (VNO to VS1). White arc = flap operating range (VFE to VS0). Small multi-engine aircraft add: red radial line = VMC; blue radial line = VYSE.',
+ zh:'紅線＝VNE（絕不可超過速度）。黃弧＝介於VNO與VNE之間（僅限平穩氣流下使用）。綠弧＝正常操作範圍（VNO至VS1）。白弧＝襟翼操作範圍（VFE至VS0）。小型多發動機飛機另加：紅色放射線＝VMC（單發最小可控速度）；藍色放射線＝VYSE（單發最佳爬升率速度）。'},
+
+{t:'h2', en:'Aircraft Documents', zh:'飛機文件'},
+{t:'h3', en:'Certificate of Aircraft Registration', zh:'航空器登記證'},
+{t:'p', en:'Must be carried in the aircraft at all times. Invalid when: aircraft registered under a foreign country\'s laws; registration cancelled; aircraft destroyed/scrapped; ownership transferred; certificate holder loses U.S. citizenship. FAA does not issue ownership certificates.',
+ zh:'須隨時攜帶於機上。以下情況登記證失效：飛機依外國法律登記、登記遭撤銷、飛機報廢或全毀、所有權轉移、持證人喪失美國公民身分。FAA不核發所有權證明。'},
+{t:'h3', en:'Airworthiness Certificate', zh:'適航證'},
+{t:'p', en:'Issued once inspected and found to meet 14 CFR Part 21 and safe for operation. Must be displayed/legible to passengers/crew whenever operated. Standard Airworthiness Certificate — normal/utility/acrobatic/commuter/transport/balloon categories. Special Airworthiness Certificate — Experimental/Restricted/Limited/Provisional/LSA (usually pink).',
+ zh:'經檢查確認符合14 CFR Part 21且適於飛行後核發。飛行期間須展示於機上、乘客與機組員皆可清楚看見。標準適航證——適用於正常／效用／特技／通勤／運輸類及氣球。特殊適航證——適用於實驗類／限用類／限制類／臨時類／LSA（通常為粉紅色）。'},
+
+{t:'h2', en:'Aircraft Inspections', zh:'飛機檢查'},
+{t:'table', head:['Inspection','Interval / Who performs'], headZh:['檢查項目','週期／執行者'], rows:[
+  {en:'Annual', zh:'年度檢查', en2:'Recip/single-engine turbine small aircraft, business/pleasure use — every 12 calendar months, by an A&P mechanic with IA or a rated repair station', zh2:'活塞式或單發渦輪動力小型飛機，商務／娛樂用途——每12個月一次，由具IA資格的A&P機工或合格維修站執行'},
+  {en:'100-hour', zh:'百小時檢查', en2:'Aircraft <12,500 lb used for hire (passengers/instruction) — every 100 flight hours (can exceed by ≤10 hrs to reach maintenance), by A&P/repair station/manufacturer', zh2:'12,500磅以下、用於收費載客或教學的飛機——每100飛行小時一次（可超出不超過10小時以飛往維修地點），由A&P機工／維修站／製造商執行'},
+  {en:'Altimeter/pitot-static', zh:'高度表／靜壓系統', en2:'Aircraft operating IFR in controlled airspace — every 24 months', zh2:'於管制空域內以IFR飛行的飛機——每24個月一次'},
+  {en:'Transponder', zh:'雷達詢答機', en2:'Any aircraft using a transponder — every 24 months, regardless of airspace', zh2:'任何使用詢答機的飛機——每24個月一次，不論空域為何'},
+  {en:'ELT', zh:'緊急定位發報器', en2:'Aircraft with an ELT — within 12 calendar months of last inspection', zh2:'裝有ELT的飛機——距上次檢查12個月內'}
+]},
+{t:'p', en:'Annual and 100-hour requirements don\'t apply to large aircraft (>12,500 lb), turbojets/turboprop multi-engine airplanes, or aircraft under a progressive inspection program. An aircraft overdue for annual inspection may fly to a maintenance location under a Special Flight Permit — but all due ADs must still be complied with first.',
+ zh:'年度檢查與百小時檢查的規定不適用於大型飛機（超過12,500磅）、渦輪噴射／渦輪螺旋槳多發動機飛機，或採用漸進式檢查計畫的飛機。逾期未做年度檢查的飛機，可依特殊飛行許可飛往維修地點——但出發前仍須先完成所有到期的適航指令（AD）。'},
+
+{t:'h2', en:'Minimum Equipment Lists (MEL) & Inoperative Equipment', zh:'最低裝備需求清單（MEL）與失效裝備'},
+{t:'p', en:'Two methods for small rotorcraft/non-turbine airplanes/gliders under Part 91: (1) 91.213(d) deferral provision — most common; pilot determines the item isn\'t required and can be operated safely without it → deactivate/remove, placard INOPERATIVE. Not for inflight discrepancies. (2) FAA-approved MEL — once requested with an LOA, becomes mandatory for that aircraft; functions like an STC for that specific aircraft.',
+ zh:'適用於Part 91規範下的小型旋翼機／非渦輪動力飛機／滑翔機的兩種處理方式：（1）91.213(d)展延條款——最常見；由飛行員判斷該項目非屬必要、且在缺少該裝備的情況下仍可安全操作→予以停用或移除，並掛上「INOPERATIVE（無法作用）」標牌。此條款不適用於飛行中發生的故障。（2）經FAA核准的MEL——一旦提出申請並取得授權函（LOA），該MEL即成為該架飛機的強制規範；其效力如同針對該特定飛機核發的補充型別證書（STC）。'},
+
+{t:'h2', en:'Preventive Maintenance', zh:'預防性維護'},
+{t:'p', en:'Simple/minor preservation + replacement of small standard parts, no complex assembly. Who may perform it: any certificated pilot except student/sport/recreational pilots, on aircraft they own/operate, not used in air carrier service. Requires a maintenance-record entry: description of work, date, pilot\'s name/signature/certificate number/type.',
+ zh:'指簡單或次要的保養工作，以及更換小型標準零件，不涉及複雜的組裝作業。可執行者：任何合格飛行員（學生、運動、休閒飛行員除外），限於自己擁有或營運、且未用於航空承運業務的飛機。須於維修紀錄中記載：工作內容說明、完成日期、飛行員姓名／簽名／證照號碼／證照類別。'},
+
+{t:'h2', en:'Repairs, Alterations, and Special Flight Permits', zh:'修理、改裝與特殊飛行許可'},
+{t:'p', en:'Major repairs/alterations — approved for return to service via FAA Form 337, by a rated repair station, an A&P mechanic with IA, or an FAA representative. Minor repairs — approved via a proper maintenance-record entry. Special flight permit — allows operation of an aircraft that doesn\'t currently meet airworthiness requirements but is safe for a specific flight (e.g., ferry to a repair base, delivery/export, evacuation, overweight ferry flight).',
+ zh:'重大修理／改裝——須以FAA表格337核准恢復使用，由合格維修站、具IA資格的A&P機工，或FAA代表簽署。輕微修理——以正確的維修紀錄登載即可核准恢復使用。特殊飛行許可——允許目前未完全符合適航要求、但對特定飛行而言仍屬安全的飛機進行操作（例如換場飛往維修基地、交機／出口、疏散撤離，或超重換場飛行）。'},
+
+{t:'h2', en:'Airworthiness Directives (ADs)', zh:'適航指令（AD）'},
+{t:'p', en:'FAA\'s mechanism to require correction of an unsafe condition in an aircraft/engine/propeller/appliance. 2 categories: emergency (immediate compliance before further flight) and less urgent (compliance within a specified time). Regulatory — must comply unless a specific exemption is granted. Owner/operator responsible for compliance, including recurring ADs.',
+ zh:'FAA用來要求修正飛機／引擎／螺旋槳／裝備中不安全狀況的機制。分為兩類：緊急類（須在下次飛行前立即遵循）與非緊急類（須於指定期限內遵循）。屬法規性質——除非取得特定豁免，否則必須遵守。適航指令的遵循責任由所有人／營運人承擔，包含重複性適航指令。'},
+
+{t:'h2', en:'Aircraft Owner/Operator Responsibilities', zh:'飛機所有人／營運人的責任'},
+{t:'li', en:'Keep current Airworthiness Certificate + Certificate of Aircraft Registration onboard', zh:'機上須備妥有效的適航證與航空器登記證'},
+{t:'li', en:'Maintain airworthy condition, including AD compliance, with maintenance properly recorded', zh:'維持飛機處於適航狀態，包含遵循適航指令，並確實記錄維修內容'},
+{t:'li', en:'Stay current on applicable regulations for operation/maintenance', zh:'隨時掌握適用於飛機操作與維修的最新法規'},
+{t:'li', en:'Notify FAA Aircraft Registry immediately of address change, sale/export, or loss of registration eligibility', zh:'地址變更、飛機出售／出口，或喪失登記資格時，須立即通知FAA航空器登記處'},
+
+{t:'h2', en:'Chapter Summary', zh:'本章摘要'},
+{t:'p', en:'Understanding the AFM/POH and related documentation (ADs, etc.) gives pilots ready access to what\'s needed to fly a given aircraft safely — informs good flight decisions and helps keep the aircraft airworthy.',
+ zh:'了解AFM／POH與相關文件（如適航指令等），能讓飛行員隨時掌握安全駕駛特定飛機所需的資訊——有助於做出正確的飛行決策，並維持飛機處於適航狀態。'}
+  ]
+},
+{
+  id:'ch10', num:10,
+  titleEn:'Chapter 10 — Weight and Balance',
+  titleZh:'第十章 — 重量與平衡',
+  subEn:'Original pages 10-1 to 10-11.',
+  subZh:'原文頁碼 10-1 至 10-11。',
+  blocks:[
+{t:'h2', en:'Weight Control', zh:'重量控制'},
+{t:'p', en:'Overloading may prevent liftoff or cause unexpectedly poor flight characteristics. Performance deficiencies: higher takeoff speed, longer takeoff run, reduced climb rate/angle, lower max altitude, shorter range, reduced cruise speed/maneuverability, higher stall/approach/landing speed, longer landing roll.',
+ zh:'超重可能導致飛機無法離地，或出現意料之外的不良飛行特性。性能上的缺陷包括：起飛速度提高、起飛滑跑距離增長、爬升率與爬升角降低、最大高度降低、航程縮短、巡航速度與機動性下降、失速速度／進場速度／落地速度提高、落地滑跑距離增長。'},
+{t:'p', en:'Fuel (6 lb/gal) is the main weight variable during flight — burning fuel makes the aircraft lighter and improves performance as flight progresses.',
+ zh:'燃油（每加侖6磅）是飛行過程中重量變化的主要因素——隨著燃油消耗，飛機會變輕，性能也會隨飛行進行而改善。'},
+
+{t:'h2', en:'Balance, Stability, and Center of Gravity', zh:'平衡、穩定性與重心'},
+{t:'p', en:'Balance = location of the CG — the point at which the aircraft would balance if suspended there. Too far forward = nose-heavy, too far aft = tail-heavy (potentially uncontrollable). Longitudinal (fore/aft) balance is the primary concern.',
+ zh:'平衡＝重心的位置——若將飛機懸掛於該點，飛機能保持平衡。重心過於偏前＝機首過重，過於偏後＝機尾過重（可能導致無法操控）。縱向（前後方向）平衡是主要關注重點。'},
+{t:'p', en:'Forward CG limit: often set by landing characteristics — exceeding it → excess nosewheel load, decreased performance, higher stall speed, higher control forces; also ensures sufficient elevator authority remains at minimum airspeed. Aft CG limit: moving aft = progressively less stable; extreme aft CG → severe control difficulty, violent stall characteristics, very light control forces (overstress risk).',
+ zh:'前重心限制：通常依落地特性訂定——超出限制時會導致前輪負荷過大、性能下降、失速速度提高、操縱桿力增加；同時也確保在最低空速下仍有足夠的升降舵操縱權限。後重心限制：重心越後移，穩定性越差；重心過度偏後時，會導致操控困難、失速特性劇烈、操縱桿力過輕（有過度施力損壞結構的風險）。'},
+
+{t:'h2', en:'Management of Weight and Balance Control', zh:'重量與平衡的管理'},
+{t:'p', en:'14 CFR 91.9 requires PIC compliance with AFM operating limits, which include weight and balance. Negligible weight change thresholds (don\'t require a new W&B check): ≤1 lb (empty weight <5,000 lb) · ≤2 lb (5,000–50,000 lb) · ≤5 lb (>50,000 lb). Negligible CG change: <0.05% MAC (fixed-wing) or <0.2% (rotary-wing).',
+ zh:'14 CFR 91.9規定機長須遵守AFM中的操作限制，其中包含重量與平衡限制。可視為「可忽略」的重量變化門檻（不須重新進行W&B檢查）：空機重量低於5,000磅者，變化≤1磅；5,000至50,000磅者，變化≤2磅；超過50,000磅者，變化≤5磅。可忽略的重心變化：固定翼飛機低於平均氣動力弦（MAC）的0.05%，旋翼機低於0.2%。'},
+
+{t:'h2', en:'Terms and Definitions', zh:'名詞與定義'},
+{t:'table', head:['Term','Definition'], headZh:['名詞','定義'], rows:[
+  {en:'Arm (moment arm)', zh:'力臂', en2:'Horizontal distance (in) from datum to an item\'s CG; + if aft, − if forward', zh2:'從基準點到該項目重心的水平距離（吋）；位於基準點後方為正值，前方為負值'},
+  {en:'CG', zh:'重心', en2:'The point the aircraft would balance around if suspended there', zh2:'若將飛機懸掛於該點，飛機能維持平衡的位置'},
+  {en:'CG limits / range', zh:'重心限制／範圍', en2:'Forward & aft points the CG must stay within / the distance between them', zh2:'重心必須維持在其間的前後限制點／此兩點間的距離'},
+  {en:'Datum (reference datum)', zh:'基準點', en2:'Manufacturer-established point all arm measurements are taken from', zh2:'由製造商設定、所有力臂測量的起始參考點'},
+  {en:'Moment', zh:'力矩', en2:'Weight × arm (in-lb)', zh2:'重量×力臂（磅－吋）'},
+  {en:'Useful load', zh:'可用載重', en2:'Pilot+passengers+baggage+usable fuel+drainable oil = max gross weight − basic empty weight', zh2:'飛行員＋乘客＋行李＋可用燃油＋可排放機油＝最大總重－基本空機重量'},
+  {en:'Standard weights', zh:'標準重量', en2:'Gasoline 6 lb/gal · Jet A/A-1 6.8 lb/gal · Jet B 6.5 lb/gal · Oil 7.5 lb/gal · Water 8.35 lb/gal', zh2:'汽油每加侖6磅・Jet A／A-1每加侖6.8磅・Jet B每加侖6.5磅・機油每加侖7.5磅・水每加侖8.35磅'}
+]},
+
+{t:'h2', en:'Principles of Weight and Balance Computations', zh:'重量與平衡計算原理'},
+{t:'p', en:'CG is normally placed slightly forward of the center of lift → mild nose-down tendency, desirable at high AOA/slow speed. Moment = weight × arm; to balance, opposing-side moments must be equal.',
+ zh:'重心通常設定在略微偏前於升力中心的位置→產生輕微的機首下俯傾向，這在高攻角、低速飛行時是有利的。力矩＝重量×力臂；要達成平衡，兩側的力矩必須相等。'},
+{t:'p', en:'3 methods to determine loaded weight and CG: Computational method (CG = total moment ÷ total weight, checked against the CG range); Graph method (manufacturer graphs plot weight vs. moment, checked against a CG moment envelope); Table method (manufacturer tables give moment values for standard weight increments per station).',
+ zh:'決定載重後的重量與重心，有三種方法：計算法（重心＝總力矩÷總重量，再與重心範圍比對）；圖表法（依製造商提供的圖表繪出重量與力矩，並與重心力矩包絡線比對）；表格法（依製造商提供的表格，查出各站位標準重量增量所對應的力矩值）。'},
+
+{t:'h2', en:'Shifting, Adding, and Removing Weight', zh:'重量的移動、增加與移除'},
+{t:'p', en:'Weight shifting: total weight unchanged; total moment changes based on direction/distance moved. Shortcut: ΔCG = (weight shifted ÷ total weight) × distance shifted, then add if CG shifts aft, subtract if forward.',
+ zh:'重量移動：總重量不變；總力矩則依移動的方向與距離而改變。速算公式：重心變化量（ΔCG）＝（移動的重量÷總重量）×移動的距離；若重心後移則相加，前移則相減。'},
+{t:'p', en:'Weight addition/removal: ΔCG = (weight added/removed ÷ new total weight) × (distance between the weight\'s station and the old CG). Add ΔCG to old CG if the change shifts CG aft; subtract if it shifts forward.',
+ zh:'重量的增加／移除：重心變化量（ΔCG）＝（增加或移除的重量÷新總重量）×（該重量所在站位與原重心之間的距離）。若此變化使重心後移，則將ΔCG加到原重心；若使重心前移，則相減。'},
+
+{t:'h2', en:'Chapter Summary', zh:'本章摘要'},
+{t:'p', en:'Operating within weight and balance limits is critical to flight safety — pilots must ensure the CG stays within approved limits throughout every phase of flight.',
+ zh:'在重量與平衡限制範圍內操作，對飛航安全至關重要——飛行員必須確保在整個飛行的每個階段，重心都維持在核准的範圍之內。'}
+  ]
+},
+{
+  id:'ch15', num:15,
+  titleEn:'Chapter 15 — Airspace',
+  titleZh:'第十五章 — 空域',
+  subEn:'Original pages 15-1 to 15-11.',
+  subZh:'原文頁碼 15-1 至 15-11。',
+  blocks:[
+{t:'h2', en:'Controlled Airspace (Classes A–E)', zh:'管制空域（A至E類）'},
+{t:'table', head:['Class','Extent / Key requirement'], headZh:['類別','範圍／關鍵要求'], rows:[
+  {en:'A', zh:'A類', en2:'18,000 ft MSL up to and incl. FL600. IFR only.', zh2:'海平面18,000呎至FL600（含）。僅限IFR飛行。'},
+  {en:'B', zh:'B類', en2:'Surface to 10,000 ft MSL, around busiest airports. ATC clearance required to enter.', zh2:'地面至海平面10,000呎，環繞最繁忙機場。進入須取得航管許可。'},
+  {en:'C', zh:'C類', en2:'Surface to 4,000 ft above airport elevation. Two-way radio comms before entry, maintained throughout.', zh2:'地面至機場標高以上4,000呎。進入前須建立雙向無線電通訊，並全程維持。'},
+  {en:'D', zh:'D類', en2:'Surface to 2,500 ft above airport elevation, around towered airports. Two-way radio comms before entry.', zh2:'地面至機場標高以上2,500呎，環繞有塔台的機場。進入前須建立雙向無線電通訊。'},
+  {en:'E', zh:'E類', en2:'All other controlled airspace — most of U.S. airspace. No requirement for VFR.', zh2:'其餘所有管制空域——涵蓋美國大部分空域。VFR飛行無須特別要求。'}
+]},
+{t:'h2', en:'Uncontrolled Airspace — Class G', zh:'非管制空域——G類'},
+{t:'p', en:'Not designated A/B/C/D/E → uncontrolled; extends from the surface to the base of the overlying Class E airspace. ATC has no authority/responsibility here, but VFR minimums still apply.',
+ zh:'未被劃定為A／B／C／D／E類的空域→即為非管制空域；範圍從地面延伸至其上方E類空域的底部。航管在此空域無管制權責，但VFR最低天氣標準仍然適用。'},
+
+{t:'h2', en:'Special Use Airspace (SUA)', zh:'特殊使用空域'},
+{t:'table', head:['Type','Notes'], headZh:['類型','說明'], rows:[
+  {en:'Prohibited area (P + number)', zh:'禁航區（P＋編號）', en2:'Flight is prohibited (security/national welfare — e.g., Camp David)', zh2:'禁止飛行（基於安全或國家利益考量——例如大衛營）'},
+  {en:'Restricted area (R + number)', zh:'限航區（R＋編號）', en2:'Hazardous to nonparticipating aircraft (artillery, gunnery, missiles); IFR may transit if inactive/released', zh2:'對非參與飛機具危險性（如砲擊、射擊、飛彈演習）；若該區未啟用或已釋出，IFR飛機可穿越'},
+  {en:'Warning area (W + number)', zh:'警告區（W＋編號）', en2:'Like a restricted area, but U.S. doesn\'t have sole jurisdiction (over domestic/international waters)', zh2:'性質類似限航區，但美國並非唯一具管轄權的國家（位於國內或國際水域上方）'},
+  {en:'Military Operations Area (MOA)', zh:'軍事操演區（MOA）', en2:'Named (not numbered); separates military training from IFR traffic', zh2:'以名稱標示（不編號）；用以將軍事訓練活動與IFR交通分隔開'},
+  {en:'Alert area (A + number)', zh:'警戒區（A＋編號）', en2:'High volume of training/unusual activity — all pilots equally responsible for collision avoidance', zh2:'訓練活動頻繁或有特殊飛行活動——所有飛行員（含穿越者）皆同等負有防撞責任'},
+  {en:'Controlled Firing Area (CFA)', zh:'管制射擊區（CFA）', en2:'Activities suspended if an aircraft approaches — not charted (no course change needed)', zh2:'若偵測到飛機接近即暫停活動——不列於航圖上（因為不需要飛機改變航線）'}
+]},
+
+{t:'h2', en:'Other Airspace Areas', zh:'其他空域類型'},
+{t:'p', en:'Military Training Routes (MTRs) — IR (IFR) / VR (VFR) + number; 4-digit = no segment above 1,500 ft AGL, 3-digit = includes a segment above 1,500 ft AGL. Temporary Flight Restrictions (TFRs) — issued via FDC NOTAM; check www.tfr.faa.gov during flight planning.',
+ zh:'軍事訓練航路（MTR）——分為IR（IFR）與VR（VFR），後接編號；四位數編號＝所有航段皆在1,500呎AGL以下，三位數編號＝含有1,500呎AGL以上的航段。暫時飛航限制（TFR）——透過FDC NOTAM發布；飛行前規劃時應查詢www.tfr.faa.gov確認。'},
+{t:'p', en:'Terminal Radar Service Areas (TRSAs) — voluntary additional radar separation service; primary airport(s) = Class D, remainder usually Class E. National Security Areas (NSAs) — flight may be temporarily prohibited via NOTAM; voluntary avoidance requested otherwise.',
+ zh:'終端雷達服務區（TRSA）——提供自願性質的額外雷達隔離服務；主要機場劃為D類空域，其餘部分通常為E類。國家安全區（NSA）——可能透過NOTAM暫時禁止飛越；其餘情況則呼籲飛行員自願避開。'},
+
+{t:'h2', en:'Basic VFR Weather Minimums', zh:'基本VFR天氣最低標準'},
+{t:'table', head:['Airspace','Visibility / Cloud clearance'], headZh:['空域','能見度／雲隙間距'], rows:[
+  {en:'Class B', zh:'B類', en2:'3 SM · Clear of clouds', zh2:'3浬・須遠離雲層'},
+  {en:'Class C / D', zh:'C類／D類', en2:'3 SM · 1,000 ft above / 500 ft below / 2,000 ft horizontal', zh2:'3浬・上方1,000呎／下方500呎／水平2,000呎'},
+  {en:'Class E — at/above 10,000 ft MSL', zh:'E類——海平面10,000呎以上', en2:'5 SM · 1,000 ft above / 1,000 ft below / 1 SM horizontal', zh2:'5浬・上方1,000呎／下方1,000呎／水平1浬'},
+  {en:'Class E — below 10,000 ft MSL', zh:'E類——海平面10,000呎以下', en2:'3 SM · 1,000/500/2,000 ft', zh2:'3浬・上方1,000呎／下方500呎／水平2,000呎'},
+  {en:'Class G — ≤1,200 ft AGL, day', zh:'G類——1,200呎AGL以下，日間', en2:'1 SM · Clear of clouds', zh2:'1浬・須遠離雲層'},
+  {en:'Class G — ≤1,200 ft AGL, night', zh:'G類——1,200呎AGL以下，夜間', en2:'3 SM · 1,000/500/2,000 ft', zh2:'3浬・上方1,000呎／下方500呎／水平2,000呎'}
+]},
+
+{t:'h2', en:'Entry / Equipment / Pilot Certificate Requirements', zh:'進入資格／裝備／飛行員證照要求'},
+{t:'table', head:['Class','Requirements'], headZh:['類別','要求'], rows:[
+  {en:'A', zh:'A類', en2:'ATC clearance · IFR-equipped · Instrument rating', zh2:'航管許可・IFR裝備・儀器等級'},
+  {en:'B', zh:'B類', en2:'ATC clearance · Two-way radio + transponder w/ altitude reporting · Private pilot cert (with limited exceptions)', zh2:'航管許可・雙向無線電＋含高度回報功能之詢答機・私人飛行員證照（有限例外）'},
+  {en:'C / D', zh:'C類／D類', en2:'Two-way radio comms before entry · No specific certificate requirement', zh2:'進入前建立雙向無線電通訊・對證照無特別要求'},
+  {en:'E / G', zh:'E類／G類', en2:'None for VFR', zh2:'VFR飛行無特別要求'}
+]},
+{t:'p', en:'Lost-comm procedures: VFR — may continue and land if weather is at/above basic VFR minimums, tower visual contact maintained, light-signal landing clearance received. IFR — continue via the last ATC clearance route → the route ATC said to expect → the filed flight-plan route.',
+ zh:'失去通訊時的處置：VFR——若天氣達到或優於基本VFR標準，且維持與塔台的目視接觸並收到燈號落地許可，則可繼續飛行並落地。IFR——依序依循：最後一次收到的航管許可航路→航管曾告知「可預期」的航路→原申報的飛航計畫航路。'},
+
+{t:'h2', en:'Miscellaneous Operating Rules', zh:'其他操作規定'},
+{t:'li', en:'Unmanned free balloons — may not operate below 2,000 ft above the surface within B/C/D/E airport-designated airspace without ATC authorization', zh:'無人自由氣球——未經航管授權，不得在B／C／D／E類機場劃定空域內、低於地面2,000呎處作業'},
+{t:'li', en:'Parachute jumps — not allowed in/into A/B/C/D airspace without ATC authorization', zh:'跳傘活動——未經航管授權，不得在A／B／C／D類空域內或進入該空域進行'},
+{t:'li', en:'Ultralight vehicles — not allowed in A/B/C/D or the surface area of airport-designated Class E without prior ATC authorization', zh:'超輕型載具——未經航管事先授權，不得進入A／B／C／D類空域，或機場劃定的E類空域地面區域'},
+
+{t:'h2', en:'Chapter Summary', zh:'本章摘要'},
+{t:'p', en:'Introduces the airspace classifications and their operating requirements. Further detail: the AIM and 14 CFR Parts 71, 73, and 91.',
+ zh:'介紹各類空域的分類與相應的操作要求。詳細內容可參考AIM（航空資訊手冊）及14 CFR Part 71、73、91。'}
+  ]
+},
+{
+  id:'ch5', num:5,
+  titleEn:'Chapter 5 — Aerodynamics of Flight',
+  titleZh:'第五章 — 飛行空氣動力學',
+  subEn:'Original pages 5-1 to 5-51 (the longest chapter).',
+  subZh:'原文頁碼 5-1 至 5-51（全書篇幅最長的一章）。',
+  blocks:[
+{t:'h2', en:'Forces Acting on the Aircraft', zh:'作用於飛機上的力'},
+{t:'p', en:'Four forces: Thrust, Lift, Weight, Drag. In steady flight, the sum of all upward force components = sum of all downward components; sum of all forward components = sum of all backward components — not simply "thrust=drag, lift=weight" in every case (e.g., in a climb part of thrust acts upward like lift; in a glide part of weight acts forward like thrust).',
+ zh:'四種作用力：推力、升力、重量、阻力。在穩定飛行狀態下，所有向上分量的總和＝所有向下分量的總和；所有向前分量的總和＝所有向後分量的總和——並非每種情況都單純是「推力＝阻力、升力＝重量」（例如爬升時，部分推力會像升力一樣向上作用；滑翔時，部分重量則會像推力一樣向前作用）。'},
+{t:'p', en:'Angle of Attack (AOA): the acute angle between the airfoil\'s chord line and the direction of the relative wind — fundamental to performance, stability, and control.',
+ zh:'攻角（AOA）：翼弦線與相對氣流方向之間的銳角——是性能、穩定性與操控性的根本要素。'},
+{t:'h3', en:'Thrust', zh:'推力'},
+{t:'p', en:'As speed decreases, required AOA increases; if speed drops enough, AOA reaches critical AOA → stall. Extra vigilance needed at low thrust/low speed.',
+ zh:'隨著速度降低，所需的攻角會增加；若速度降得夠低，攻角將達到臨界攻角→發生失速。在低推力／低速狀態下須格外提高警覺。'},
+{t:'h3', en:'Lift', zh:'升力'},
+{t:'p', en:'Lift equation: L = CL × (ρV²/2) × S — lift depends on air density, velocity squared, wing area, and coefficient of lift. Lift is proportional to velocity squared — double the airspeed = 4× the lift. Since an airfoil always stalls at the same AOA, a heavier aircraft needs higher airspeed to generate the extra lift needed at that same AOA.',
+ zh:'升力公式：L＝CL×（ρV²/2）×S——升力取決於空氣密度、速度平方、機翼面積與升力係數。升力與速度平方成正比——空速加倍，升力就變為4倍。由於同一翼型總是在相同攻角下失速，較重的飛機必須以更高空速飛行，才能在同一攻角下產生足夠的額外升力。'},
+{t:'h3', en:'Lift/Drag Ratio', zh:'升阻比'},
+{t:'p', en:'L/D-MAX = the AOA/airspeed combo yielding the most lift for the least drag — the most efficient AOA. Total drag is lowest at L/D-MAX; below/above that speed, total drag increases.',
+ zh:'最大升阻比（L/D-MAX）＝能以最少阻力產生最多升力的攻角／空速組合——即最有效率的攻角。總阻力在L/D-MAX時最低；低於或高於該速度，總阻力都會增加。'},
+{t:'h3', en:'Drag', zh:'阻力'},
+{t:'p', en:'Parasite drag (form drag + interference drag + skin friction drag) increases with the square of airspeed. Induced drag ("the price of lift") varies inversely with airspeed — high at low speed (high AOA needed), low at high speed. Total drag = parasite + induced, summing to a minimum at L/D-MAX.',
+ zh:'寄生阻力（形狀阻力＋干擾阻力＋表面摩擦阻力）隨空速平方增加。誘導阻力（「升力的代價」）則與空速成反比——低速（需要高攻角）時較大，高速時較小。總阻力＝寄生阻力＋誘導阻力，兩者相加的總和在L/D-MAX處達到最小值。'},
+
+{t:'h2', en:'Wingtip Vortices', zh:'翼尖渦流'},
+{t:'p', en:'High pressure under the wing spills around the wingtip to the low pressure above → rotating vortex trails behind each wingtip. Vortex strength is greatest when the generating aircraft is heavy, clean (gear/flaps up), and slow (high AOA).',
+ zh:'機翼下方的高壓氣流繞過翼尖，流向上方的低壓區→在每個翼尖後方形成旋轉的渦流。當產生渦流的飛機越重、外形越乾淨（起落架／襟翼收起）、速度越慢（攻角越大），渦流強度就越強。'},
+{t:'p', en:'Avoiding wake turbulence: rotate prior to the point where the preceding aircraft rotated, stay above its flight path; when landing behind a larger aircraft, land beyond its touchdown point; avoid flight below/behind another aircraft\'s flight path.',
+ zh:'避免尾流亂流的方法：在前機拉起點之前就先拉起，並保持在其飛行路徑上方；在較大型飛機後方落地時，須落於其觸地點之後；避免飛行於其他飛機飛行路徑的下方或後方。'},
+
+{t:'h2', en:'Ground Effect', zh:'地面效應'},
+{t:'p', en:'Within about one wingspan of the surface, airflow/wingtip vortices are restricted → reduces induced drag, changes thrust required. In ground effect: less induced drag, less AOA needed, reduced elevator down-force needed (tendency to pitch up). Aircraft can seem to "float" landing (excess speed in ground effect); on takeoff, may become airborne before reaching safe climb speed, then settle back as it climbs out of ground effect.',
+ zh:'在距地面約一個翼展以內的高度，氣流與翼尖渦流會受到限制→降低誘導阻力，並改變所需推力。處於地面效應中：誘導阻力較小、所需攻角較小、升降舵所需的下壓力也較小（有機首上仰的傾向）。落地時飛機可能會出現「飄浮」感（地面效應中速度過剩）；起飛時，飛機可能在達到安全爬升速度前就先離地，離開地面效應範圍爬升時則可能再度下沉。'},
+
+{t:'h2', en:'Axes of an Aircraft', zh:'飛機的三軸'},
+{t:'p', en:'Longitudinal axis (nose-to-tail) → rolling → ailerons. Lateral axis (wingtip-to-wingtip) → pitching → elevator/stabilator. Vertical axis (top-to-bottom through CG) → yawing → rudder.',
+ zh:'縱軸（機首至機尾）→滾轉→由副翼控制。橫軸（翼尖至翼尖）→俯仰→由升降舵／全動平尾控制。垂直軸（通過重心的上下方向）→偏航→由方向舵控制。'},
+
+{t:'h2', en:'Aircraft Design Characteristics — Stability', zh:'飛機設計特性——穩定性'},
+{t:'h3', en:'Static and Dynamic Stability', zh:'靜穩定性與動穩定性'},
+{t:'p', en:'Positive static stability — initial tendency to return toward equilibrium after a disturbance. Neutral — tendency to remain in the new position. Negative (instability) — tendency to continue diverging. Dynamic stability describes the response over time: damped (oscillations decrease, positive), neutral (constant amplitude), divergent (oscillations increase, negative).',
+ zh:'正靜穩定性——受到擾動後，有回到平衡狀態的初始傾向。中性靜穩定性——傾向維持在新的位置。負靜穩定性（不穩定）——傾向持續偏離。動穩定性描述的則是隨時間演變的反應：阻尼型（振盪逐漸減小，屬正動穩定）、中性型（振幅維持不變）、發散型（振盪逐漸增大，屬負動穩定）。'},
+{t:'h3', en:'Longitudinal Stability (Pitching)', zh:'縱向穩定性（俯仰）'},
+{t:'p', en:'The most important stability an aircraft should possess. CG typically forward of the wing\'s center of lift → constant nose-down tendency, balanced by a down load on the horizontal tail. Aft CG → less stable, more responsive, easier to stall. Forward CG → more stable, higher control forces, especially at low speed.',
+ zh:'飛機最重要應具備的穩定性。重心通常位於機翼升力中心之前→產生持續的機首下俯傾向，並靠水平尾翼上的向下負荷來平衡。重心偏後→穩定性較差、操縱反應較靈敏、也更容易失速。重心偏前→穩定性較佳，但操縱桿力較大，尤其在低速時更為明顯。'},
+{t:'h3', en:'Lateral Stability (Rolling)', zh:'側向穩定性（滾轉）'},
+{t:'p', en:'Primary design feature: dihedral (wings angled upward from root to tip) — in a sideslip, the lower wing has a greater effective AOA → generates more lift → rolls back level. Sweepback also contributes. Keel effect: high-wing aircraft — the fuselage hangs like a pendulum below the wing\'s CL, naturally righting the aircraft — more laterally stable than low-wing designs.',
+ zh:'主要設計特徵：上反角（機翼由翼根至翼尖向上傾斜）——側滑時，下方機翼的有效攻角較大→產生較多升力→使飛機滾轉回水平狀態。後掠角也有助於此效果。龍骨效應：高單翼飛機的機身如同鐘擺般懸掛在機翼升力中心下方，能自然地使飛機回正——因此側向穩定性比低單翼設計更佳。'},
+{t:'h3', en:'Directional Stability (Yawing)', zh:'方向穩定性（偏航）'},
+{t:'p', en:'Achieved mainly via the vertical stabilizer/fin — acts like a weathervane, keeping the nose pointed into the relative wind.',
+ zh:'主要透過垂直安定面／垂尾達成——作用如同風向標，使機首保持指向相對氣流的方向。'},
+{t:'h3', en:'Spiral Instability', zh:'螺旋不穩定'},
+{t:'p', en:'Occurs when directional stability is strong relative to lateral (dihedral) stability — a disturbed aircraft tends to increase bank in a slow spiral rather than return to wings-level; pilot must actively correct.',
+ zh:'當方向穩定性相對於側向（上反角）穩定性過強時會發生此現象——受擾動的飛機會傾向於在緩慢的螺旋中持續增加坡度，而非自行恢復水平；飛行員必須主動修正。'},
+
+{t:'h2', en:'Effect of Wing Planform', zh:'機翼平面形狀的影響'},
+{t:'p', en:'Aspect ratio (span²/area) — higher aspect ratio (long, narrow wings, e.g., gliders) = more efficient lift/less induced drag but structurally heavier and less maneuverable; lower aspect ratio = more induced drag but lighter/more maneuverable.',
+ zh:'展弦比（翼展²÷面積）——展弦比越高（機翼細長，例如滑翔機），升力效率越高、誘導阻力越小，但結構較重、機動性較差；展弦比越低則誘導阻力較大，但結構較輕、機動性較佳。'},
+
+{t:'h2', en:'Aerodynamic Forces in Flight Maneuvers', zh:'飛行機動中的空氣動力'},
+{t:'p', en:'Banking splits lift into a vertical component (opposing weight) and a horizontal component (turning force). Steeper bank → more back pressure/higher AOA needed to maintain altitude → higher stall speed and load factor. Slipping turn = insufficient rate of turn for the bank angle; skidding turn = excess rate of turn for the bank angle.',
+ zh:'坡度會將升力分解為垂直分量（對抗重量）與水平分量（轉彎力）。坡度越陡→需要越大的拉桿力／攻角才能維持高度→失速速度與負載因數也隨之提高。內滑轉彎＝坡度相對於轉彎率而言過大；外滑轉彎＝坡度相對於轉彎率而言過小。'},
+
+{t:'h2', en:'Stalls', zh:'失速'},
+{t:'p', en:'A stall = a rapid decrease in lift caused by exceeding the critical AOA — can occur at any airspeed, any attitude, any power setting. Stalling speed increases with load factor (steep turns, abrupt maneuvers) and with weight — in a turn, stall speed increases in proportion to the square root of the load factor (e.g., 60° bank = 2G → stall speed increases by √2 ≈ 1.41×).',
+ zh:'失速＝因超過臨界攻角而導致升力急遽下降——可能發生在任何空速、任何姿態、任何動力設定下。失速速度會隨負載因數（陡坡轉彎、劇烈機動）與重量增加而提高——在轉彎中，失速速度的增加幅度與負載因數的平方根成正比（例如60°坡度＝2G負載→失速速度增加約√2≈1.41倍）。'},
+
+{t:'h2', en:'Angle of Attack Indicators', zh:'攻角指示器'},
+{t:'p', en:'Directly displays proximity to critical AOA, regardless of weight, bank angle, temperature, density altitude, or CG — unlike airspeed alone, which only reflects a safe stall margin for one specific weight/config/load-factor combination. Promoted by the FAA/GAJSC to reduce loss-of-control (LOC) accidents.',
+ zh:'能直接顯示飛機與臨界攻角之間的距離，且不受重量、坡度、溫度、密度高度或重心影響——這點與單純的空速指示不同，空速僅能反映特定重量／構型／負載因數組合下的失速安全餘裕。FAA與GAJSC推廣此裝置以降低失控（LOC）事故的發生。'},
+
+{t:'h2', en:'Basic Propeller Principles', zh:'螺旋槳基本原理'},
+{t:'p', en:'A rotating propeller is essentially an airfoil, generating thrust the same way a wing generates lift. Fixed-pitch propeller — one blade angle, a compromise between climb and cruise. Constant-speed propeller — automatically adjusts blade angle to maintain a set rpm regardless of airspeed/power.',
+ zh:'旋轉中的螺旋槳本質上就是一種翼型，其產生推力的方式與機翼產生升力的原理相同。固定槳距螺旋槳——只有單一槳葉角度，須在爬升與巡航效能之間取捨。定速螺旋槳——會自動調整槳葉角度，無論空速或動力如何變化，都能維持設定的轉速。'},
+{t:'h3', en:'Torque and P-Factor', zh:'扭力與P效應'},
+{t:'p', en:'4 elements causing left-turning tendency (standard-rotation prop, most pronounced at high power/low airspeed/high AOA, e.g., takeoff): (1) Torque reaction — Newton\'s 3rd law reaction to the engine turning the prop. (2) Corkscrewing effect — spiraling slipstream strikes the vertical stabilizer from the left. (3) Gyroscopic action — a force applied to the spinning prop is felt 90° later in the direction of rotation. (4) Asymmetric loading (P-factor) — at high AOA, the descending propeller blade generates more thrust than the ascending blade.',
+ zh:'導致左偏傾向的四種因素（適用於標準旋轉方向的螺旋槳，在高動力／低空速／高攻角時最明顯，例如起飛階段）：（1）扭力反作用——牛頓第三定律對引擎轉動螺旋槳所產生的反作用力。（2）螺旋效應——呈螺旋狀的滑流會吹擊垂直安定面的左側。（3）陀螺進動效應——施加於旋轉中螺旋槳上的力，其效果會在旋轉方向上延遲90°才顯現。（4）不對稱負載（P效應）——在高攻角時，下降側槳葉產生的推力比上升側槳葉更大。'},
+
+{t:'h2', en:'Load Factors', zh:'負載因數'},
+{t:'p', en:'Load factor = the ratio of the load supported by the wings to the actual weight of the aircraft (units of G). Limit load factors by category: Normal 3.8 to −1.52; Utility 4.4 to −1.76; Acrobatic 6.0 to −3.00.',
+ zh:'負載因數＝機翼所承受的負荷與飛機實際重量的比值（單位為G）。依類別劃分的限制負載因數：正常類3.8至−1.52；效用類4.4至−1.76；特技類6.0至−3.00。'},
+{t:'p', en:'Load factor rises steeply with bank angle in a level, coordinated turn: 60° bank = 2G; 80° bank ≈ 5.76G — increase becomes very rapid past 45°. Any aircraft can be stalled at any airspeed; increased load factor increases stalling speed by the square root of the load factor.',
+ zh:'在水平協調轉彎中，負載因數會隨坡度增加而急遽上升：60°坡度＝2G；80°坡度≈5.76G——超過45°後增加幅度變得非常快。任何飛機在任何空速下都可能發生失速；負載因數增加時，失速速度會依負載因數的平方根倍數提高。'},
+{t:'h3', en:'Vg Diagram', zh:'Vg圖'},
+{t:'p', en:'Plots load factor (G) vs. indicated airspeed. Intersection of the positive limit load factor line and the max-lift curve = maneuvering speed (VA) — below VA, the aircraft will stall before structural damage occurs even at full abrupt control deflection; above VA, structural damage can occur before a stall develops.',
+ zh:'繪製負載因數（G）與指示空速的關係圖。正限制負載因數線與最大升力曲線的交點＝機動速度（VA）——低於VA時，即使猛烈滿舵操縱，飛機也會先失速而非結構受損；高於VA時，則可能在失速發生前就先造成結構損傷。'},
+{t:'h3', en:'Rate and Radius of Turn', zh:'轉彎率與轉彎半徑'},
+{t:'p', en:'ROT (degrees/sec) = 1,091 × tan(bank angle) ÷ airspeed (kt TAS) — increasing airspeed at a constant bank angle decreases ROT. Radius of turn: doubling speed at the same bank angle quadruples the radius.',
+ zh:'轉彎率（度／秒）＝1,091×tan（坡度）÷空速（節，真空速）——在坡度不變的情況下，空速增加會降低轉彎率。轉彎半徑：在相同坡度下，速度加倍，轉彎半徑則會變為4倍。'},
+
+{t:'h2', en:'High Speed Flight', zh:'高速飛行'},
+{t:'p', en:'Critical Mach number — the flight Mach number at which airflow first reaches Mach 1.0 somewhere on the airframe (typically over the wing). Transonic range — mixed subsonic/supersonic flow simultaneously. Supersonic range — airflow over the entire aircraft is supersonic.',
+ zh:'臨界馬赫數——機身上（通常是機翼表面）某處氣流首次達到馬赫1.0時的飛行馬赫數。穿音速範圍——同時存在次音速與超音速混合氣流。超音速範圍——整架飛機周圍的氣流皆為超音速。'},
+{t:'p', en:'Shock waves form as a boundary between supersonic/subsonic flow — cause a sudden pressure/density rise and sharp drag increase ("wave drag"). Sweepback delays the onset of critical Mach number, but swept wings tend to stall first at the wingtips (reduces aileron effectiveness, can cause a pitch-up tendency).',
+ zh:'震波形成於超音速與次音速氣流的邊界——會造成壓力與密度的急遽上升，並使阻力大幅增加（「波阻」）。後掠角能延緩達到臨界馬赫數的時機，但後掠翼容易先從翼尖開始失速（降低副翼效能，並可能導致機首上仰傾向）。'},
+{t:'p', en:'Mach buffet = airframe buffeting from airflow separation/shock waves at high Mach number — occurs when flown too slow for weight/altitude/G-loading (low-speed stall) or too fast (high-speed/Mach buffet); both boundaries narrow with altitude, converging at very high altitude ("coffin corner").',
+ zh:'馬赫抖振＝在高馬赫數下，因氣流分離或震波所造成的機身抖動——可能發生在相對於重量／高度／G負載而言飛得太慢（低速失速）或太快（高速／馬赫抖振）的情況下；這兩個邊界都會隨高度上升而逐漸收窄，在極高高度時甚至可能重疊（俗稱「棺材角」）。'},
+
+{t:'h2', en:'Chapter Summary', zh:'本章摘要'},
+{t:'p', en:'The most complex and technically detailed chapter of the handbook — covers the aerodynamic principles governing lift/drag/stability/load factors/high-speed flight that pilots need to understand aircraft performance and limitations.',
+ zh:'本書技術內容最複雜、最詳盡的一章——涵蓋升力、阻力、穩定性、負載因數與高速飛行等空氣動力原理，這些都是飛行員理解飛機性能與限制所必須具備的知識。'}
+  ]
+},
+{
+  id:'ch7', num:7,
+  titleEn:'Chapter 7 — Aircraft Systems',
+  titleZh:'第七章 — 飛機系統',
+  subEn:'Original pages 7-1 to 7-41.',
+  subZh:'原文頁碼 7-1 至 7-41。',
+  blocks:[
+{t:'h2', en:'Powerplant — Reciprocating Engines', zh:'動力系統——活塞式引擎'},
+{t:'p', en:'4-stroke cycle: Intake (fuel-air mixture drawn in) → Compression (mixture compressed) → Power (spark ignites, expanding gas drives piston) → Exhaust (burned gases pushed out). Dual ignition (2 magnetos, 2 spark plugs per cylinder) — redundancy + more complete/faster combustion.',
+ zh:'四行程循環：進氣（吸入油氣混合物）→壓縮（混合氣被壓縮）→動力（火星塞點火，膨脹氣體推動活塞）→排氣（燃燒後的廢氣被排出）。雙點火系統（2具磁電機、每缸2個火星塞）——提供備援，同時使燃燒更完全、更快速。'},
+{t:'h2', en:'Propeller', zh:'螺旋槳'},
+{t:'p', en:'Fixed-pitch propeller — blade angle set by the manufacturer, cannot be changed in flight; a compromise between climb and cruise efficiency. Adjustable-pitch (constant-speed) propeller — a governor automatically adjusts blade angle to maintain a selected rpm regardless of airspeed/power.',
+ zh:'固定槳距螺旋槳——槳葉角度由製造商設定，飛行中無法調整；須在爬升效率與巡航效率之間取捨。可調槳距（定速）螺旋槳——調速器會自動調整槳葉角度，無論空速或動力如何變化，都能維持設定的轉速。'},
+
+{t:'h2', en:'Induction Systems', zh:'進氣系統'},
+{t:'p', en:'2 types: carburetor system (mixes fuel/air before the intake manifold) and fuel injection system (mixes fuel/air at each cylinder).', zh:'兩種類型：化油器系統（在進入進氣歧管之前混合油氣）與燃油噴射系統（在每個汽缸處混合油氣）。'},
+{t:'h3', en:'Carburetor Icing', zh:'化油器結冰'},
+{t:'p', en:'Venturi effect + fuel vaporization both cause a temperature drop in the carburetor throat (can be 60–70°F below ambient) → ice can form even in above-freezing ambient temps with high relative humidity; most likely at low power settings. First indication: gradual loss of rpm (fixed-pitch) or manifold pressure (constant-speed), often followed by engine roughness.',
+ zh:'文氏管效應與燃油汽化兩者都會造成化油器喉部溫度下降（可能比外界氣溫低60–70°F）→即使外界氣溫高於冰點，只要相對濕度高，仍可能結冰；在低動力設定時最容易發生。最初徵兆：轉速逐漸下降（固定槳距）或歧管壓力逐漸下降（定速槳），常伴隨引擎運轉不平順。'},
+{t:'p', en:'Carburetor heat — anti-icing system routing air across a heat exchanger on the exhaust manifold; use causes a decrease in engine power and a richer mixture. Should not generally be used as a preventive measure at full power (reduces detonation margin).',
+ zh:'化油器加溫——一種防冰系統，將空氣導引通過排氣歧管上的熱交換器；使用時會使引擎動力下降，並使混合比變濃。一般不建議在全動力狀態下作為預防性措施使用（會降低爆震的安全餘裕）。'},
+{t:'h3', en:'Fuel Injection Systems', zh:'燃油噴射系統'},
+{t:'p', en:'Advantages: reduced evaporative icing risk, better fuel flow, faster throttle response, more precise mixture control, better fuel distribution across cylinders, easier cold-weather starts. Disadvantages: harder hot-engine starting, vapor lock risk on hot days, restart difficulty after an engine-driven pump failure.',
+ zh:'優點：降低蒸發結冰風險、燃油流量較佳、油門反應較快、混合比控制更精確、各缸燃油分配更均勻、寒冷天氣較容易啟動。缺點：熱車較難啟動、炎熱天氣有氣阻風險、引擎驅動幫浦故障後較難重新啟動。'},
+
+{t:'h2', en:'Superchargers and Turbosuperchargers', zh:'機械增壓器與渦輪增壓器'},
+{t:'p', en:'Both increase induction air density beyond ram air alone, to maintain sea-level-equivalent (or better) power at altitude. Superchargers — engine-driven (gear-driven off the crankshaft). Turbosuperchargers — driven by exhaust gas energy rather than engine power directly, a key efficiency advantage since it doesn\'t rob crankshaft power; can maintain sea-level manifold pressure much higher into the flight envelope (extends the aircraft\'s critical altitude).',
+ zh:'兩者都能提升進氣空氣密度（超越僅靠衝壓空氣所能達到的程度），使飛機在高空仍能維持海平面等效（甚至更高）的動力。機械增壓器——由引擎驅動（透過曲軸齒輪傳動）。渦輪增壓器——由排氣能量驅動，而非直接消耗引擎動力，這是其相較機械增壓器的關鍵效率優勢，因為不會佔用曲軸動力；能在更高的飛行高度範圍內維持海平面歧管壓力（延伸飛機的臨界高度）。'},
+
+{t:'h2', en:'Ignition System', zh:'點火系統'},
+{t:'p', en:'Magneto — self-contained, engine-driven, generates its own electrical current via a permanent magnet, independent of the aircraft\'s electrical/battery system — spark plugs will still fire even with a total electrical system failure. Dual magneto system (standard) — 2 independent magnetos, each firing one of the 2 spark plugs per cylinder.',
+ zh:'磁電機——獨立自足、由引擎驅動，透過永久磁鐵自行產生電流，不依賴飛機的電力／電瓶系統——即使整個電力系統完全失效，火星塞仍能持續點火。雙磁電機系統（標準配置）——2具獨立的磁電機，各自負責每缸2個火星塞中的其中一個。'},
+
+{t:'h2', en:'Oil Systems', zh:'滑油系統'},
+{t:'p', en:'4 functions: reduces friction (cooling/lubrication), removes heat from cylinders, seals between cylinder walls and pistons, carries away contaminants. Oil pressure gauge — direct indication; should register within a few seconds of starting. Oil temperature gauge — indirect and delayed reading of overall engine temperature.',
+ zh:'四大功能：降低摩擦（冷卻／潤滑）、帶走汽缸熱量、密封汽缸壁與活塞之間的間隙、帶走污染物。油壓表——直接指示；啟動後應在數秒內顯示讀數。油溫表——間接且延遲地反映引擎整體溫度。'},
+
+{t:'h2', en:'Engine Cooling / Exhaust / Ignition Hazards', zh:'引擎冷卻／排氣／燃燒危害'},
+{t:'p', en:'Cylinder-head temperature (CHT) gauge — more direct/faster indication than oil temp. EGT (exhaust gas temperature) gauge — used for leaning the mixture (peak EGT = leanest usable mixture for a given power setting).',
+ zh:'汽缸頭溫度（CHT）表——比油溫表反應更直接、更迅速。排氣溫度（EGT）表——用於調整混合比（EGT峰值＝該動力設定下可用的最貧混合比）。'},
+{t:'p', en:'Detonation — uncontrolled, explosive burning of the fuel-air mixture; characterized by high CHT and engine roughness; causes: lower fuel grade than specified, high manifold pressure with low rpm, excessively lean mixture at high power. Preignition — fuel-air mixture ignites prior to the timed spark, from a residual hot spot in the combustion chamber.',
+ zh:'爆震——油氣混合物發生失控、爆炸性的燃燒，而非正常漸進式燃燒；特徵為汽缸頭溫度升高、引擎運轉不平順；成因包括：使用低於規定標號的燃油、高歧管壓力搭配低轉速、高動力時混合比過貧。早燃——油氣混合物在正常點火時機之前，因燃燒室內殘留的熱點而提前點燃。'},
+
+{t:'h2', en:'Turbine Engines', zh:'渦輪引擎'},
+{t:'table', head:['Type','Notes'], headZh:['類型','說明'], rows:[
+  {en:'Turbojet', zh:'渦輪噴射引擎', en2:'All exhaust gas energy converted to thrust through the nozzle — high altitude, high-speed, long-range', zh2:'所有排氣能量皆透過噴嘴轉換為推力——適合高空、高速、長程飛行'},
+  {en:'Turboprop', zh:'渦輪螺旋槳引擎', en2:'Turbine drives a reduction-geared propeller — compromise between turbojet and reciprocating/prop', zh2:'渦輪透過減速齒輪驅動螺旋槳——介於渦輪噴射與活塞螺旋槳之間的折衷方案'},
+  {en:'Turbofan', zh:'渦輪風扇引擎', en2:'A ducted fan bypasses part of the intake air around the core, mixing with exhaust for added thrust with better fuel efficiency — most modern airliners', zh2:'涵道式風扇讓部分進氣繞過核心機，與排氣混合以增加推力並提升燃油效率——現今大多數客機採用此型式'},
+  {en:'Turboshaft', zh:'渦輪軸引擎', en2:'Turbine drives an output shaft (e.g., helicopter rotor via a gearbox) — helicopters, APUs', zh2:'渦輪驅動輸出軸（例如透過減速箱驅動直升機旋翼）——用於直升機、輔助動力單元（APU）'}
+]},
+{t:'p', en:'EPR (Engine Pressure Ratio) — indicates thrust output. EGT is a critical limiting factor for turbine engines. Torquemeter — measures turboprop/turboshaft power output.',
+ zh:'發動機壓力比（EPR）——用以指示推力輸出。排氣溫度（EGT）是渦輪引擎的關鍵限制因子。扭力計——用於測量渦輪螺旋槳／渦輪軸引擎的功率輸出。'},
+{t:'p', en:'Foreign Object Damage (FOD) — ingested debris can severely damage compressor/turbine blades. Compressor stalls — imbalance between velocity and blade AOA, often from distorted inlet airflow. Flameout — combustion stops in flight, most commonly from fuel starvation.',
+ zh:'外物損傷（FOD）——吸入異物可能嚴重損壞壓縮機或渦輪葉片。壓縮機失速——氣流速度與葉片攻角失衡，常因進氣氣流受到擾亂所致。熄火——飛行中燃燒中止，最常見的原因是燃油供應中斷。'},
+
+{t:'h2', en:'Fuel Systems', zh:'燃油系統'},
+{t:'p', en:'Gravity-feed system — tanks mounted above the engine (typically high-wing), fuel flows by gravity alone. Fuel-pump system — needed when tanks are below/level with the engine (typically low-wing). Fuel selector valve — BOTH/LEFT/RIGHT/OFF.',
+ zh:'重力供油系統——油箱裝設於引擎上方（通常為高單翼飛機），完全靠重力供油。幫浦供油系統——當油箱低於或與引擎同高時（通常為低單翼飛機）須採用此系統。燃油選擇活門——分為兩箱（BOTH）／左（LEFT）／右（RIGHT）／關閉（OFF）。'},
+{t:'p', en:'Fuel grade color coding: AVGAS 80 = Red, AVGAS 100 = Green, AVGAS 100LL = Blue, Jet A = Colorless/straw. Never use auto gas unless specifically authorized (STC).',
+ zh:'燃油標號色碼：AVGAS 80＝紅色，AVGAS 100＝綠色，AVGAS 100LL＝藍色，Jet A＝無色或淡黃色。除非有特別核准（STC），否則絕不可使用車用汽油。'},
+{t:'p', en:'Fuel contamination causes: inadequate preflight inspection, improperly filtered fuel, tanks stored partially filled (condensation). Drain fuel strainer/tank sumps before each flight. Static electricity: proper grounding sequence during fueling — drum/truck to ground, ground to aircraft, then nozzle to aircraft.',
+ zh:'燃油污染的成因：飛行前檢查不確實、加油時濾油不當、油箱長期未加滿存放（導致內部凝結水氣）。每次飛行前應排放油濾與油箱沉澱杯的積水。靜電：加油時須依正確順序接地——油罐車或油桶先接地、地面再接飛機、最後才是油槍接飛機。'},
+
+{t:'h2', en:'Electrical System', zh:'電力系統'},
+{t:'p', en:'Engine-driven alternator/generator supplies power and charges the battery. Master/battery switch ON connects battery power to the main bus. Ammeter — center-zero type: positive deflection = battery charging, negative = battery discharging. Voltage regulator — controls charge rate, keeps system voltage within a safe range.',
+ zh:'由引擎驅動的交流發電機／發電機供應電力並為電瓶充電。主電源／電瓶開關打開後，會將電瓶電力接上主匯流排。電流表——中心歸零型：指針偏向正值表示電瓶正在充電，偏向負值則表示電瓶正在放電。電壓調節器——控制充電速率，使系統電壓維持在安全範圍內。'},
+
+{t:'h2', en:'Landing Gear', zh:'起落架'},
+{t:'p', en:'Tricycle gear advantages: allows more forceful/earlier braking, better forward visibility, tends to prevent ground looping. Tailwheel gear: reduced forward visibility on the ground, more prone to ground loop. Fixed vs. retractable — retractable reduces cruise drag at the cost of weight/complexity.',
+ zh:'三點式起落架的優點：可更早、更用力地煞車，前方視野較佳，也較不易發生地面打轉。尾輪式起落架：地面時前方視野較差，較容易發生地面打轉。固定式與可收放式——可收放式能降低巡航阻力，但代價是增加重量與系統複雜度。'},
+
+{t:'h2', en:'Pressurized Aircraft', zh:'加壓艙飛機'},
+{t:'p', en:'Cabin pressurization keeps a comfortable/safe cabin altitude while the aircraft flies much higher. Key components: outflow valve (controls cabin pressure), cabin pressure regulator, cabin air pressure safety valve. Cabin differential pressure — the actual structural limit is the pressure difference, not cabin altitude directly. Rapid decompression drastically shortens useful consciousness time.',
+ zh:'座艙加壓能在飛機飛航於更高高度的同時，維持座艙處於舒適安全的等效高度。主要元件：排氣活門（控制座艙壓力）、座艙壓力調節器、座艙空氣壓力安全活門。座艙壓差——結構上真正的限制在於座艙內外的壓力差，而非座艙高度本身。快速失壓會大幅縮短有效意識時間。'},
+
+{t:'h2', en:'Oxygen Systems', zh:'氧氣系統'},
+{t:'p', en:'Cannula — simple plastic tubing, comfortable, limited to lower altitudes (typically up to 18,000 ft). Diluter-demand — oxygen mixed with cabin air, only during inhalation. Pressure-demand — pressurized airtight mask seal, needed at very high altitudes. Continuous-flow — typically for passengers, uses a reservoir bag. Pulse oximeter — non-invasive blood oxygen saturation measurement.',
+ zh:'鼻導管——簡單的塑膠管，配戴舒適，但僅適用於較低高度（通常至18,000呎）。稀釋需氧式——氧氣與座艙空氣混合，僅在吸氣時供應。加壓需氧式——面罩須形成加壓氣密封，適用於極高高度。連續流量式——通常供乘客使用，搭配儲氣袋。脈搏血氧計——非侵入式血氧飽和度測量裝置。'},
+
+{t:'h2', en:'Anti-Ice and Deice Systems', zh:'防冰與除冰系統'},
+{t:'p', en:'Most light aircraft have only a heated pitot tube, not full airframe ice protection — not certified for known icing. Inflatable deicing boots — rubber sheets cyclically inflated/deflated to crack off ice. Thermal anti-ice — heated leading edges (turbine aircraft, bleed air). Weeping wing (TKS) — leading-edge panels weep antifreeze fluid.',
+ zh:'大多數輕型飛機僅配備加溫式皮托管，並無完整的機身防冰系統——不具備已知結冰條件下飛行的合格認證。充氣式除冰靴——橡膠片週期性充氣與洩氣，藉此震裂並剝除冰層。熱能防冰系統——加溫前緣（渦輪動力飛機，使用引擎抽氣）。滲液式除冰翼（TKS系統）——前緣板滲出防凍液。'},
+
+{t:'h2', en:'Chapter Summary', zh:'本章摘要'},
+{t:'p', en:'Aircraft require various essential systems (powerplant, fuel, electrical, hydraulic, pressurization, oxygen, anti-ice) working together; a pilot must understand the specific systems installed on their aircraft via the AFM/POH.',
+ zh:'飛機需要多項重要系統（動力、燃油、電力、液壓、加壓、氧氣、防冰）協同運作；飛行員必須透過AFM／POH了解自己所駕駛飛機上實際裝設的各項系統。'}
+  ]
+},
+{
+  id:'ch8', num:8,
+  titleEn:'Chapter 8 — Flight Instruments',
+  titleZh:'第八章 — 飛航儀表',
+  subEn:'Original pages 8-1 to 8-28.',
+  subZh:'原文頁碼 8-1 至 8-28。',
+  blocks:[
+{t:'h2', en:'Pitot-Static Flight Instruments', zh:'皮托靜壓飛航儀表'},
+{t:'p', en:'The pitot-static system feeds 3 instruments: altimeter, airspeed indicator (ASI), vertical speed indicator (VSI). Alternate static source (usually inside the flight deck) — using it typically causes: altimeter reads slightly high, ASI reads slightly high, VSI shows a momentary climb indication before stabilizing.',
+ zh:'皮托靜壓系統供應三種儀表所需的資訊：高度表、空速表（ASI）、垂直速度表（VSI）。備用靜壓來源（通常位於駕駛艙內）——使用時通常會造成：高度表讀數略偏高、空速表讀數略偏高、垂直速度表會短暫顯示爬升指示後才穩定下來。'},
+{t:'h3', en:'Altimeter', zh:'高度表'},
+{t:'p', en:'An aneroid barometer — a stack of sealed aneroid wafers expands/contracts with static pressure changes. Pressure: flying from high to low pressure without resetting → actual altitude is lower than indicated ("high to low, look out below"). Temperature: colder-than-standard air is denser → true altitude is lower than indicated for a given pressure altitude.',
+ zh:'一種空盒氣壓計——由一疊密封的空盒膜盒組成，會隨靜壓變化而膨脹或收縮。氣壓效應：若未重新設定高度表，從高壓區飛往低壓區時→實際高度會低於指示高度（口訣「從高到低，當心別太低」）。溫度效應：氣溫低於標準值時空氣較密→在相同壓力高度下，真實高度會低於指示高度。'},
+{t:'p', en:'Types of altitude: Indicated (read directly), True (actual height above MSL), Absolute (actual height AGL), Pressure (above the Standard Datum Plane), Density (pressure altitude corrected for nonstandard temperature).',
+ zh:'高度的種類：指示高度（直接讀取）、真實高度（實際海平面以上的高度）、絕對高度（實際地面以上的高度）、壓力高度（標準基準面以上的高度）、密度高度（依非標準溫度修正後的壓力高度）。'},
+{t:'h3', en:'Vertical Speed Indicator (VSI)', zh:'垂直速度表（VSI）'},
+{t:'p', en:'A diaphragm receives direct static pressure while the instrument case receives it through a calibrated leak — the pressure differential drives the needle. Trend information shows first, before rate information settles a few seconds later.',
+ zh:'膜盒直接接收靜壓，而儀表殼體則透過一個經過校準的洩壓孔接收靜壓——兩者間的壓差驅動指針運作。趨勢資訊會先顯示，之後幾秒才會穩定顯示出速率資訊。'},
+{t:'h3', en:'Airspeed Indicator (ASI)', zh:'空速表（ASI）'},
+{t:'p', en:'A differential pressure gauge: measures the difference between ram (pitot) pressure and static pressure. Markings: White arc = flap operating range (VS0 to VFE). Green arc = normal operating range (VS1 to VNO). Yellow arc = caution range (VNO to VNE). Red line = VNE.',
+ zh:'一種差壓式儀表：測量衝壓（皮托）壓力與靜壓之間的差值。標示：白弧＝襟翼操作範圍（VS0至VFE）。綠弧＝正常操作範圍（VS1至VNO）。黃弧＝警戒範圍（VNO至VNE）。紅線＝VNE。'},
+{t:'h3', en:'Blockage of the Pitot-Static System', zh:'皮托靜壓系統阻塞'},
+{t:'p', en:'Blocked pitot tube (static clear, drain hole also blocked): ASI acts like an altimeter — reads higher than actual in a climb, lower than actual in a descent. Blocked static port (pitot clear): ASI reads inaccurately (opposite trend); altimeter freezes; VSI reads a constant zero.',
+ zh:'皮托管阻塞（靜壓孔暢通、排水孔也一併阻塞）：空速表會表現得如同高度表——爬升時讀數偏高，下降時讀數偏低。靜壓孔阻塞（皮托管暢通）：空速表讀數會不準確（趨勢相反）；高度表指示會凍結不動；垂直速度表則會恆定顯示為零。'},
+
+{t:'h2', en:'Electronic Flight Display (EFD)', zh:'電子飛行顯示器（EFD）'},
+{t:'p', en:'Modern glass-cockpit systems (PFD/MFD) present the same pitot-static + gyroscopic information digitally: airspeed tape, attitude indicator, altimeter tape, VSI, heading indicator/HSI, turn indicator. Trend vectors — magenta lines showing where a value will be in the next several seconds if the current rate continues.',
+ zh:'現代玻璃座艙系統（PFD／MFD）以數位方式呈現與皮托靜壓＋陀螺儀表相同的資訊：空速帶、姿態指示器、高度帶、垂直速度表、航向指示器／HSI、轉彎指示器。趨勢向量——洋紅色線條，顯示若目前變化速率持續下去，數值在未來幾秒後會落在何處。'},
+
+{t:'h2', en:'Gyroscopic Flight Instruments', zh:'陀螺儀飛行儀表'},
+{t:'p', en:'Two fundamental principles: Rigidity in space — a spinning gyroscope resists changes to its plane of rotation. Precession — a force applied to a spinning gyro\'s rim is felt 90° later in the direction of rotation.',
+ zh:'兩項基本原理：空間剛性——旋轉中的陀螺會抗拒其旋轉平面發生改變。進動——施加於旋轉陀螺邊緣的力，其效果會在旋轉方向上延遲90°才顯現。'},
+{t:'h3', en:'Turn Indicators', zh:'轉彎指示器'},
+{t:'p', en:'Turn-and-slip indicator — needle width = one standard-rate turn (3°/sec). Turn coordinator — senses roll rate in addition to yaw rate, giving an earlier indication of a turn\'s onset; "NO PITCH INFORMATION" printed on the face. Inclinometer (ball) — centered = coordinated; low/inside = slipping; outside/high = skidding.',
+ zh:'轉彎側滑儀——指針寬度＝一個標準轉彎率（每秒3°）。轉彎協調儀——除了偏航率外還能感測滾轉率，能更早顯示轉彎的開始；儀表面上會印有「NO PITCH INFORMATION」（無俯仰資訊）字樣。傾斜儀（滾珠）——置中＝協調轉彎；偏向內側低處＝內滑；偏向外側高處＝外滑。'},
+{t:'h3', en:'Attitude Indicator', zh:'姿態指示器'},
+{t:'p', en:'Gyro mounted in the horizontal plane, gives a stable pitch/bank reference (artificial horizon). Older vacuum-driven units may tumble if pitch/bank limits are exceeded.',
+ zh:'陀螺儀水平安裝，提供穩定的俯仰／坡度參考（人工地平儀）。較舊的真空驅動型儀表若超過俯仰／坡度限制，可能會發生翻覆（陀螺失效）。'},
+{t:'h3', en:'Heading Indicator', zh:'航向指示器'},
+{t:'p', en:'Maintains a stable heading reference, since the magnetic compass alone is too erratic in turbulence/turns for reliable reference. Must be periodically realigned to the magnetic compass during straight-and-level, unaccelerated flight (gyro drift/precession error accumulates over time).',
+ zh:'提供穩定的航向參考，因為單靠磁羅盤在亂流或轉彎中太不穩定，無法可靠使用。須在平飛、無加速度的飛行狀態下，定期與磁羅盤重新對齊（陀螺會隨時間累積漂移／進動誤差）。'},
+
+{t:'h2', en:'Compass Systems', zh:'羅盤系統'},
+{t:'h3', en:'Magnetic Compass Induced Errors', zh:'磁羅盤誤差'},
+{t:'p', en:'Variation — angular difference between true north and magnetic north, corrected via an isogonic chart. Deviation — compass error from the aircraft\'s own magnetic interference, corrected via a compass correction card (only AMTs may adjust it).',
+ zh:'偏角——真北與磁北之間的角度差，須以等偏線圖修正。羅差——由飛機本身的磁性干擾所造成的羅盤誤差，須以羅差修正卡修正（只有航空維修技術員AMT才能調整）。'},
+{t:'p', en:'Northerly turning error — rule of thumb: stop the turn 15° plus half the latitude prior to the desired heading. Southerly turning error — opposite (compass lags, continue turn beyond the heading). Acceleration error (ANDS mnemonic: Accelerate North, Decelerate South) on east/west headings. Oscillation error — combination of all the above.',
+ zh:'北向轉彎誤差——經驗法則：在到達目標航向前，提早15°加上緯度一半的角度停止轉彎。南向轉彎誤差——效果相反（羅盤顯示落後，須超過目標航向再停止轉彎）。加減速誤差（口訣ANDS：加速時偏北Accelerate North、減速時偏南Decelerate South），發生在東西向航向飛行時。振盪誤差——上述各種誤差綜合作用的結果。'},
+
+{t:'h2', en:'Chapter Summary', zh:'本章摘要'},
+{t:'p', en:'Flight instruments enable an aircraft to be operated with precision and safety in conditions where outside visual references are inadequate — pilots must understand each instrument\'s principle of operation, normal indications, and failure modes.',
+ zh:'飛航儀表使飛機能在外界視覺參考不足的情況下，依然能精確、安全地操作——飛行員必須了解每項儀表的運作原理、正常指示方式，以及可能的故障模式。'}
+  ]
+},
+{
+  id:'ch11', num:11,
+  titleEn:'Chapter 11 — Aircraft Performance',
+  titleZh:'第十一章 — 飛機性能',
+  subEn:'Original pages 11-1 to 11-28.',
+  subZh:'原文頁碼 11-1 至 11-28。',
+  blocks:[
+{t:'h2', en:'Climb Performance', zh:'爬升性能'},
+{t:'h3', en:'Angle of Climb (AOC) vs. Rate of Climb (ROC)', zh:'爬升角（AOC）與爬升率（ROC）'},
+{t:'p', en:'AOC = altitude gained relative to horizontal distance — matters for obstacle clearance. Maximum AOC occurs at the speed giving the greatest excess of thrust over thrust required. ROC = altitude gained relative to time. Maximum ROC occurs at the speed giving the greatest excess of power available over power required.',
+ zh:'爬升角（AOC）＝相對於水平飛行距離所獲得的高度——與越障能力有關。最大爬升角發生在「可用推力超過所需推力」差值最大的速度。爬升率（ROC）＝相對於時間所獲得的高度。最大爬升率發生在「可用功率超過所需功率」差值最大的速度。'},
+{t:'p', en:'Absolute ceiling — altitude where climb rate = zero. Service ceiling — altitude where max ROC drops to a small standard value (100 fpm for most light aircraft).',
+ zh:'絕對升限——爬升率降為零的高度。實用升限——最大爬升率降至一個標準小數值（大多數輕型飛機為每分鐘100呎）的高度。'},
+
+{t:'h2', en:'Range Performance', zh:'航程性能'},
+{t:'p', en:'Maximum range (propeller aircraft) occurs at L/D-MAX — minimizes fuel used per distance covered. Maximum endurance occurs at minimum power required (a lower speed than max-range speed) — minimizes fuel used per unit time, useful for holding.',
+ zh:'最大航程（螺旋槳飛機）發生在最大升阻比（L/D-MAX）——能以最少燃油飛行最遠距離。最大續航力則發生在所需動力最小的速度（比最大航程速度更低）——能以最少燃油維持最長飛行時間，適用於待命盤旋。'},
+
+{t:'h2', en:'Region of Reversed Command', zh:'反操縱區'},
+{t:'p', en:'Normal command region (above L/D-MAX speed): more power/thrust needed to fly faster. Region of reversed command (below L/D-MAX speed, "back side of the power curve"): as speed decreases further, MORE power is needed to maintain level flight — counterintuitive and hazardous; simply lowering the nose to regain speed loses altitude. Commonly encountered on final approach at minimum controllable airspeed.',
+ zh:'正常操縱區（高於L/D-MAX速度）：要飛得更快，需要更多動力／推力。反操縱區（低於L/D-MAX速度，即「功率曲線的背面」）：速度進一步降低時，維持水平飛行反而需要「更多」動力——這一點違反直覺且具危險性；單純低頭增速反而會損失高度。此區域常見於最終進場、以最低可控空速飛行時。'},
+
+{t:'h2', en:'Takeoff and Landing Performance', zh:'起飛與降落性能'},
+{t:'h3', en:'Dynamic Hydroplaning', zh:'動態水漂現象'},
+{t:'p', en:'A layer of water lifts the tires off the runway surface, drastically reducing tire friction/braking/steering. Minimum hydroplaning speed formula: √(tire pressure psi) × 9. Example: 36 psi tire pressure → √36 × 9 = 54 knots.',
+ zh:'一層水膜將輪胎抬離跑道表面，大幅降低輪胎摩擦力、煞車效果與轉向能力。最低水漂速度公式：√（輪胎壓力，psi）×9。例如：輪胎壓力36 psi→√36×9＝54節。'},
+{t:'h3', en:'Effect of Gross Weight and Wind', zh:'總重與風的影響'},
+{t:'p', en:'Takeoff: heavier weight → lower acceleration + higher required lift-off speed → significantly lengthens takeoff distance. Landing: a 10% increase in landing weight causes ~5% increase in landing speed and ~10% increase in landing distance. Wind: a 10-knot tailwind increases landing distance by about 21%; a 10% increase in landing speed increases landing distance by about 20%.',
+ zh:'起飛：重量增加→加速度降低＋所需離地速度提高→大幅增加起飛滑跑距離。落地：落地重量增加10%，會使落地速度增加約5%、落地距離增加約10%。風：10節順風會使落地距離增加約21%；落地速度增加10%，會使落地距離增加約20%。'},
+
+{t:'h2', en:'Performance Charts', zh:'性能圖表'},
+{t:'p', en:'Charts are built on specific stated conditions (weight, configuration, wind, runway surface, pressure altitude, temperature) — always match every condition before using its output. Interpolation required when actual conditions fall between two listed chart values.',
+ zh:'圖表都是依特定的假設條件（重量、構型、風、跑道表面、壓力高度、溫度）繪製——使用前務必核對每一項條件是否相符。當實際條件落在圖表所列兩個數值之間時，須進行內插計算。'},
+
+{t:'h2', en:'Chapter Summary', zh:'本章摘要'},
+{t:'p', en:'Performance characteristics vary greatly among aircraft; weight, atmospheric conditions, and external environmental factors significantly affect performance. Pilots must become intimately familiar with the performance charts of the specific aircraft flown — the AFM/POH is the primary source.',
+ zh:'不同飛機的性能特性差異很大；重量、大氣狀況與外部環境因素都會顯著影響性能。飛行員必須非常熟悉自己所駕駛飛機的性能圖表——AFM／POH是主要的資料來源。'}
+  ]
+},
+{
+  id:'ch12', num:12,
+  titleEn:'Chapter 12 — Weather Theory',
+  titleZh:'第十二章 — 天氣理論',
+  subEn:'Original pages 12-1 to 12-25. High relevance to interview scenario prep.',
+  subZh:'原文頁碼 12-1 至 12-25。與面試情境題高度相關。',
+  blocks:[
+{t:'h2', en:'Atmosphere', zh:'大氣層'},
+{t:'p', en:'Layers (bottom to top): Troposphere (surface weather occurs here, temperature decreases with altitude) → Tropopause (boundary at the top, height varies with latitude/season) → Stratosphere → Mesosphere → Thermosphere.',
+ zh:'大氣層由下至上分為：對流層（地表天氣現象發生於此，溫度隨高度增加而下降）→對流層頂（其上方的邊界，高度因緯度與季節而異）→平流層→中氣層→熱氣層。'},
+{t:'h3', en:'Coriolis Force', zh:'科氏力'},
+{t:'p', en:'Caused by Earth\'s rotation; deflects air to the right in the Northern Hemisphere — deflection is greatest at the poles, zero at the equator; magnitude increases with the speed of the moving air. Breaks the general circulation into 3 distinct cells per hemisphere.',
+ zh:'由地球自轉所產生；在北半球會使空氣向右偏轉——偏轉在兩極最大，在赤道則為零；氣流速度越快，偏轉幅度也越大。使整體環流在每個半球分裂為三個獨立的環流胞。'},
+
+{t:'h2', en:'Wind and Currents', zh:'風與氣流'},
+{t:'h3', en:'Low-Level Wind Shear', zh:'低空風切'},
+{t:'p', en:'A sudden change in wind speed/direction over a short distance. Microburst — a strong, localized downdraft that spreads out horizontally at the surface, creating rapidly changing headwind → tailwind (or vice versa) as an aircraft passes through — extremely hazardous during takeoff/climb-out or approach/landing. Wind shear can affect any flight, any altitude, any aircraft type.',
+ zh:'指風速或風向在短距離內急遽變化。微爆流——一股強烈的局部下沖氣流，在地面向水平方向擴散，導致飛機穿越時經歷順風急速轉為逆風（或反之）——在起飛爬升或進場落地階段極度危險。風切可能影響任何飛行、任何高度、任何機型。'},
+
+{t:'h2', en:'Atmospheric Stability', zh:'大氣穩定度'},
+{t:'p', en:'Stability = the atmosphere\'s ability to resist vertical motion. Adiabatic heating/cooling — temperature change in a parcel of air due to compression/expansion alone. Inversion — temperature increases with altitude over some layer — very stable air, often traps pollutants/fog/haze near the surface.',
+ zh:'穩定度＝大氣抵抗垂直運動的能力。絕熱增溫／降溫——空氣塊僅因壓縮或膨脹而產生的溫度變化。逆溫——某一層大氣中溫度隨高度增加而上升——空氣非常穩定，常將污染物、霧或霾困在地表附近。'},
+
+{t:'h2', en:'Moisture and Temperature', zh:'水氣與溫度'},
+{t:'p', en:'Dew point = the temperature to which air must be cooled to become saturated (100% relative humidity). A small spread between temperature and dew point indicates air is close to saturation (high fog/cloud formation risk); a large spread indicates dry air.',
+ zh:'露點＝空氣須冷卻至該溫度才會達到飽和（相對濕度100%）。溫度與露點之間的差距越小，代表空氣越接近飽和（形成霧或雲的風險越高）；差距越大則代表空氣越乾燥。'},
+
+{t:'h2', en:'Clouds', zh:'雲'},
+{t:'table', head:['Category','Types / Notes'], headZh:['類別','類型／說明'], rows:[
+  {en:'High clouds', zh:'高雲族', en2:'Cirrus, Cirrostratus, Cirrocumulus — composed mostly of ice crystals', zh2:'卷雲、卷層雲、卷積雲——主要由冰晶組成'},
+  {en:'Middle clouds', zh:'中雲族', en2:'Altostratus, Altocumulus', zh2:'高層雲、高積雲'},
+  {en:'Low clouds', zh:'低雲族', en2:'Stratus, Stratocumulus, Nimbostratus (steady precipitation)', zh2:'層雲、層積雲、雨層雲（持續性降水）'},
+  {en:'Vertical development', zh:'具垂直發展的雲', en2:'Towering Cumulus, Cumulonimbus — can be obscured by other layers, hiding embedded thunderstorm activity', zh2:'濃積雲、積雨雲——可能被其他雲層遮蔽，隱藏其中的雷雨活動'}
+]},
+{t:'p', en:'Freezing rain/freezing drizzle occurs when precipitation falls through a layer of air with temperatures at or below freezing near the surface (supercooled liquid droplets freeze on contact with any surface) — a significant icing hazard.',
+ zh:'凍雨／凍毛毛雨發生在降水通過地表附近溫度處於或低於冰點的氣層時（過冷液態水滴一接觸物體表面即結凍）——是嚴重的結冰危害。'},
+
+{t:'h2', en:'Fronts — 4 Types', zh:'鋒面——四種類型'},
+{t:'table', head:['Front','Description'], headZh:['鋒面','說明'], rows:[
+  {en:'Warm front', zh:'暖鋒', en2:'Warm air mass advances and replaces colder air; wide bands of stratiform clouds/precipitation ahead, gradual deterioration', zh2:'暖氣團前進並取代較冷空氣；前方有大範圍層狀雲與降水，天氣逐漸惡化'},
+  {en:'Cold front', zh:'冷鋒', en2:'Cold air mass advances and undercuts warmer air; narrower band of more intense weather (cumulonimbus, thunderstorms), especially fast-moving fronts', zh2:'冷氣團前進並楔入較暖空氣下方；天氣劇烈但範圍較窄（積雨雲、雷雨），移動快速的冷鋒尤其明顯'},
+  {en:'Stationary front', zh:'滯留鋒', en2:'Boundary not advancing significantly either direction — weather can persist for extended periods', zh2:'鋒面邊界未明顯朝任一方向移動——天氣狀況可能持續較長時間'},
+  {en:'Occluded front', zh:'囚錮鋒', en2:'A fast-moving cold front catches up to and overtakes a slower warm front — cold-front-type or warm-front-type occlusion', zh2:'移動較快的冷鋒追上並超越移動較慢的暖鋒——分為冷鋒型或暖鋒型囚錮'}
+]},
+
+{t:'h2', en:'Thunderstorms', zh:'雷雨'},
+{t:'p', en:'3 stages: cumulus (developing, updrafts dominate) → mature (most intense — updrafts and downdrafts present, heaviest rain/hail/lightning/turbulence) → dissipating (downdrafts dominate, weakening). Rule of thumb: circumnavigate thunderstorms identified as severe or with an extreme radar echo by at least 20 miles.',
+ zh:'三個發展階段：積雲期（發展階段，以上升氣流為主）→成熟期（最劇烈的階段——上升與下沉氣流同時存在，降雨、冰雹、閃電與亂流最為劇烈）→消散期（以下沉氣流為主，強度減弱）。經驗法則：對於被判定為嚴重或雷達回波為極強等級的雷雨，應至少繞開20浬以上。'},
+{t:'h3', en:'Hazards', zh:'危害'},
+{t:'li', en:'Squall line — a narrow band of active, often severe thunderstorms that can develop ahead of a fast-moving cold front', zh:'颮線——狹窄且活躍、常屬嚴重等級的雷雨帶，可能在快速移動的冷鋒前方形成'},
+{t:'li', en:'Tornadoes — most violent thunderstorms can spawn tornadoes; can occur with isolated cells or squall lines', zh:'龍捲風——最猛烈的雷雨可能孕育出龍捲風；可能發生於單一胞或颮線之中'},
+{t:'li', en:'Icing — updrafts support abundant supercooled liquid water, creating severe icing potential', zh:'結冰——上升氣流承載大量過冷液態水，可能造成嚴重的結冰狀況'},
+{t:'li', en:'Engine water ingestion — turbine engines have a limit on the amount of water they can ingest; strong updrafts can loft water concentrations exceeding that limit', zh:'引擎進水——渦輪引擎能承受的進水量有其上限；強烈上升氣流可能捲起超過該上限的水量'},
+{t:'li', en:'Hail — competes with turbulence as the greatest thunderstorm hazard; can be encountered even in clear air some distance from the visible storm cell', zh:'冰雹——與亂流並列為雷雨對飛機最大的威脅；即使在遠離可見風暴胞的晴空區域也可能遭遇'},
+
+{t:'h2', en:'Chapter Summary', zh:'本章摘要'},
+{t:'p', en:'Knowledge of the atmosphere and the forces acting within it helps pilots understand the weather reports/forecasts used for flight planning (Chapter 13) and make sound go/no-go and en route weather decisions.',
+ zh:'了解大氣層及其中作用的各種力，有助於飛行員理解用於飛行規劃的天氣報告與預報（第十三章），並做出正確的起降／續飛決策，以及航路中的天氣應對決策。'}
+  ]
+},
+{
+  id:'ch13', num:13,
+  titleEn:'Chapter 13 — Aviation Weather Services',
+  titleZh:'第十三章 — 航空氣象服務',
+  subEn:'Original pages 13-1 to 13-24. High relevance to interview scenario prep.',
+  subZh:'原文頁碼 13-1 至 13-24。與面試情境題高度相關。',
+  blocks:[
+{t:'h2', en:'Weather Briefings', zh:'天氣簡報'},
+{t:'table', head:['Type','When to use'], headZh:['類型','使用時機'], rows:[
+  {en:'Standard briefing', zh:'標準簡報', en2:'Most complete — first briefing of the day or when planning has been substantially delayed; includes adverse conditions, synopsis, current/forecast conditions, winds/temps aloft, NOTAMs', zh2:'內容最完整——用於當天第一次簡報，或規劃已大幅延遲時；包含不利天氣狀況、綜觀分析、現況／預報天氣、高空風溫、NOTAM'},
+  {en:'Abbreviated briefing', zh:'簡略簡報', en2:'Shortened version — used to update an earlier briefing, or to get only specific information', zh2:'簡化版本——用於更新先前的簡報，或僅需查詢特定資訊時'},
+  {en:'Outlook briefing', zh:'展望簡報', en2:'Requested when departure is 6+ hours away — general guidance for flight planning', zh2:'預計出發時間在6小時以上時使用——提供一般性的飛行規劃參考'}
+]},
+
+{t:'h2', en:'Aviation Weather Reports', zh:'航空氣象報告'},
+{t:'h3', en:'METAR', zh:'METAR（例行天氣報告）'},
+{t:'p', en:'An observation of current surface weather, issued on a regular schedule (typically hourly); SPECI = a special (non-routine) METAR issued between scheduled reports when significant changes occur. Sky cover: FEW · SCT (scattered) · BKN (broken) · OVC (overcast).',
+ zh:'對目前地面天氣的觀測，依固定排程發布（通常每小時一次）；SPECI＝特別（非例行）METAR，當天氣發生重大變化時會在排定時刻之間額外發布。雲量：FEW（少雲）・SCT（疏雲）・BKN（裂雲）・OVC（密雲）。'},
+{t:'h3', en:'Pilot Weather Reports (PIREPs)', zh:'飛行員天氣報告（PIREP）'},
+{t:'p', en:'Provide valuable real-time information on actual conditions encountered, filed by pilots. Encoding fields: message type (UA=routine, UUA=urgent), location, time, altitude, aircraft type, sky cover, weather/visibility, temperature, wind, turbulence, icing, remarks. Urgent PIREPs (UUA) are for hazardous conditions: severe turbulence/icing, wind shear.',
+ zh:'由飛行員回報，提供有關實際遭遇天氣狀況的珍貴即時資訊。編碼欄位：報告類型（UA＝例行、UUA＝緊急）、位置、時間、高度、機型、雲量、天氣／能見度、溫度、風、亂流、結冰、備註。緊急PIREP（UUA）用於回報危險狀況：嚴重亂流／結冰、風切。'},
+{t:'h3', en:'Terminal Aerodrome Forecasts (TAF)', zh:'機場預報（TAF）'},
+{t:'p', en:'Established for the 5-statute-mile radius around an airport; provides expected surface weather conditions in scheduled format for a specific valid period.',
+ zh:'涵蓋機場周圍5浬半徑範圍內；以固定排程格式提供特定有效期間內的預期地面天氣狀況。'},
+
+{t:'h2', en:'Inflight Weather Advisories', zh:'飛航中天氣諮詢'},
+{t:'h3', en:'AIRMET (WA)', zh:'AIRMET（機場天氣諮詢）'},
+{t:'p', en:'Advisories for weather potentially hazardous to aircraft with limited capability — moderate icing, moderate turbulence, sustained winds ≥30 kt, widespread ceiling <1,000 ft and/or visibility <3 miles, extensive mountain obscuration. 3 types: Sierra (IFR/mountain obscuration), Tango (turbulence, surface winds, wind shear), Zulu (icing, freezing levels).',
+ zh:'針對可能對能力有限的飛機構成危害的天氣所發布的諮詢——中度結冰、中度亂流、地面持續風速達30節以上、大範圍雲底低於1,000呎及／或能見度低於3浬、大範圍山區能見度受阻。分為三種：Sierra（IFR狀況／山區能見度受阻）、Tango（亂流、地面風、低空風切）、Zulu（結冰、結冰層高度）。'},
+{t:'h3', en:'SIGMET (WS) / Convective SIGMET (WST)', zh:'SIGMET／對流性SIGMET（WST）'},
+{t:'p', en:'SIGMET — inflight advisories concerning nonconvective weather hazardous to ALL aircraft (not just small/limited ones) — severe icing, severe/extreme turbulence, dust/sandstorms, volcanic ash. Valid for 4 hours. Convective SIGMET — specifically for convective weather, issued for eastern/central/western U.S. regions on a scheduled basis.',
+ zh:'SIGMET——針對對「所有」飛機（不只是能力受限的小型機）皆具危害的非對流性天氣所發布的飛航中諮詢——嚴重結冰、嚴重／極端亂流、沙塵暴、火山灰。有效期為4小時。對流性SIGMET——專門針對對流性天氣，依排程分別針對美國東部／中部／西部區域發布。'},
+
+{t:'h2', en:'Weather Charts', zh:'天氣圖'},
+{t:'p', en:'Surface Analysis Chart — shows frontal positions, pressure systems, and station data. Weather Depiction Chart — broad overview of IFR/MVFR/VFR conditions nationwide. Significant Weather Prognostic Charts — forecast charts depicting expected significant weather at future times.',
+ zh:'地面分析圖——顯示鋒面位置、氣壓系統與各測站資料。天氣描繪圖——概略呈現全國IFR／MVFR／VFR狀況的分布。顯著天氣預測圖——描繪未來時段預期出現的顯著天氣狀況。'},
+
+{t:'h2', en:'NEXRAD Limitations', zh:'NEXRAD雷達的限制'},
+{t:'p', en:'Ground-based NEXRAD data displayed in the cockpit (via datalink) has inherent latency (often several minutes old) and attenuation issues — datalink weather should never be used for tactical, real-time thunderstorm penetration/avoidance decisions; only for strategic (big-picture) route planning.',
+ zh:'透過資料鏈路顯示於駕駛艙內的地面NEXRAD雷達資料，本身存在延遲問題（常常已是數分鐘前的資料）以及訊號衰減問題——資料鏈路天氣絕不應用於即時、戰術性的雷雨穿越或迴避決策；僅適合用於策略性（大範圍）的航路規劃。'},
+
+{t:'h2', en:'Pilot Responsibility', zh:'飛行員的責任'},
+{t:'p', en:'Ultimately, the pilot in command bears full responsibility for obtaining and correctly interpreting weather information and for the final go/no-go decision — no single weather product/service relieves the pilot of that responsibility.',
+ zh:'最終，機長對取得並正確判讀天氣資訊，以及最終的起降／續飛決策，都負有完全的責任——沒有任何單一天氣資訊來源或服務能免除飛行員的這項責任。'},
+
+{t:'h2', en:'Chapter Summary', zh:'本章摘要'},
+{t:'p', en:'Weather services and reports give pilots the data needed to plan flights safely — understanding the format, source, latency, and limitations of each product is essential to using them correctly in the decision-making process covered in Chapter 2.',
+ zh:'氣象服務與報告提供飛行員安全規劃飛行所需的資料——理解每項產品的格式、來源、延遲程度與限制，是在第二章所述決策流程中正確運用這些資訊的關鍵。'}
+  ]
+},
+{
+  id:'ch14', num:14,
+  titleEn:'Chapter 14 — Airport Operations',
+  titleZh:'第十四章 — 機場作業',
+  subEn:'Original pages 14-1 to 14-38.',
+  subZh:'原文頁碼 14-1 至 14-38。',
+  blocks:[
+{t:'h2', en:'Nontowered Airport Operations', zh:'無塔台機場作業'},
+{t:'p', en:'Nontowered pattern entry: always entered at pattern altitude; standard method is a 45° entry to the downwind leg. ATIS — recorded broadcast of current airport conditions; note the current letter code when checking in with ATC.',
+ zh:'無塔台機場的航線進入：一律應以航線高度進入；標準方式是以45°角進入下風腳。ATIS——播報機場現況的錄音廣播；與航管聯絡時須報告目前的代碼字母。'},
+
+{t:'h2', en:'Runway Markings and Signs', zh:'跑道標示與號誌'},
+{t:'p', en:'Displaced threshold — a threshold located at a point other than the physical runway end; the area before it can be used for taxi/takeoff roll but NOT for landing. Runway holding position marking — 4 yellow lines (2 solid, 2 dashed); never cross the solid lines toward the runway without clearance.',
+ zh:'位移門檻——門檻位置並非位於跑道的實體端點；門檻前方的區域可用於滑行或起飛滑跑，但「不可」用於落地。跑道等待位置標線——4條黃線（2實線、2虛線）；未獲許可絕不可跨越實線朝跑道方向前進。'},
+{t:'p', en:'Runway designation marking — derived from the runway\'s magnetic direction (rounded to nearest 10°, dropping the last digit — e.g., 253° → "25"). LAHSO (Land and Hold Short Operations) — pilots must be advised why LAHSO is in use, and can decline; not authorized for student pilots.',
+ zh:'跑道編號標示——依跑道磁方位（四捨五入至最接近的10°，並去掉最後一位數字——例如253°→「25」）。LAHSO（落地並在指定點前停止作業）——航管須告知飛行員採用LAHSO的原因，飛行員亦可拒絕；學生飛行員不得執行此作業。'},
+
+{t:'h2', en:'Airport Lighting', zh:'機場燈光'},
+{t:'p', en:'Airport beacon: flashing white and green = civilian land airport; flashing white and yellow = water airport; two quick white flashes + green = military airport.',
+ zh:'機場信標燈：白綠交替閃爍＝民用陸上機場；白黃交替閃爍＝水上機場；兩次快速白光閃爍加一次綠光＝軍用機場。'},
+{t:'p', en:'VASI — red over white = on glidepath ("red over white, you\'re all right"). PAPI — 4 lights: all white = high, 2 white/2 red = on glidepath, all red = low. REIL — synchronized flashing lights at the runway threshold.',
+ zh:'VASI（目視進場坡度指示器）——紅上白下＝在正確下滑道上（口訣：「紅上白下，一切安好」）。PAPI（精確進場路徑指示器）——共4盞燈：全白＝過高，2白2紅＝在正確下滑道上，全紅＝過低。REIL（跑道端識別燈）——位於跑道門檻的同步閃爍燈。'},
+
+{t:'h2', en:'Radio Communications — Lost Communication', zh:'無線電通訊——失去通訊'},
+{t:'table', head:['Light signal','Aircraft on ground / in flight'], headZh:['燈號','地面上／飛行中的飛機'], rows:[
+  {en:'Steady green', zh:'穩定綠燈', en2:'Cleared for takeoff / Cleared to land', zh2:'獲准起飛／獲准落地'},
+  {en:'Flashing green', zh:'閃爍綠燈', en2:'Cleared to taxi / Return for landing', zh2:'獲准滑行／返場落地'},
+  {en:'Steady red', zh:'穩定紅燈', en2:'Stop / Give way, continue circling', zh2:'停止／讓路，繼續盤旋'},
+  {en:'Flashing red', zh:'閃爍紅燈', en2:'Taxi clear of the runway / Airport unsafe, do not land', zh2:'滑離跑道／機場不安全，勿落地'},
+  {en:'Alternating red and green', zh:'紅綠交替', en2:'General warning — exercise extreme caution', zh2:'一般警告——須格外謹慎'}
+]},
+
+{t:'h2', en:'Wake Turbulence Avoidance Procedures', zh:'尾流迴避程序'},
+{t:'li', en:'Landing behind a larger aircraft, same runway: land beyond its touchdown point', zh:'在較大型飛機後方、同一跑道落地：須落於其觸地點之後'},
+{t:'li', en:'Landing behind a departing larger aircraft, same runway: note its rotation point, land prior to it', zh:'在較大型飛機起飛後、同一跑道落地：記下其拉起點，須在該點之前落地'},
+{t:'li', en:'Landing behind a larger aircraft, crossing runway: cross above its flight path', zh:'在較大型飛機之後、以交叉跑道落地：須從其飛行路徑上方通過'},
+
+{t:'h2', en:'Pilot Deviations (PDs) and Runway Incursion Avoidance', zh:'飛行員違規與跑道侵入防範'},
+{t:'p', en:'A pilot deviation = an action violating a CFR, TFR, NOTAM, or ATC instruction. Approximately 3 runway incursions occur each day at U.S. airports. Best practices: read back all runway crossing/hold instructions completely; review airport layouts during preflight planning; request progressive taxi instructions when unfamiliar.',
+ zh:'飛行員違規＝違反聯邦法規（CFR）、暫時飛航限制（TFR）、NOTAM或航管指示的行為。美國各機場平均每天約發生3起跑道侵入事件。最佳實務做法：完整覆誦所有跨越跑道／等待的指示；飛行前規劃時檢視機場配置圖；不熟悉機場時主動要求逐步滑行指示。'},
+{t:'p', en:'"Line up and wait" (LUAW) — taxi onto the runway and align for departure, but do NOT take off until a separate takeoff clearance is issued; extra caution required, especially with landing traffic on the same runway.',
+ zh:'「進入跑道並等待」（LUAW）——滑進跑道並對正起飛方向，但在收到單獨的起飛許可之前「不可」起飛；須格外小心，尤其當同一跑道上有落地交通時。'},
+
+{t:'h2', en:'Engineered Materials Arresting Systems (EMAS)', zh:'工程材料攔阻系統（EMAS）'},
+{t:'p', en:'A bed of engineered, crushable material at the runway end designed to reliably and predictably crush under the weight of an aircraft, decelerating it safely and reducing overrun severity. If an aircraft engages an EMAS: continue deceleration efforts, maintain runway centerline, maintain deceleration throughout.',
+ zh:'在跑道末端鋪設的工程可壓潰材料層，設計目的是在飛機重量壓迫下能可靠、可預測地潰陷，藉此安全地使飛機減速，降低衝出跑道的嚴重程度。若飛機進入EMAS：應持續進行減速動作、保持在跑道中線上、全程持續施加減速力道。'},
+
+{t:'h2', en:'Chapter Summary', zh:'本章摘要'},
+{t:'p', en:'Focused on airport operations both in the air and on the ground — emphasizes runway incursion avoidance, taxi route planning, and clear communications as key best practices to avoid errors during surface operations.',
+ zh:'本章聚焦於空中與地面的機場作業——強調跑道侵入防範、滑行路線規劃，以及清晰的溝通，是避免地面作業出錯的關鍵最佳實務做法。'}
+  ]
+},
+{
+  id:'ch16', num:16,
+  titleEn:'Chapter 16 — Navigation',
+  titleZh:'第十六章 — 導航',
+  subEn:'Original pages 16-1 to 16-35.',
+  subZh:'原文頁碼 16-1 至 16-35。',
+  blocks:[
+{t:'h2', en:'Measurement of Direction', zh:'方向的測定'},
+{t:'p', en:'Variation — angular difference between true north and magnetic north at a given location; the Agonic line is where TN and MN coincide. Deviation — compass error from the aircraft\'s own magnetic disturbances, an intermediate step after applying variation.',
+ zh:'偏角——特定地點真北與磁北之間的角度差；等偏線（Agonic line）即真北與磁北重合的線。羅差——由飛機本身磁性干擾造成的羅盤誤差，是修正偏角之後還須額外處理的一個步驟。'},
+{t:'p', en:'Sequence: True Course → apply variation → Magnetic Course/Heading → apply deviation → Compass Heading.', zh:'修正順序：真航線→修正偏角→磁航線／磁航向→修正羅差→羅盤航向。'},
+
+{t:'h2', en:'Effect of Wind', zh:'風的影響'},
+{t:'p', en:'Wind Correction Angle (WCA) — the correction applied to the True Course to counteract wind drift, yielding the heading the aircraft must actually fly to maintain the desired track.',
+ zh:'風修正角（WCA）——為抵銷風的偏移影響而施加於真航線上的修正角度，藉此得出飛機實際必須飛行的航向，以維持所需的航跡。'},
+
+{t:'h2', en:'Dead Reckoning — Wind Triangle', zh:'推測航行——風三角'},
+{t:'p', en:'A graphic (or computed) method for determining the effect of wind on heading and groundspeed — 3 vectors: true course/distance, wind direction/velocity, true airspeed — solving the triangle yields the heading to fly and resulting groundspeed.',
+ zh:'一種以圖解（或計算）方式決定風對航向與地速影響的方法——共三個向量：真航線／距離、風向／風速、真空速——解出此三角形後，即可得出應飛的航向與所產生的地速。'},
+
+{t:'h2', en:'Ground-Based Navigation — VOR', zh:'地基導航——VOR'},
+{t:'p', en:'The primary ground-based radio navaid for decades; the course/radial is referenced from magnetic north at the station. 3 usable classes: T (Terminal), L (Low altitude), H (High altitude). Positively identify the station by its Morse code identifier before relying on it.',
+ zh:'數十年來主要的地基無線電助航設施；其航道／方位徑是以測站處的磁北為基準。共有三種可用等級：T（終端）、L（低空）、H（高空）。使用前務必先以摩斯電碼識別碼確認測站身分無誤。'},
+{t:'p', en:'CDI (Course Deviation Indicator) — an OBS dial, a needle showing deviation, a TO/FROM flag. HSI — combines heading indicator + CDI. RMI — shows a rotating compass card with pointer(s) indicating magnetic bearing TO the tuned station.',
+ zh:'CDI（航道偏移指示器）——包含OBS選台鈕、顯示偏移量的指針，以及TO／FROM旗標。HSI（水平狀態指示器）——結合航向指示器與CDI於一體。RMI（無線電磁指示器）——顯示會旋轉的羅盤卡，指針指向所調頻測站的磁方位角。'},
+
+{t:'h2', en:'DME and RNAV', zh:'DME 與區域導航（RNAV）'},
+{t:'p', en:'DME uses UHF signals to measure slant-range distance to a co-located VOR/VORTAC station. DME-computed groundspeed/time-to-station are only accurate when flying directly to or from the station. RNAV permits electronic course guidance along any selected course, not just fixed VOR radials.',
+ zh:'DME使用UHF訊號，測量至同址設置的VOR／VORTAC測站的斜距。DME計算出的地速／到站時間，僅在直飛向測站或直飛離測站時才準確。RNAV（區域導航）能沿任意選定的航線提供電子航道導引，而不僅限於VOR固定的方位徑。'},
+
+{t:'h2', en:'Global Positioning System (GPS)', zh:'全球定位系統（GPS）'},
+{t:'p', en:'Minimum of 4 satellites necessary to establish a 3D position fix with time correction. RAIM (Receiver Autonomous Integrity Monitoring) — many VFR GPS receivers and all handheld units LACK RAIM capability, meaning the unit cannot reliably detect/warn of a faulty satellite signal.',
+ zh:'須至少鎖定4顆衛星，才能確立包含時間修正的三維位置定位。RAIM（接收機自主完整性監控）——許多VFR用GPS接收器與所有手持式機型都「不具備」RAIM功能，代表該設備無法可靠地偵測或警示衛星訊號異常。'},
+{t:'p', en:'VFR waypoints supplement (not replace) standard pilotage/dead-reckoning/other navigation techniques. Do not relieve the pilot of any responsibility for proper flight planning, airspace awareness, or basic navigation skills.',
+ zh:'VFR航點是用來輔助（而非取代）標準的目視領航、推測航行等其他導航技巧。這並不能免除飛行員在妥善飛行規劃、空域警覺，以及基本導航技能上應負的責任。'},
+
+{t:'h2', en:'Chapter Summary', zh:'本章摘要'},
+{t:'p', en:'Covers the fundamentals of VFR navigation: charts, pilotage, dead reckoning, VOR/DME/NDB/GPS-based navigation, flight planning, and procedures for lost/diversion situations.',
+ zh:'涵蓋VFR導航的基本要素：航圖、目視領航、推測航行、VOR／DME／NDB／GPS導航、飛行規劃，以及迷航／轉降情況的處置程序。'}
+  ]
+},
+{
+  id:'ch17', num:17,
+  titleEn:'Chapter 17 — Aeromedical Factors',
+  titleZh:'第十七章 — 航空醫學因素',
+  subEn:'Original pages 17-1 to 17-29. High relevance to interview scenario prep.',
+  subZh:'原文頁碼 17-1 至 17-29。與面試情境題高度相關。',
+  blocks:[
+{t:'h2', en:'Hypoxia', zh:'缺氧'},
+{t:'table', head:['Type','Cause'], headZh:['類型','成因'], rows:[
+  {en:'Hypoxic hypoxia', zh:'缺氧性缺氧', en2:'Insufficient oxygen available to the lungs/blood (e.g., high altitude)', zh2:'肺部／血液可獲得的氧氣不足（例如高空環境）'},
+  {en:'Hypemic hypoxia', zh:'血液性缺氧', en2:'Blood can\'t carry enough oxygen (e.g., blood loss, CO poisoning, anemia)', zh2:'血液無法攜帶足夠氧氣（例如失血、一氧化碳中毒、貧血）'},
+  {en:'Stagnant hypoxia', zh:'滯留性缺氧', en2:'Oxygen-rich blood isn\'t circulating adequately (e.g., poor circulation, high +G, cold)', zh2:'富氧血液未能充分循環（例如循環不良、高正G力、寒冷）'},
+  {en:'Histotoxic hypoxia', zh:'組織中毒性缺氧', en2:'Cells can\'t effectively use available oxygen (e.g., alcohol, drugs, poisons)', zh2:'細胞無法有效利用現有的氧氣（例如酒精、藥物、毒物）'}
+]},
+{t:'p', en:'Symptoms: cyanosis, headache, decreased response to stimuli, impaired judgment, euphoria, visual impairment, drowsiness, lightheadedness, tingling in fingers/toes. Treatment: fly at a lower altitude and/or use supplemental oxygen.',
+ zh:'症狀：發紺（膚色發青）、頭痛、對刺激反應變慢、判斷力受損、欣快感、視覺障礙、嗜睡、頭暈、手指腳趾刺痛感。處置：飛往較低高度並／或使用補充氧氣。'},
+{t:'table', head:['Altitude (MSL)','Time of useful consciousness'], headZh:['高度（海平面）','有效意識時間'], rows:[
+  {en:'45,000 ft', zh:'45,000呎', en2:'9–15 seconds', zh2:'9–15秒'},
+  {en:'40,000 ft', zh:'40,000呎', en2:'15–20 seconds', zh2:'15–20秒'},
+  {en:'35,000 ft', zh:'35,000呎', en2:'30–60 seconds', zh2:'30–60秒'},
+  {en:'30,000 ft', zh:'30,000呎', en2:'1–2 minutes', zh2:'1–2分鐘'},
+  {en:'28,000 ft', zh:'28,000呎', en2:'2½–3 minutes', zh2:'2.5–3分鐘'}
+]},
+
+{t:'h2', en:'Hyperventilation', zh:'過度換氣'},
+{t:'p', en:'Excessive rate/depth of respiration, often triggered by an unexpected stressful situation. Symptoms overlap significantly with hypoxia, making the two easy to confuse. Treatment: consciously slow the breathing rate, talk aloud to help regulate breathing.',
+ zh:'呼吸速率或深度過度，常由突發的壓力情境所引發。症狀與缺氧高度重疊，兩者容易混淆。處置：有意識地放慢呼吸速率，出聲說話有助於調節呼吸節奏。'},
+
+{t:'h2', en:'Spatial Disorientation and Illusions', zh:'空間迷向與錯覺'},
+{t:'h3', en:'Vestibular Illusions', zh:'前庭系統錯覺'},
+{t:'p', en:'The Leans — the most common illusion; a slow roll into a bank too gradual to detect, followed by an abrupt correction to level, creates a sensation of banking in the opposite direction. Coriolis illusion — moving the head out of the plane of an established turn creates a strong, disorienting sensation of rotation in an entirely different axis — potentially the most dangerous illusion.',
+ zh:'傾斜錯覺（The Leans）——最常見的錯覺；緩慢滾轉進入坡度、慢到無法察覺，之後突然修正回水平時，會產生朝反方向傾斜的錯覺。科氏力錯覺——在已建立的轉彎中將頭部移出原本平面，會產生強烈、令人迷向的另一軸向旋轉感——可能是最危險的一種錯覺。'},
+{t:'p', en:'Graveyard spiral — during a prolonged, coordinated turn, the vestibular system stops sensing rotation; leveling the wings produces a sensation of turning the opposite direction — the pilot may re-enter the original turn while altitude is lost, often without realizing it. Somatogravic illusion — rapid acceleration (e.g., takeoff) can be perceived as a nose-up pitch, tempting an inappropriate nose-down correction.',
+ zh:'死亡螺旋——在持續、協調的轉彎中，前庭系統會停止感知旋轉；此時將機翼回正，會產生朝反方向轉彎的錯覺——飛行員可能因此重新進入原本的轉彎，並在不自覺的情況下持續掉高度。體覺重力錯覺——快速加速（例如起飛時）可能被誤認為是機首上仰，進而誘使飛行員做出不當的低頭修正。'},
+{t:'h3', en:'Visual Illusions — False Horizon', zh:'視覺錯覺——假地平線'},
+{t:'p', en:'Occurs when the natural horizon is obscured, or sloping cloud formations/ground light patterns are mistaken for it — can lead the pilot into a dangerous attitude.',
+ zh:'發生於自然地平線被遮蔽時，或將傾斜的雲層形狀／地面燈光排列誤認為地平線——可能導致飛行員進入危險姿態。'},
+{t:'h3', en:'Coping with Spatial Disorientation', zh:'應對空間迷向'},
+{t:'p', en:'If disorientation occurs: trust the flight instruments — do not rely on bodily sensation. Understand the causes and remain alert for signs/symptoms; do not fly into adverse weather/reduced visibility without an instrument rating or currency.',
+ zh:'一旦發生迷向：相信飛航儀表——不要依賴身體的感覺。理解成因並隨時警覺相關徵兆；未持有儀器等級或未保持儀器飛行資格現行時，不應飛入惡劣天氣或低能見度環境。'},
+
+{t:'h2', en:'Optical Illusions (Approach/Landing)', zh:'視覺錯覺（進場／落地）'},
+{t:'table', head:['Illusion','Effect'], headZh:['錯覺','效果'], rows:[
+  {en:'Runway width illusion', zh:'跑道寬度錯覺', en2:'Narrower-than-usual runway → illusion of being higher → tendency to fly a lower approach; wider runway → opposite', zh2:'比平常窄的跑道→產生「較高」的錯覺→傾向飛出偏低的進場；較寬的跑道則相反'},
+  {en:'Runway/terrain slope illusion', zh:'跑道／地形坡度錯覺', en2:'Upsloping runway → illusion of being higher → lower approach; downsloping → opposite', zh2:'上坡跑道→產生「較高」的錯覺→偏低的進場；下坡跑道則相反'},
+  {en:'Featureless terrain illusion', zh:'無特徵地形錯覺', en2:'Lack of ground features (water, snow, darkness) makes the aircraft seem higher than actual', zh2:'缺乏地面參照物（水面、雪地、夜間黑暗）會使飛機看起來比實際位置更高'},
+  {en:'Haze', zh:'霾', en2:'Creates an illusion of greater distance/height than actual → tendency to fly a lower approach', zh2:'產生比實際更遠／更高的錯覺→傾向飛出偏低的進場'},
+  {en:'Ground lighting illusions', zh:'地面燈光錯覺', en2:'Lights along a straight path can be mistaken for runway/approach lights; bright lighting can create an illusion of less distance than actual', zh2:'沿直線排列的燈光可能被誤認為跑道／進場燈；明亮的燈光系統可能產生距離比實際更近的錯覺'}
+]},
+{t:'p', en:'Prevention: anticipate the possibility of illusions, especially at unfamiliar airports at night; consult the Chart Supplement for runway slope; use VASI/PAPI for a reliable glidepath reference rather than relying on visual judgment alone.',
+ zh:'預防方式：預先意識到可能出現錯覺，尤其是在夜間飛往不熟悉的機場時；查閱Chart Supplement確認跑道坡度資訊；使用VASI／PAPI作為可靠的下滑道參考，而非單憑目視判斷。'},
+
+{t:'h2', en:'Stress and Fatigue', zh:'壓力與疲勞'},
+{t:'p', en:'Acute stress — a short-term reaction to an immediate threat/demand. Chronic stress — a level of stress present with such regularity that performance is consistently affected. Acute fatigue can be prevented through proper diet and adequate rest.',
+ zh:'急性壓力——對立即性威脅或需求的短期反應。慢性壓力——經常性存在、持續影響表現的壓力狀態。急性疲勞可透過適當飲食與充分休息來預防。'},
+
+{t:'h2', en:'Alcohol', zh:'酒精'},
+{t:'p', en:'14 CFR Part 91 requires blood alcohol level below 0.04%, and that 8 hours pass between drinking alcohol and acting as PIC ("8 hours bottle to throttle"). A pilot with a BAC of 0.04% or higher, even after 8 hours, may not fly until it drops below that threshold — 8 hours alone does not guarantee compliance if BAC is still elevated.',
+ zh:'14 CFR Part 91規定血液酒精濃度須低於0.04%，且飲酒後須間隔8小時才能擔任機長（俗稱「酒後8小時方可飛」）。若血液酒精濃度達0.04%或以上，即使已滿8小時，仍不得飛行，須等到濃度降至門檻以下為止——單純滿8小時並不能保證符合規定（若酒精濃度仍偏高）。'},
+{t:'p', en:'Best practice: be more conservative than the regulation requires — alcohol\'s effects (impaired judgment/coordination/reaction time, reduced G-tolerance) can persist well beyond when BAC returns to zero.',
+ zh:'最佳做法：採取比法規要求更保守的標準——酒精的影響（判斷力、協調性、反應時間受損，G力耐受度降低）可能在血液酒精濃度降回零之後仍持續存在。'},
+
+{t:'h2', en:'Drugs', zh:'藥物'},
+{t:'p', en:'14 CFR 61.53 prohibits acting as PIC while using any medication that affects faculties in a way contrary to safety. Many common over-the-counter drugs (e.g., antihistamines like Benadryl/diphenhydramine) cause drowsiness and impair performance.',
+ zh:'14 CFR 61.53規定，服用任何會以不利飛安方式影響身心能力的藥物時，不得擔任機長。許多常見的非處方藥（例如Benadryl／diphenhydramine等抗組織胺藥物）會引起嗜睡，並影響飛行表現。'},
+
+{t:'h2', en:'Altitude-Induced Decompression Sickness (DCS)', zh:'高空引發的減壓病（DCS）'},
+{t:'p', en:'Caused by nitrogen coming out of solution and forming bubbles as ambient pressure drops with altitude. Immediate response: 100% oxygen, emergency descent, land as soon as possible.',
+ zh:'由於高度上升、環境壓力下降，體內溶解的氮氣析出並形成氣泡所致。立即處置：使用100%純氧、緊急下降、盡快落地。'},
+{t:'h3', en:'DCS After Scuba Diving', zh:'潛水後的減壓病風險'},
+{t:'p', en:'Wait at least 12 hours after non-decompression-stop diving before flying up to 8,000 ft. Wait at least 24 hours after decompression-stop diving before flying up to 8,000 ft. Wait at least 24 hours after ANY scuba dive before flying above 8,000 ft.',
+ zh:'進行「無需減壓停留」的潛水後，須至少間隔12小時才能飛往8,000呎以下高度。進行「需要減壓停留」的潛水後，須至少間隔24小時才能飛往8,000呎以下高度。「任何」水肺潛水後，須至少間隔24小時才能飛往8,000呎以上高度。'},
+
+{t:'h2', en:'Vision in Flight', zh:'飛行中的視覺'},
+{t:'h3', en:'Night Vision', zh:'夜間視覺'},
+{t:'p', en:'Night blind spot — cones are inactive in low light, creating a small central blind area at night → use off-center viewing to see dim objects better. Dark adaptation takes significant time (30+ minutes); a bright light exposure can instantly ruin it. Supplemental oxygen improves night vision performance (retinal rod cells are especially oxygen-sensitive).',
+ zh:'夜間盲點——低光源下錐狀細胞停止作用，在夜間會形成一個中央小範圍的盲區→須採用偏離中心的目視技巧才能看清較暗的物體。暗適應需要相當長的時間（30分鐘以上）；強光曝露會瞬間破壞已建立的暗適應。補充氧氣有助於提升夜間視力表現（視網膜桿狀細胞對氧氣特別敏感）。'},
+{t:'h3', en:'Night Vision Illusions', zh:'夜間視覺錯覺'},
+{t:'p', en:'Autokinesis — staring at a fixed point of light in the dark, it appears to move after several seconds. Fascination (fixation) — pilot ignores orientation cues and focuses attention on a single object/light, potentially flying into it. Flicker vertigo — caused by a flickering light source, potentially inducing disorientation.',
+ zh:'自動視動錯覺——在黑暗中盯著一個固定光點看，數秒後會產生該光點正在移動的錯覺。目眩神迷（固著）——飛行員忽略了方向感的線索，將注意力完全集中在單一物體或光點上，可能因此撞上該物體。閃爍性暈眩——由閃爍的光源所引發，可能導致空間迷向。'},
+
+{t:'h2', en:'Chapter Summary', zh:'本章摘要'},
+{t:'p', en:'Aeromedical factors — hypoxia, hyperventilation, spatial disorientation, optical illusions, stress/fatigue, substance use, decompression sickness, and vision/night-flying physiology — all directly affect pilot performance and safety; understanding them is essential to sound aeronautical decision-making (Chapter 2) and safe flight in every phase.',
+ zh:'航空醫學因素——缺氧、過度換氣、空間迷向、視覺錯覺、壓力與疲勞、藥物使用、減壓病，以及視覺與夜航生理機制——都會直接影響飛行員的表現與飛安；理解這些因素，對第二章所述的航空決策以及每個飛行階段的安全都至關重要。'}
+  ]
+}
+];
+/* ============================================================ */
+
+let lang = 'zh';
+let chapterIdx = 0;
+
+function buildChapterNav(){
+  const nav = document.getElementById('chapternav');
+  nav.innerHTML = '';
+  const order = CHAPTERS.map((ch,i)=>i).sort((a,b)=> CHAPTERS[a].num - CHAPTERS[b].num);
+  order.forEach(i=>{
+    const ch = CHAPTERS[i];
+    const b = document.createElement('button');
+    b.className = 'chip' + (i===chapterIdx ? ' active' : '');
+    b.textContent = 'Ch.'+ch.num;
+    b.onclick = ()=>{ chapterIdx = i; renderAll(); };
+    nav.appendChild(b);
+  });
+}
+
+function buildContent(){
+  const ch = CHAPTERS[chapterIdx];
+  const content = document.getElementById('content');
+  content.innerHTML = '';
+  ch.blocks.forEach(d=>{
+    if(d.t==='table'){
+      const table = document.createElement('table');
+      const cols = d.rows[0].en3 !== undefined ? 3 : 2;
+      let headHtml = '<thead><tr>';
+      d.head.forEach((h,i)=>{ headHtml += `<th class="tr" data-en="${h}" data-zh="${d.headZh[i]}"></th>`; });
+      headHtml += '</tr></thead>';
+      table.innerHTML = headHtml;
+      const tbody = document.createElement('tbody');
+      d.rows.forEach(r=>{
+        const tr = document.createElement('tr');
+        const c1 = document.createElement('td'); c1.className='tr'; c1.dataset.en=r.en; c1.dataset.zh=r.zh;
+        const c2 = document.createElement('td'); c2.className='tr'; c2.dataset.en=r.en2; c2.dataset.zh=r.zh2;
+        tr.appendChild(c1); tr.appendChild(c2);
+        if(cols===3){
+          const c3 = document.createElement('td'); c3.className='tr'; c3.dataset.en=r.en3; c3.dataset.zh=r.zh3;
+          tr.appendChild(c3);
+        }
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      content.appendChild(table);
+      return;
+    }
+    if(d.t==='img'){
+      const fig = document.createElement('figure');
+      fig.className = 'fig';
+      const img = document.createElement('img');
+      img.src = d.src;
+      img.alt = d.en;
+      img.loading = 'lazy';
+      const cap = document.createElement('figcaption');
+      cap.className = 'tr';
+      cap.dataset.en = d.en;
+      cap.dataset.zh = d.zh;
+      fig.appendChild(img);
+      fig.appendChild(cap);
+      content.appendChild(fig);
+      return;
+    }
+    const el = document.createElement(d.t==='li' ? 'li' : d.t);
+    el.className='tr'; el.dataset.en = d.en; el.dataset.zh = d.zh;
+    if(d.t==='li'){
+      let ul = content.lastElementChild;
+      if(!ul || ul.tagName!=='UL'){ ul = document.createElement('ul'); content.appendChild(ul); }
+      ul.appendChild(el);
+    } else { content.appendChild(el); }
+  });
+}
+
+function renderAll(){
+  document.body.className = lang==='zh' ? 'zh' : '';
+  const ch = CHAPTERS[chapterIdx];
+  document.getElementById('chapterTitle').textContent = lang==='zh' ? ch.titleZh : ch.titleEn;
+  document.getElementById('chapterSub').textContent = lang==='zh' ? ch.subZh : ch.subEn;
+  buildContent();
+  document.querySelectorAll('.tr').forEach(el=>{
+    el.textContent = lang==='zh' ? el.dataset.zh : el.dataset.en;
+  });
+  document.getElementById('btn-zh').classList.toggle('active', lang==='zh');
+  document.getElementById('btn-en').classList.toggle('active', lang==='en');
+  document.getElementById('hoverHint').textContent = lang==='zh'
+    ? '滑鼠停在文字上看英文原文' : 'Hover text to see the Chinese translation';
+  buildChapterNav();
+  {
+    const order = CHAPTERS.map((ch,i)=>i).sort((a,b)=> CHAPTERS[a].num - CHAPTERS[b].num);
+    const pos = order.indexOf(chapterIdx);
+    document.getElementById('prevBtn').disabled = pos===0;
+    document.getElementById('nextBtn').disabled = pos===order.length-1;
+  }
+  window.scrollTo({top:0, behavior:'instant'});
+}
+
+document.getElementById('btn-zh').onclick = ()=>{ lang='zh'; renderAll(); };
+document.getElementById('btn-en').onclick = ()=>{ lang='en'; renderAll(); };
+document.getElementById('prevBtn').onclick = ()=>{
+  const order = CHAPTERS.map((ch,i)=>i).sort((a,b)=> CHAPTERS[a].num - CHAPTERS[b].num);
+  const pos = order.indexOf(chapterIdx);
+  if(pos>0){ chapterIdx = order[pos-1]; renderAll(); }
+};
+document.getElementById('nextBtn').onclick = ()=>{
+  const order = CHAPTERS.map((ch,i)=>i).sort((a,b)=> CHAPTERS[a].num - CHAPTERS[b].num);
+  const pos = order.indexOf(chapterIdx);
+  if(pos<order.length-1){ chapterIdx = order[pos+1]; renderAll(); }
+};
+renderAll();
+
+const tip = document.getElementById('tooltip');
+function showTip(el, x, y){
+  const other = lang==='zh' ? el.dataset.en : el.dataset.zh;
+  if(!other) return;
+  tip.classList.toggle('zh-font', lang==='en');
+  tip.innerHTML = `<span class="tag">${lang==='zh'?'EN source':'中文翻譯'}</span>${other}`;
+  tip.classList.add('show');
+  positionTip(x,y);
+}
+function positionTip(x,y){
+  const pad = 16;
+  let left = x + pad, top = y + pad;
+  const rect = tip.getBoundingClientRect();
+  if(left + rect.width > window.innerWidth - 8) left = x - rect.width - pad;
+  if(top + rect.height > window.innerHeight - 8) top = y - rect.height - pad;
+  tip.style.left = left+'px'; tip.style.top = top+'px';
+}
+document.addEventListener('mousemove', e=>{
+  const el = e.target.closest('.tr');
+  if(el){ showTip(el, e.clientX, e.clientY); } else { tip.classList.remove('show'); }
+});
+document.addEventListener('mouseleave', ()=> tip.classList.remove('show'));
+document.addEventListener('click', e=>{
+  const el = e.target.closest('.tr');
+  if(el && ('ontouchstart' in window)){
+    const rectEl = el.getBoundingClientRect();
+    showTip(el, rectEl.left+10, rectEl.bottom+6);
+    setTimeout(()=> tip.classList.remove('show'), 3500);
+  }
+});
+</script>
+</body>
+</html>
