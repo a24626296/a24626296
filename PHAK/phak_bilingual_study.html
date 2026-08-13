@@ -56,7 +56,13 @@
   table{ width:100%; border-collapse:collapse; margin:1rem 0 1.4rem; font-size:.9rem; }
   th,td{ border:1px solid var(--hair); padding:.55rem .7rem; text-align:left; vertical-align:top; }
   figure.fig{ margin:1.4rem 0; padding:0; }
-  figure.fig img{ width:100%; height:auto; display:block; border:1px solid var(--hair); border-radius:6px; background:#fff; }
+  .fig-resizable{
+    resize:horizontal; overflow:hidden; width:62%; min-width:160px; max-width:100%;
+    border:1px solid var(--hair); border-radius:6px; background:#fff; box-sizing:border-box;
+    display:block;
+  }
+  .fig-resizable img{ width:100%; height:auto; display:block; }
+  @media (max-width:700px){ .fig-resizable{ width:100%; resize:none; } }
   figure.fig figcaption{ margin-top:.5rem; font-size:.85rem; color:var(--ink-soft); cursor:help; padding:.15rem .3rem; border-radius:4px; }
   figure.fig figcaption:hover{ background:var(--amber-tint); }
   figure.fig figcaption .tag{ font-family:'JetBrains Mono',monospace; font-size:.7rem; color:var(--amber-dark); margin-right:.4rem; }
@@ -92,10 +98,12 @@
     cursor:pointer; letter-spacing:.03em; display:inline-flex; align-items:center; gap:.35rem; }
   #syncBtn:hover{ border-color:var(--teal); color:#8fd6d0; }
   #syncBtn.syncing{ opacity:.6; cursor:wait; }
-  #collapseAllBtn,#expandAllBtn{ appearance:none; border:1px solid #33424D; background:#0D1620; color:#8CA0AB;
+  #toggleAllBtn,#fontDecBtn,#fontIncBtn{ appearance:none; border:1px solid #33424D; background:#0D1620; color:#8CA0AB;
     font-family:'JetBrains Mono',monospace; font-size:.7rem; padding:.35rem .7rem; border-radius:6px;
     cursor:pointer; letter-spacing:.03em; }
-  #collapseAllBtn:hover,#expandAllBtn:hover{ border-color:var(--amber); color:var(--amber); }
+  #toggleAllBtn:hover,#fontDecBtn:hover,#fontIncBtn:hover{ border-color:var(--amber); color:var(--amber); }
+  #fontDecBtn,#fontIncBtn{ font-size:.85rem; padding:.3rem .6rem; font-weight:700; }
+  .fontsize-group{ display:inline-flex; gap:.25rem; }
   details.section{ margin-bottom:0; }
   details.section > summary{
     list-style:none; cursor:pointer; display:flex; flex-wrap:wrap; align-items:baseline; gap:.5rem;
@@ -111,6 +119,21 @@
   details.section[open] > summary::before{ transform:rotate(90deg); }
   details.section > summary h2{ margin:0; padding:0; border-bottom:none; font-size:1.35rem; flex:1 1 auto; min-width:180px; }
   details.section > summary:hover h2{ color:var(--amber-dark); }
+  details.subsection{ margin:0; }
+  details.subsection > summary{
+    list-style:none; cursor:pointer; display:flex; flex-wrap:wrap; align-items:baseline; gap:.45rem;
+    margin:1.5rem 0 .6rem; padding-bottom:.1rem; -webkit-tap-highlight-color:transparent;
+  }
+  details.subsection > summary::-webkit-details-marker{ display:none; }
+  details.subsection > summary::marker{ content:''; }
+  details.subsection > summary::before{
+    content:'▸'; display:inline-block; color:var(--teal); font-size:.85rem;
+    transition:transform .15s; flex:0 0 auto; transform-origin:45% 50%;
+  }
+  details.subsection[open] > summary::before{ transform:rotate(90deg); }
+  details.subsection > summary h3{ margin:0; padding:0; color:var(--teal); }
+  details.subsection > summary:hover h3{ color:var(--amber-dark); }
+  #content{ transition:none; }
   .yt-tools{ display:flex; align-items:center; gap:.4rem; flex:0 0 auto; margin-left:auto; }
   .yt-input{ width:180px; max-width:42vw; font-family:'JetBrains Mono',monospace; font-size:.72rem;
     padding:.4rem .55rem; border:1px solid var(--hair); border-radius:6px; background:#fff; color:var(--ink); }
@@ -177,8 +200,11 @@
     <span class="hint" id="hoverHint">滑鼠停在文字上看英文原文・雙擊可編輯</span>
     <button id="resetEditsBtn">清除本機編輯</button>
     <button id="syncBtn"><span id="syncDot"></span><span id="syncBtnLabel">雲端同步</span></button>
-    <button id="collapseAllBtn">全部摺疊</button>
-    <button id="expandAllBtn">全部展開</button>
+    <button id="toggleAllBtn">全部摺疊</button>
+    <span class="fontsize-group">
+      <button id="fontDecBtn" title="縮小文字">－</button>
+      <button id="fontIncBtn" title="放大文字">＋</button>
+    </span>
   </div>
   <div class="chapternav" id="chapternav"></div>
 </div>
@@ -791,8 +817,8 @@ const CHAPTERS = [
 {t:'h3', en:'Quick Mental Math: QNH → Pressure Altitude', zh:'快速心算：由 QNH 換算壓力高度'},
 {t:'p', en:'Shortcut formula: PA = IA + (1013 − QNH) × 30 ft, where IA (Indicated Altitude) is what the altimeter reads with QNH set — on the ground, IA equals the field elevation. Keep PA on the left side of the equation; flipping it to solve for IA requires flipping the sign too: IA = PA − (1013 − QNH) × 30 ft. Writing "IA = PA + (1013 − QNH) × 30" is a common mistake and gives the wrong answer.',
  zh:'快速心算公式：PA（壓力高度）= IA（指示高度）+ (1013 − QNH) × 30 呎，其中 IA 是高度表撥入 QNH 時的指示讀數——在地面時，IA 就等於機場海拔。務必把 PA 放在等號左邊；如果要移項求 IA，加號必須變號：IA = PA − (1013 − QNH) × 30 呎。寫成「IA = PA + (1013 − QNH) × 30」是常見的錯誤寫法，算出來的答案會不對。'},
-{t:'p', en:'Worked example — field elevation 1,000 ft: (A) Low pressure, QNH 1003 hPa: 1013−1003 = +10 hPa → +300 ft → PA = 1,300 ft (engine and wings feel like they are sitting on a 1,300-ft-high field — thinner air, reduced performance). (B) High pressure, QNH 1023 hPa: 1013−1023 = −10 hPa → −300 ft → PA = 700 ft (denser air, better performance, as if 300 ft lower).',
- zh:'實戰算例——機場海拔 1,000 呎：情境 A，低氣壓 QNH 1003 hPa：1013−1003 = +10 hPa → +300 呎 → PA = 1,300 呎（引擎與機翼感受到的空氣，就像停在 1,300 呎高地一樣稀薄，性能下降）。情境 B，高氣壓 QNH 1023 hPa：1013−1023 = −10 hPa → −300 呎 → PA = 700 呎（空氣更濃密，性能更好，如同低了 300 呎）。'},
+{t:'p', en:'Worked example — RCFN Taitung Fengnian (field elevation 143 ft): (A) Low pressure, QNH 1003 hPa: 1013−1003 = +10 hPa → +300 ft → PA = 143 + 300 = 443 ft (engine and wings feel like they are sitting on a 443-ft-high field — thinner air, reduced performance). (B) High pressure, QNH 1023 hPa: 1013−1023 = −10 hPa → −300 ft → PA = 143 − 300 = −157 ft. Yes, negative — at a low-elevation field like RCFN, a strong high-pressure day can push pressure altitude below sea level. That is not an error; it is simply how far "thicker" the air feels compared to the standard datum plane.',
+ zh:'實戰算例——RCFN 台東豐年機場（機場海拔 143 呎）：情境 A，低氣壓 QNH 1003 hPa：1013−1003 = +10 hPa → +300 呎 → PA = 143 + 300 = 443 呎（引擎與機翼感受到的空氣，就像停在 443 呎高地一樣稀薄，性能下降）。情境 B，高氣壓 QNH 1023 hPa：1013−1023 = −10 hPa → −300 呎 → PA = 143 − 300 = −157 呎。沒錯，是負值——像 RCFN 這種低海拔機場，遇到強高氣壓天氣，壓力高度真的可能低於海平面。這不是算錯，只是代表空氣比標準基準面「濃密」了多少而已。'},
 
 {t:'h3', en:'Why "30 ft per hPa"? And When It Stops Being True', zh:'為什麼是「30 呎/hPa」？這個數字什麼時候會失準'},
 {t:'p', en:'The precise conversion (from 1 inHg ≈ 33.86 hPa and the low-altitude rule of thumb 1 inHg ≈ 1,000 ft) works out to about 29.5 ft/hPa — pilots round this to 30 ft/hPa for fast mental math near the ground, with only about 3 ft of error. This shortcut is only valid at low altitude: as altitude increases the air thins, so it takes a larger height change to produce the same 1 hPa pressure drop. Around 18,000 ft the ratio is closer to 50 ft/hPa, and near 30,000 ft (typical jet cruise) it climbs to roughly 70–80 ft/hPa.',
@@ -832,7 +858,13 @@ const CHAPTERS = [
     en3:'+ (plus)', zh3:'必須用加號（+）'},
    {en:'Cold temperature', zh:'低溫',
     en2:'Better performance — feels lower', zh2:'性能變好（Good）——感覺變低（Lower）',
-    en3:'− (minus)', zh3:'必須用減號（−）'}
+    en3:'− (minus)', zh3:'必須用減號（−）'},
+   {en:'High humidity', zh:'高濕度',
+    en2:'Worse performance — feels higher', zh2:'性能變差（Bad）——感覺變高（Higher）',
+    en3:'Not in the ±120 formula itself, but behaves like "+"', zh3:'不在 ±120 公式本身內，但效果上等同「+」'},
+   {en:'Low humidity', zh:'低濕度',
+    en2:'Better performance — feels lower', zh2:'性能變好（Good）——感覺變低（Lower）',
+    en3:'Not in the ±120 formula itself, but behaves like "−"', zh3:'不在 ±120 公式本身內，但效果上等同「−」'}
  ]},
 {t:'p', en:'Memory rule: always keep the value you are solving for (PA, or DA) on the left side of the equation, and build it from the more "raw"/upstream value on the right (IA → PA → DA) by adding the correction. That way you never have to remember how to flip a sign when transposing the formula — PA = IA + (1013 − QNH) × 30 ft, and DA = PA + 120 × (OAT − ISA), full stop.',
  zh:'終極記憶法：永遠把「想求的目標」（PA 或 DA）放在等號左邊，並用更「原始／上游」的數值（IA → PA → DA）在右邊加上修正值去推算。這樣就完全不需要背移項變號的規則——只要記住 PA = IA + (1013 − QNH) × 30 呎，以及 DA = PA + 120 × (OAT − ISA) 這兩個標準寫法就好。'},
@@ -2150,10 +2182,11 @@ function buildContent(){
   const ch = CHAPTERS[chapterIdx];
   const content = document.getElementById('content');
   const prevState = {};
-  content.querySelectorAll('details.section').forEach(det=>{ prevState[det.dataset.sectionKey] = det.open; });
+  content.querySelectorAll('details').forEach(det=>{ prevState[det.dataset.sectionKey] = det.open; });
   content.innerHTML = '';
-  let currentDetails = null;
-  const appendToCurrent = (node)=>{ (currentDetails || content).appendChild(node); };
+  let currentH2 = null;
+  let currentH3 = null;
+  const appendToCurrent = (node)=>{ (currentH3 || currentH2 || content).appendChild(node); };
   ch.blocks.forEach((d, idx)=>{
     if(d.t==='h2'){
       const det = document.createElement('details');
@@ -2172,7 +2205,25 @@ function buildContent(){
       det.appendChild(summary);
       det.appendChild(yt.playerBox);
       content.appendChild(det);
-      currentDetails = det;
+      currentH2 = det;
+      currentH3 = null;
+      return;
+    }
+    if(d.t==='h3'){
+      const det3 = document.createElement('details');
+      det3.className = 'subsection';
+      const key = `${ch.id}_b${idx}`;
+      det3.dataset.sectionKey = key;
+      det3.open = prevState.hasOwnProperty(key) ? prevState[key] : true;
+      const summary3 = document.createElement('summary');
+      const h3el = document.createElement('h3');
+      h3el.className = 'tr';
+      h3el.dataset.en = escapeHtml(d.en); h3el.dataset.zh = escapeHtml(d.zh);
+      applyEdit(h3el, key);
+      summary3.appendChild(h3el);
+      det3.appendChild(summary3);
+      (currentH2 || content).appendChild(det3);
+      currentH3 = det3;
       return;
     }
     if(d.t==='table'){
@@ -2210,16 +2261,19 @@ function buildContent(){
     if(d.t==='img'){
       const fig = document.createElement('figure');
       fig.className = 'fig';
+      const box = document.createElement('div');
+      box.className = 'fig-resizable';
       const img = document.createElement('img');
       img.src = d.src;
       img.alt = d.en;
       img.loading = 'lazy';
+      box.appendChild(img);
       const cap = document.createElement('figcaption');
       cap.className = 'tr';
       cap.dataset.en = escapeHtml(d.en);
       cap.dataset.zh = escapeHtml(d.zh);
       applyEdit(cap, `${ch.id}_b${idx}`);
-      fig.appendChild(img);
+      fig.appendChild(box);
       fig.appendChild(cap);
       appendToCurrent(fig);
       return;
@@ -2228,12 +2282,13 @@ function buildContent(){
     el.className='tr'; el.dataset.en = escapeHtml(d.en); el.dataset.zh = escapeHtml(d.zh);
     applyEdit(el, `${ch.id}_b${idx}`);
     if(d.t==='li'){
-      const container = currentDetails || content;
+      const container = currentH3 || currentH2 || content;
       let ul = container.lastElementChild;
       if(!ul || ul.tagName!=='UL'){ ul = document.createElement('ul'); container.appendChild(ul); }
       ul.appendChild(el);
     } else { appendToCurrent(el); }
   });
+  updateToggleAllLabel();
 }
 
 function renderAll(){
@@ -2350,17 +2405,46 @@ document.getElementById('syncClearTokenBtn').onclick = ()=>{
   document.getElementById('syncStatus').textContent = lang==='zh' ? '已清除本機金鑰' : 'Local token cleared';
 };
 
-document.getElementById('collapseAllBtn').onclick = ()=>{
-  document.querySelectorAll('#content details.section').forEach(det=>{ det.open = false; });
+// Single toggle button for collapse/expand-all — label reflects the action
+// it will perform next (based on whether any section is currently open).
+function updateToggleAllLabel(){
+  const btn = document.getElementById('toggleAllBtn');
+  if(!btn) return;
+  const dets = document.querySelectorAll('#content details');
+  const anyOpen = Array.from(dets).some(d=> d.open);
+  btn.textContent = lang==='zh'
+    ? (anyOpen ? '全部摺疊' : '全部展開')
+    : (anyOpen ? 'Collapse all' : 'Expand all');
+}
+document.getElementById('toggleAllBtn').onclick = ()=>{
+  const dets = document.querySelectorAll('#content details');
+  const anyOpen = Array.from(dets).some(d=> d.open);
+  dets.forEach(d=>{ d.open = !anyOpen; });
+  updateToggleAllLabel();
 };
-document.getElementById('expandAllBtn').onclick = ()=>{
-  document.querySelectorAll('#content details.section').forEach(det=>{ det.open = true; });
+
+// Article text size (zoom applies to #content only, leaving the topbar/UI untouched).
+let textScale = 1;
+function applyTextScale(){
+  document.getElementById('content').style.zoom = textScale;
+}
+document.getElementById('fontDecBtn').onclick = ()=>{
+  textScale = Math.max(0.7, +(textScale - 0.1).toFixed(2));
+  applyTextScale();
 };
+document.getElementById('fontIncBtn').onclick = ()=>{
+  textScale = Math.min(1.6, +(textScale + 0.1).toFixed(2));
+  applyTextScale();
+};
+
 // Clicking the heading text itself shouldn't toggle the section (so double-click-to-edit
 // works cleanly); clicking elsewhere on the summary bar (arrow, empty space) still toggles.
 document.addEventListener('click', e=>{
-  if(e.target.closest('summary h2.tr') || e.target.closest('summary .yt-tools')) e.preventDefault();
+  if(e.target.closest('summary h2.tr') || e.target.closest('summary h3.tr') || e.target.closest('summary .yt-tools')) e.preventDefault();
 });
+document.addEventListener('toggle', e=>{
+  if(e.target.matches && e.target.matches('#content details')) updateToggleAllLabel();
+}, true);
 
 // Floating "🖍 標記" button — appears when the user selects text inside a
 // non-editing block, giving touch users (iPad) a tap alternative to the
