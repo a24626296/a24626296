@@ -76,6 +76,48 @@
   .navfoot button:disabled{ opacity:.35; cursor:default; }
   footer{ max-width:760px; margin:2rem auto 0; padding:1.2rem 1.5rem 0; border-top:1px solid var(--hair); font-size:.8rem; color:var(--ink-soft); font-family:'JetBrains Mono',monospace; }
   @media (max-width:600px){ .masthead h1{ font-size:1.6rem; } }
+
+  .tr.editing, td.tr.editing, th.tr.editing, figcaption.tr.editing{
+    background:var(--amber-tint); outline:2px dashed var(--amber); outline-offset:2px;
+    cursor:text; box-shadow:0 2px 8px rgba(0,0,0,.08);
+  }
+  .tr.editing::before{ display:none; }
+  .tr.edited::after{ content:"✎"; font-size:.7em; color:var(--amber-dark); margin-left:.35em; vertical-align:super; }
+  #resetEditsBtn{ appearance:none; border:1px solid #33424D; background:#0D1620; color:#8CA0AB;
+    font-family:'JetBrains Mono',monospace; font-size:.7rem; padding:.35rem .7rem; border-radius:6px;
+    cursor:pointer; letter-spacing:.03em; }
+  #resetEditsBtn:hover{ border-color:var(--amber); color:var(--amber); }
+  #syncBtn{ appearance:none; border:1px solid #33424D; background:#0D1620; color:#8CA0AB;
+    font-family:'JetBrains Mono',monospace; font-size:.7rem; padding:.35rem .7rem; border-radius:6px;
+    cursor:pointer; letter-spacing:.03em; display:inline-flex; align-items:center; gap:.35rem; }
+  #syncBtn:hover{ border-color:var(--teal); color:#8fd6d0; }
+  #syncBtn.syncing{ opacity:.6; cursor:wait; }
+  #syncDot{ width:7px; height:7px; border-radius:50%; background:#5a6b74; flex:0 0 auto; }
+  #syncDot.ok{ background:#3fae6b; }
+  #syncDot.err{ background:#c0533a; }
+  .modal-overlay{ position:fixed; inset:0; background:rgba(10,14,17,.55); z-index:70;
+    display:flex; align-items:center; justify-content:center; padding:1.2rem; }
+  .modal-overlay.hidden{ display:none; }
+  .modal-panel{ background:var(--paper); color:var(--ink); border-radius:10px; max-width:440px; width:100%;
+    padding:1.4rem 1.4rem 1.2rem; box-shadow:0 20px 50px rgba(0,0,0,.35); border:1px solid var(--hair); }
+  .modal-panel h3{ margin:0 0 .6rem; font-size:1.1rem; }
+  .modal-panel p{ font-size:.83rem; color:var(--ink-soft); line-height:1.6; margin:0 0 .8rem; }
+  .modal-panel input[type=password]{ width:100%; font-family:'JetBrains Mono',monospace; font-size:.85rem;
+    padding:.55rem .6rem; border:1px solid var(--hair); border-radius:6px; background:#fff; color:var(--ink);
+    margin-bottom:.7rem; }
+  .modal-actions{ display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.3rem; }
+  .modal-actions button{ appearance:none; border:1px solid var(--hair); background:var(--paper); color:var(--ink);
+    font-family:'JetBrains Mono',monospace; font-size:.78rem; padding:.5rem .9rem; border-radius:6px; cursor:pointer; }
+  .modal-actions button.primary{ background:var(--teal); border-color:var(--teal); color:#fff; }
+  .modal-actions button.primary:hover{ background:var(--amber); border-color:var(--amber); color:#1B1200; }
+  .modal-actions button.danger:hover{ border-color:#c0533a; color:#c0533a; }
+  .modal-actions button:hover:not(.primary):not(.danger){ border-color:var(--amber); color:var(--amber-dark); }
+  #syncStatus{ font-family:'JetBrains Mono',monospace; font-size:.75rem; margin-top:.7rem; min-height:1em; }
+  #toast{ position:fixed; bottom:22px; left:50%; transform:translateX(-50%) translateY(10px);
+    background:var(--placard-bg); color:var(--placard-text); border:1px solid var(--amber); border-radius:6px;
+    padding:.55rem 1rem; font-size:.8rem; font-family:'JetBrains Mono',monospace; opacity:0;
+    pointer-events:none; transition:opacity .2s, transform .2s; z-index:60; }
+  #toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
 </style>
 </head>
 <body class="zh">
@@ -87,9 +129,26 @@
       <button id="btn-zh" class="active">中文</button>
       <button id="btn-en">EN</button>
     </div>
-    <span class="hint" id="hoverHint">滑鼠停在文字上看英文原文</span>
+    <span class="hint" id="hoverHint">滑鼠停在文字上看英文原文・雙擊可編輯</span>
+    <button id="resetEditsBtn">清除本機編輯</button>
+    <button id="syncBtn"><span id="syncDot"></span><span id="syncBtnLabel">雲端同步</span></button>
   </div>
   <div class="chapternav" id="chapternav"></div>
+</div>
+
+<div class="modal-overlay hidden" id="syncPanel">
+  <div class="modal-panel">
+    <h3>雲端同步設定</h3>
+    <p>編輯內容會同步到 <code>a24626296/a24626296</code> repo 的 <code>PHAK/edits.json</code>。讀取不需要金鑰；要「推送」你的編輯，需要一組對此 repo 有 <strong>Contents: Read and write</strong> 權限的 GitHub Fine-grained PAT。金鑰只會存在這台裝置的瀏覽器 localStorage，不會上傳。</p>
+    <input type="password" id="syncTokenInput" placeholder="貼上 github_pat_... （留空＝只拉取，不推送）">
+    <div class="modal-actions">
+      <button id="syncSaveBtn" class="primary">儲存金鑰並立即同步</button>
+      <button id="syncPullOnlyBtn">只從雲端拉取</button>
+      <button id="syncClearTokenBtn" class="danger">清除本機金鑰</button>
+      <button id="syncCancelBtn">關閉</button>
+    </div>
+    <p id="syncStatus"></p>
+  </div>
 </div>
 
 <div class="wrap">
@@ -108,6 +167,7 @@
 <footer class="tr" data-en="Source: FAA-H-8083-25C (2023), U.S. Department of Transportation / Federal Aviation Administration — public domain U.S. Government work." data-zh="來源：FAA-H-8083-25C（2023），美國交通部／聯邦航空總署 — 美國政府著作，屬公版。">來源：FAA-H-8083-25C（2023），美國交通部／聯邦航空總署 — 美國政府著作，屬公版。</footer>
 
 <div id="tooltip"></div>
+<div id="toast"></div>
 
 <script>
 /* ============================================================
@@ -1555,6 +1615,236 @@ const CHAPTERS = [
 ];
 /* ============================================================ */
 
+/* ============================================================
+   USER EDITS — double-click any highlighted text to edit it in
+   place. Edits are saved per-language to localStorage and are
+   restored automatically on future visits (per browser/device).
+   ============================================================ */
+const EDIT_STORE_KEY = 'phak_edits_v1';
+let EDITS = {};
+try{ EDITS = JSON.parse(localStorage.getItem(EDIT_STORE_KEY) || '{}'); }catch(e){ EDITS = {}; }
+
+function saveEditStore(){
+  try{ localStorage.setItem(EDIT_STORE_KEY, JSON.stringify(EDITS)); }catch(e){}
+}
+
+// Apply any saved edit for this key onto the element's dataset,
+// and remember the key on the element so we can save future edits.
+function applyEdit(el, key){
+  el.dataset.editKey = key;
+  const e = EDITS[key];
+  if(e){
+    if(e.en !== undefined) el.dataset.en = e.en;
+    if(e.zh !== undefined) el.dataset.zh = e.zh;
+    el.classList.add('edited');
+  }
+}
+
+let editingEl = null;
+let editingOriginalText = '';
+
+function startEdit(el){
+  if(editingEl && editingEl!==el) commitEdit(editingEl);
+  editingEl = el;
+  editingOriginalText = el.textContent;
+  el.contentEditable = 'true';
+  el.classList.add('editing');
+  tip.classList.remove('show');
+  el.focus();
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
+function commitEdit(el){
+  if(!el) return;
+  el.contentEditable = 'false';
+  el.classList.remove('editing');
+  const newText = el.textContent.replace(/\s+/g,' ').trim();
+  const key = el.dataset.editKey;
+  const changed = newText !== editingOriginalText.trim();
+  if(key && changed){
+    const cur = lang==='zh' ? 'zh' : 'en';
+    if(!EDITS[key]) EDITS[key] = {};
+    EDITS[key][cur] = newText;
+    EDITS[key].ts = Date.now();
+    el.dataset[cur] = newText;
+    el.classList.add('edited');
+    saveEditStore();
+    showToast(lang==='zh' ? '已儲存編輯 ✓' : 'Edit saved ✓');
+    scheduleAutoPush();
+  }
+  if(editingEl===el) editingEl = null;
+}
+
+function cancelEdit(el){
+  if(!el) return;
+  el.contentEditable = 'false';
+  el.classList.remove('editing');
+  el.textContent = editingOriginalText;
+  if(editingEl===el) editingEl = null;
+}
+
+document.addEventListener('dblclick', e=>{
+  const el = e.target.closest('.tr');
+  if(!el) return;
+  e.preventDefault();
+  startEdit(el);
+});
+
+document.addEventListener('keydown', e=>{
+  if(!editingEl) return;
+  if(e.key==='Enter' && !e.shiftKey){
+    e.preventDefault();
+    commitEdit(editingEl);
+  } else if(e.key==='Escape'){
+    e.preventDefault();
+    cancelEdit(editingEl);
+  }
+});
+
+// Commit on blur (clicking elsewhere, switching chapters, etc.)
+document.addEventListener('blur', e=>{
+  if(editingEl && e.target===editingEl) commitEdit(editingEl);
+}, true);
+
+let toastTimer = null;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  if(!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> t.classList.remove('show'), 1600);
+}
+
+/* ============================================================
+   CLOUD SYNC — edits.json is read/written to the PHAK folder of
+   a24626296/a24626296 via the GitHub Contents API. Reading works
+   without a token (public repo). Writing needs a fine-grained PAT
+   with Contents: Read & write on this repo, stored locally only.
+   ============================================================ */
+const SYNC_REPO = 'a24626296/a24626296';
+const SYNC_PATH = 'PHAK/edits.json';
+const SYNC_TOKEN_KEY = 'phak_sync_pat';
+let syncToken = localStorage.getItem(SYNC_TOKEN_KEY) || '';
+let cloudSha = null;
+let pushTimer = null;
+let syncBusy = false;
+
+function b64ToUtf8(b64){
+  return decodeURIComponent(escape(atob(b64.replace(/\n/g,''))));
+}
+function utf8ToB64(str){
+  return btoa(unescape(encodeURIComponent(str)));
+}
+
+function setSyncDot(state){
+  const dot = document.getElementById('syncDot');
+  if(!dot) return;
+  dot.classList.remove('ok','err');
+  if(state) dot.classList.add(state);
+}
+
+async function fetchCloudEdits(){
+  const res = await fetch(`https://api.github.com/repos/${SYNC_REPO}/contents/${SYNC_PATH}`, {
+    headers: syncToken ? { Authorization: `token ${syncToken}` } : {}
+  });
+  if(res.status===404) return null;
+  if(!res.ok) throw new Error(`GET ${res.status}`);
+  const data = await res.json();
+  cloudSha = data.sha;
+  return JSON.parse(b64ToUtf8(data.content));
+}
+
+// key-level last-write-wins merge using each entry's ts
+function mergeEdits(a, b){
+  const merged = {...a};
+  Object.keys(b||{}).forEach(k=>{
+    const incoming = b[k], existing = merged[k];
+    if(!existing || (incoming.ts||0) >= (existing.ts||0)) merged[k] = incoming;
+  });
+  return merged;
+}
+
+async function pullFromCloud(silent){
+  setSyncDot(null);
+  try{
+    const cloud = await fetchCloudEdits();
+    if(cloud){
+      EDITS = mergeEdits(EDITS, cloud);
+      saveEditStore();
+      renderAll();
+      setSyncDot('ok');
+      if(!silent) showToast(lang==='zh' ? '已從雲端載入編輯' : 'Loaded edits from cloud');
+    } else {
+      setSyncDot('ok');
+      if(!silent) showToast(lang==='zh' ? '雲端尚無編輯紀錄' : 'No cloud edits yet');
+    }
+  }catch(e){
+    console.warn('pullFromCloud failed', e);
+    setSyncDot('err');
+    if(!silent) showToast(lang==='zh' ? '拉取失敗：'+e.message : 'Pull failed: '+e.message);
+  }
+}
+
+async function pushToCloud(){
+  if(!syncToken) return;
+  if(syncBusy) return;
+  syncBusy = true;
+  setSyncDot(null);
+  const btn = document.getElementById('syncBtn');
+  if(btn) btn.classList.add('syncing');
+  try{
+    let cloud = null;
+    try{ cloud = await fetchCloudEdits(); }catch(e){ /* proceed, may be first write */ }
+    EDITS = cloud ? mergeEdits(EDITS, cloud) : EDITS;
+    const body = {
+      message: `Update PHAK study edits (${new Date().toISOString()})`,
+      content: utf8ToB64(JSON.stringify(EDITS, null, 2)),
+      ...(cloudSha ? { sha: cloudSha } : {})
+    };
+    const res = await fetch(`https://api.github.com/repos/${SYNC_REPO}/contents/${SYNC_PATH}`, {
+      method: 'PUT',
+      headers: { Authorization: `token ${syncToken}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if(!res.ok){
+      const err = await res.json().catch(()=>({}));
+      throw new Error(err.message || `PUT ${res.status}`);
+    }
+    const data = await res.json();
+    cloudSha = data.content.sha;
+    saveEditStore();
+    setSyncDot('ok');
+    showToast(lang==='zh' ? '已同步到雲端 ☁️' : 'Synced to cloud ☁️');
+  }catch(e){
+    console.error('pushToCloud failed', e);
+    setSyncDot('err');
+    showToast(lang==='zh' ? '同步失敗：'+e.message : 'Sync failed: '+e.message);
+  }finally{
+    syncBusy = false;
+    if(btn) btn.classList.remove('syncing');
+  }
+}
+
+function scheduleAutoPush(){
+  if(!syncToken) return;
+  clearTimeout(pushTimer);
+  pushTimer = setTimeout(()=> pushToCloud(), 4000);
+}
+
+function openSyncPanel(){
+  document.getElementById('syncTokenInput').value = syncToken;
+  document.getElementById('syncStatus').textContent = '';
+  document.getElementById('syncPanel').classList.remove('hidden');
+}
+function closeSyncPanel(){
+  document.getElementById('syncPanel').classList.add('hidden');
+}
+
 let lang = 'zh';
 let chapterIdx = 0;
 
@@ -1576,22 +1866,31 @@ function buildContent(){
   const ch = CHAPTERS[chapterIdx];
   const content = document.getElementById('content');
   content.innerHTML = '';
-  ch.blocks.forEach(d=>{
+  ch.blocks.forEach((d, idx)=>{
     if(d.t==='table'){
       const table = document.createElement('table');
       const cols = d.rows[0].en3 !== undefined ? 3 : 2;
-      let headHtml = '<thead><tr>';
-      d.head.forEach((h,i)=>{ headHtml += `<th class="tr" data-en="${h}" data-zh="${d.headZh[i]}"></th>`; });
-      headHtml += '</tr></thead>';
-      table.innerHTML = headHtml;
+      const thead = document.createElement('thead');
+      const trHead = document.createElement('tr');
+      d.head.forEach((h,ci)=>{
+        const th = document.createElement('th');
+        th.className='tr'; th.dataset.en=h; th.dataset.zh=d.headZh[ci];
+        applyEdit(th, `${ch.id}_b${idx}_th${ci}`);
+        trHead.appendChild(th);
+      });
+      thead.appendChild(trHead);
+      table.appendChild(thead);
       const tbody = document.createElement('tbody');
-      d.rows.forEach(r=>{
+      d.rows.forEach((r,ri)=>{
         const tr = document.createElement('tr');
         const c1 = document.createElement('td'); c1.className='tr'; c1.dataset.en=r.en; c1.dataset.zh=r.zh;
+        applyEdit(c1, `${ch.id}_b${idx}_r${ri}_c0`);
         const c2 = document.createElement('td'); c2.className='tr'; c2.dataset.en=r.en2; c2.dataset.zh=r.zh2;
+        applyEdit(c2, `${ch.id}_b${idx}_r${ri}_c1`);
         tr.appendChild(c1); tr.appendChild(c2);
         if(cols===3){
           const c3 = document.createElement('td'); c3.className='tr'; c3.dataset.en=r.en3; c3.dataset.zh=r.zh3;
+          applyEdit(c3, `${ch.id}_b${idx}_r${ri}_c2`);
           tr.appendChild(c3);
         }
         tbody.appendChild(tr);
@@ -1611,6 +1910,7 @@ function buildContent(){
       cap.className = 'tr';
       cap.dataset.en = d.en;
       cap.dataset.zh = d.zh;
+      applyEdit(cap, `${ch.id}_b${idx}`);
       fig.appendChild(img);
       fig.appendChild(cap);
       content.appendChild(fig);
@@ -1618,6 +1918,7 @@ function buildContent(){
     }
     const el = document.createElement(d.t==='li' ? 'li' : d.t);
     el.className='tr'; el.dataset.en = d.en; el.dataset.zh = d.zh;
+    applyEdit(el, `${ch.id}_b${idx}`);
     if(d.t==='li'){
       let ul = content.lastElementChild;
       if(!ul || ul.tagName!=='UL'){ ul = document.createElement('ul'); content.appendChild(ul); }
@@ -1638,7 +1939,7 @@ function renderAll(){
   document.getElementById('btn-zh').classList.toggle('active', lang==='zh');
   document.getElementById('btn-en').classList.toggle('active', lang==='en');
   document.getElementById('hoverHint').textContent = lang==='zh'
-    ? '滑鼠停在文字上看英文原文' : 'Hover text to see the Chinese translation';
+    ? '滑鼠停在文字上看英文原文・雙擊可編輯' : 'Hover to see translation・double-click to edit';
   buildChapterNav();
   {
     const order = CHAPTERS.map((ch,i)=>i).sort((a,b)=> CHAPTERS[a].num - CHAPTERS[b].num);
@@ -1682,17 +1983,65 @@ function positionTip(x,y){
 }
 document.addEventListener('mousemove', e=>{
   const el = e.target.closest('.tr');
+  if(el && el.isContentEditable){ tip.classList.remove('show'); return; }
   if(el){ showTip(el, e.clientX, e.clientY); } else { tip.classList.remove('show'); }
 });
 document.addEventListener('mouseleave', ()=> tip.classList.remove('show'));
 document.addEventListener('click', e=>{
   const el = e.target.closest('.tr');
+  if(el && el.isContentEditable) return;
   if(el && ('ontouchstart' in window)){
     const rectEl = el.getBoundingClientRect();
     showTip(el, rectEl.left+10, rectEl.bottom+6);
     setTimeout(()=> tip.classList.remove('show'), 3500);
   }
 });
+
+document.getElementById('resetEditsBtn').onclick = ()=>{
+  const empty = Object.keys(EDITS).length===0;
+  if(empty){ showToast(lang==='zh' ? '目前沒有任何編輯' : 'No edits to clear'); return; }
+  const msg = lang==='zh'
+    ? '確定要清除所有已編輯的內容嗎？此動作無法復原。'
+    : 'Clear all edited content? This cannot be undone.';
+  if(confirm(msg)){
+    EDITS = {};
+    saveEditStore();
+    renderAll();
+    showToast(lang==='zh' ? '已清除所有編輯' : 'All edits cleared');
+  }
+};
+
+document.getElementById('syncBtn').onclick = ()=>{ openSyncPanel(); };
+document.getElementById('syncCancelBtn').onclick = ()=> closeSyncPanel();
+document.getElementById('syncPanel').addEventListener('click', e=>{
+  if(e.target.id==='syncPanel') closeSyncPanel();
+});
+document.getElementById('syncSaveBtn').onclick = async ()=>{
+  const val = document.getElementById('syncTokenInput').value.trim();
+  syncToken = val;
+  if(val){ localStorage.setItem(SYNC_TOKEN_KEY, val); } else { localStorage.removeItem(SYNC_TOKEN_KEY); }
+  const status = document.getElementById('syncStatus');
+  status.textContent = lang==='zh' ? '同步中…' : 'Syncing…';
+  await pullFromCloud(true);
+  if(syncToken) await pushToCloud();
+  status.textContent = lang==='zh' ? '完成 ✓' : 'Done ✓';
+  setTimeout(closeSyncPanel, 700);
+};
+document.getElementById('syncPullOnlyBtn').onclick = async ()=>{
+  const status = document.getElementById('syncStatus');
+  status.textContent = lang==='zh' ? '拉取中…' : 'Pulling…';
+  await pullFromCloud(false);
+  status.textContent = lang==='zh' ? '完成 ✓' : 'Done ✓';
+};
+document.getElementById('syncClearTokenBtn').onclick = ()=>{
+  syncToken = '';
+  localStorage.removeItem(SYNC_TOKEN_KEY);
+  document.getElementById('syncTokenInput').value = '';
+  document.getElementById('syncStatus').textContent = lang==='zh' ? '已清除本機金鑰' : 'Local token cleared';
+};
+
+// Silent pull on load so edits made on another device show up automatically.
+pullFromCloud(true);
 </script>
 </body>
 </html>
