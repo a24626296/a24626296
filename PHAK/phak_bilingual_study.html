@@ -2214,8 +2214,13 @@ document.addEventListener('selectionchange', ()=>{
   if(!trEl || trEl.isContentEditable){ hlBtn.style.display = 'none'; return; }
   const rect = range.getBoundingClientRect();
   if(rect.width===0 && rect.height===0){ hlBtn.style.display = 'none'; return; }
-  hlBtn.style.left = Math.max(8, rect.left + rect.width/2 - 34) + 'px';
-  hlBtn.style.top = Math.max(8, rect.top - 42) + 'px';
+  const vh = window.innerHeight;
+  // Prefer placing below the selection — iOS's own copy/lookup menu appears
+  // above it, so this avoids the two overlapping. Fall back to above only
+  // if there's no room below (selection near the bottom of the screen).
+  const placeBelow = rect.bottom + 50 < vh;
+  hlBtn.style.left = Math.max(8, Math.min(window.innerWidth-76, rect.left + rect.width/2 - 34)) + 'px';
+  hlBtn.style.top = placeBelow ? (rect.bottom + 14) + 'px' : Math.max(8, rect.top - 42) + 'px';
   hlBtn.style.display = 'block';
 });
 
