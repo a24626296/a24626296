@@ -97,7 +97,7 @@
   table{ width:100%; border-collapse:collapse; margin:1rem 0 1.4rem; font-size:.9rem; }
   th,td{ border:1px solid var(--hair); padding:.55rem .7rem; text-align:left; vertical-align:top; }
   figure.fig{ margin:1.4rem 0; padding:0; }
-  figure.fig img{ width:100%; height:auto; display:block; border:1px solid var(--hair); border-radius:6px; background:#fff; }
+  figure.fig img{ width:var(--img-w,100%); height:auto; display:block; margin:0 auto; border:1px solid var(--hair); border-radius:6px; background:#fff; transition:width .15s; }
   figure.fig figcaption{ margin-top:.5rem; font-size:.85rem; color:var(--ink-soft); cursor:help; padding:.15rem .3rem; border-radius:4px; }
   figure.fig figcaption:hover{ background:var(--amber-tint); }
   figure.fig figcaption .tag{ font-family:'JetBrains Mono',monospace; font-size:.7rem; color:var(--amber-dark); margin-right:.4rem; }
@@ -132,6 +132,11 @@
       <button id="fontDec" title="縮小文字" aria-label="縮小文字">A−</button>
       <button id="fontReset" title="重設文字大小" aria-label="重設文字大小">A</button>
       <button id="fontInc" title="放大文字" aria-label="放大文字">A+</button>
+    </div>
+    <div class="fontctl" id="imgctl">
+      <button id="imgDec" title="縮小圖片" aria-label="縮小圖片">圖－</button>
+      <button id="imgReset" title="重設圖片大小" aria-label="重設圖片大小">圖</button>
+      <button id="imgInc" title="放大圖片" aria-label="放大圖片">圖+</button>
     </div>
     <button class="modebtn" id="quietBtn">沉靜式閱讀</button>
     <button class="modebtn" id="archiveBtn">封存</button>
@@ -2072,6 +2077,14 @@ function applyFontSize(){
   localStorage.setItem('phak_fontsize', fontSize);
 }
 
+const IMG_MIN = 30, IMG_MAX = 100, IMG_STEP = 10, IMG_DEFAULT = 100;
+let imgScale = parseInt(localStorage.getItem('phak_imgscale'), 10) || IMG_DEFAULT;
+function applyImgScale(){
+  imgScale = Math.max(IMG_MIN, Math.min(IMG_MAX, imgScale));
+  document.documentElement.style.setProperty('--img-w', imgScale + '%');
+  localStorage.setItem('phak_imgscale', imgScale);
+}
+
 let quietMode = localStorage.getItem('phak_quiet') === '1';
 function applyQuietMode(){
   document.body.classList.toggle('quiet', quietMode);
@@ -2245,6 +2258,9 @@ document.getElementById('btn-en').onclick = ()=>{ lang='en'; renderAll(); };
 document.getElementById('fontDec').onclick = ()=>{ fontSize -= 1; applyFontSize(); };
 document.getElementById('fontInc').onclick = ()=>{ fontSize += 1; applyFontSize(); };
 document.getElementById('fontReset').onclick = ()=>{ fontSize = FS_DEFAULT; applyFontSize(); };
+document.getElementById('imgDec').onclick = ()=>{ imgScale -= IMG_STEP; applyImgScale(); };
+document.getElementById('imgInc').onclick = ()=>{ imgScale += IMG_STEP; applyImgScale(); };
+document.getElementById('imgReset').onclick = ()=>{ imgScale = IMG_DEFAULT; applyImgScale(); };
 document.getElementById('quietBtn').onclick = ()=>{ quietMode = !quietMode; applyQuietMode(); };
 document.getElementById('archiveBtn').onclick = ()=>{ archiving = !archiving; applyArchiveMode(); };
 document.getElementById('prevBtn').onclick = ()=>{
@@ -2259,6 +2275,7 @@ document.getElementById('nextBtn').onclick = ()=>{
 };
 renderAll();
 applyFontSize();
+applyImgScale();
 applyQuietMode();
 applyArchiveMode();
 
