@@ -54,6 +54,26 @@
   .archivebar .chip:hover{ opacity:1; border-color:var(--amber); color:var(--amber); }
   .archivebar .chip .chip-x{ display:inline-flex; }
 
+  .blockwrap{ position:relative; }
+  .blockctl{ display:none; gap:.3rem; margin-bottom:.35rem; }
+  body.editing .blockwrap > .blockctl{ display:flex; }
+  .blockctl button{ appearance:none; border:1px solid var(--hair); background:var(--paper); color:var(--ink-soft);
+    font-family:'JetBrains Mono',monospace; font-size:.68rem; width:1.7rem; height:1.4rem; border-radius:4px; cursor:pointer; }
+  .blockctl button:hover:not(:disabled){ border-color:var(--teal); color:var(--teal); }
+  .blockctl button:disabled{ opacity:.3; cursor:default; }
+
+  body.editing .tr-text{ border-radius:3px; padding:.05rem .2rem; margin:-.05rem -.2rem; }
+  body.editing .tr-text:hover{ background:var(--teal-tint); cursor:text; }
+  body.editing .tr-text:focus{ outline:2px solid var(--teal); background:#fff; cursor:text; }
+  body.editing p.tr:hover, body.editing li.tr:hover{ background:none; }
+  body.editing p.tr:hover::before, body.editing li.tr:hover::before{ content:none; }
+
+  .editctl{ display:none; align-items:center; gap:.4rem; }
+  body.editing .editctl{ display:flex; }
+  .editctl button{ appearance:none; border:1px solid #33424D; background:#0D1620; color:#9FB0BA;
+    font-family:'JetBrains Mono',monospace; font-size:.72rem; padding:.35rem .65rem; border-radius:6px; cursor:pointer; }
+  .editctl button:hover{ border-color:#D9534F; color:#D9534F; }
+
   body.quiet{ background:#F7F2E4; }
   body.quiet .chapternav{ display:none; }
   body.quiet .title, body.quiet .hint{ display:none; }
@@ -140,7 +160,12 @@
     </div>
     <button class="modebtn" id="quietBtn">沉靜式閱讀</button>
     <button class="modebtn" id="archiveBtn">封存</button>
+    <button class="modebtn" id="editBtn">編輯模式</button>
+    <div class="editctl" id="editctl">
+      <button id="resetEditsBtn">重置本章編輯</button>
+    </div>
     <span class="hint" id="hoverHint">滑鼠停在文字上看英文原文</span>
+    <span class="hint" id="lastUpdated">最後更新：載入中…</span>
   </div>
   <div class="chapternav" id="chapternav"></div>
   <div class="archivebar" id="archivebar">
@@ -2175,57 +2200,188 @@ function saveArchivedChapters(){
   localStorage.setItem('phak_archived', JSON.stringify(Array.from(archivedChapters)));
 }
 
+let editMode = false;
+let textEdits = JSON.parse(localStorage.getItem('phak_textedits') || '{}');
+let orderEdits = JSON.parse(localStorage.getItem('phak_order') || '{}');
+
+function getOrder(ch){
+  return orderEdits[ch.id] || ch.blocks.map((_,i)=>i);
+}
+function setOrder(ch, order){
+  orderEdits[ch.id] = order;
+  localStorage.setItem('phak_order', JSON.stringify(orderEdits));
+}
+function moveBlock(ch, pos, dir){
+  const order = getOrder(ch).slice();
+  const newPos = pos + dir;
+  if(newPos < 0 || newPos >= order.length) return;
+  const tmp = order[pos]; order[pos] = order[newPos]; order[newPos] = tmp;
+  setOrder(ch, order);
+}
+function getEditedText(chId, key, field, fallback){
+  const rec = textEdits[chId] && textEdits[chId][key];
+  return (rec && rec[field] !== undefined) ? rec[field] : fallback;
+}
+function saveEditedText(chId, key, field, value){
+  if(!textEdits[chId]) textEdits[chId] = {};
+  if(!textEdits[chId][key]) textEdits[chId][key] = {};
+  textEdits[chId][key][field] = value;
+  localStorage.setItem('phak_textedits', JSON.stringify(textEdits));
+}
+function resetChapterEdits(chId){
+  delete textEdits[chId];
+  delete orderEdits[chId];
+  localStorage.setItem('phak_textedits', JSON.stringify(textEdits));
+  localStorage.setItem('phak_order', JSON.stringify(orderEdits));
+}
+function applyEditMode(){
+  document.body.classList.toggle('editing', editMode);
+  const btn = document.getElementById('editBtn');
+  btn.textContent = editMode ? (lang==='zh' ? '退出編輯' : 'Exit Edit') : (lang==='zh' ? '編輯模式' : 'Edit Mode');
+  btn.classList.toggle('active', editMode);
+}
+
+let lastUpdatedDate = null;
+async function loadLastUpdated(){
+  const CACHE_KEY = 'phak_lastupdated_cache';
+  const CACHE_TTL = 10 * 60 * 1000; // 10 minutes
+  try{
+    const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+    if(cached && (Date.now() - cached.fetchedAt) < CACHE_TTL){
+      lastUpdatedDate = new Date(cached.date);
+      renderLastUpdated();
+      return;
+    }
+  }catch(e){}
+  try{
+    const resp = await fetch('https://api.github.com/repos/a24626296/a24626296/commits?path=PHAK/phak_bilingual_study.html&per_page=1');
+    if(!resp.ok) throw new Error('bad status');
+    const data = await resp.json();
+    if(!data || !data[0]) throw new Error('no commits');
+    const dateStr = data[0].commit.committer.date;
+    lastUpdatedDate = new Date(dateStr);
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ date: dateStr, fetchedAt: Date.now() }));
+  }catch(e){
+    try{
+      const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+      lastUpdatedDate = cached ? new Date(cached.date) : 'error';
+    }catch(e2){ lastUpdatedDate = 'error'; }
+  }
+  renderLastUpdated();
+}
+function renderLastUpdated(){
+  const el = document.getElementById('lastUpdated');
+  if(!el) return;
+  if(lastUpdatedDate === null){
+    el.textContent = lang==='zh' ? '最後更新：載入中…' : 'Last updated: loading…';
+  } else if(lastUpdatedDate === 'error'){
+    el.textContent = lang==='zh' ? '最後更新：無法取得' : 'Last updated: unavailable';
+  } else {
+    const formatted = lastUpdatedDate.toLocaleString(lang==='zh' ? 'zh-TW' : 'en-US',
+      { year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' });
+    el.textContent = (lang==='zh' ? '最後更新：' : 'Last updated: ') + formatted;
+  }
+}
+
 function buildContent(){
   const ch = CHAPTERS[chapterIdx];
   const content = document.getElementById('content');
   content.innerHTML = '';
-  ch.blocks.forEach(d=>{
+  const order = getOrder(ch);
+
+  function trText(elType, key, enFallback, zhFallback){
+    const el = document.createElement(elType);
+    el.className = 'tr';
+    el.dataset.en = getEditedText(ch.id, key, 'en', enFallback);
+    el.dataset.zh = getEditedText(ch.id, key, 'zh', zhFallback);
+    const span = document.createElement('span');
+    span.className = 'tr-text';
+    span.contentEditable = editMode ? 'true' : 'false';
+    if(editMode){
+      span.addEventListener('blur', ()=>{
+        const val = span.innerHTML;
+        el.dataset[lang] = val;
+        saveEditedText(ch.id, key, lang, val);
+      });
+    }
+    el.appendChild(span);
+    return el;
+  }
+
+  function makeBlockCtl(pos){
+    const ctl = document.createElement('span');
+    ctl.className = 'blockctl';
+    const up = document.createElement('button');
+    up.type = 'button'; up.textContent = '▲';
+    up.title = lang==='zh' ? '上移' : 'Move up';
+    up.disabled = pos === 0;
+    up.onclick = ()=>{ moveBlock(ch, pos, -1); renderAll(); };
+    const down = document.createElement('button');
+    down.type = 'button'; down.textContent = '▼';
+    down.title = lang==='zh' ? '下移' : 'Move down';
+    down.disabled = pos === order.length - 1;
+    down.onclick = ()=>{ moveBlock(ch, pos, 1); renderAll(); };
+    ctl.appendChild(up); ctl.appendChild(down);
+    return ctl;
+  }
+
+  order.forEach((origIdx, pos)=>{
+    const d = ch.blocks[origIdx];
+    if(!d) return;
+    const key = String(origIdx);
+
     if(d.t==='table'){
+      const wrap = document.createElement('div');
+      wrap.className = 'blockwrap';
+      if(editMode) wrap.appendChild(makeBlockCtl(pos));
       const table = document.createElement('table');
       const cols = d.rows[0].en3 !== undefined ? 3 : 2;
-      let headHtml = '<thead><tr>';
-      d.head.forEach((h,i)=>{ headHtml += `<th class="tr" data-en="${h}" data-zh="${d.headZh[i]}"></th>`; });
-      headHtml += '</tr></thead>';
-      table.innerHTML = headHtml;
+      const thead = document.createElement('thead');
+      const headTr = document.createElement('tr');
+      d.head.forEach((h,ci)=>{ headTr.appendChild(trText('th', key+'.head.'+ci, h, d.headZh[ci])); });
+      thead.appendChild(headTr);
+      table.appendChild(thead);
       const tbody = document.createElement('tbody');
-      d.rows.forEach(r=>{
+      d.rows.forEach((r,ri)=>{
         const tr = document.createElement('tr');
-        const c1 = document.createElement('td'); c1.className='tr'; c1.dataset.en=r.en; c1.dataset.zh=r.zh;
-        const c2 = document.createElement('td'); c2.className='tr'; c2.dataset.en=r.en2; c2.dataset.zh=r.zh2;
-        tr.appendChild(c1); tr.appendChild(c2);
-        if(cols===3){
-          const c3 = document.createElement('td'); c3.className='tr'; c3.dataset.en=r.en3; c3.dataset.zh=r.zh3;
-          tr.appendChild(c3);
-        }
+        tr.appendChild(trText('td', key+'.row.'+ri+'.0', r.en, r.zh));
+        tr.appendChild(trText('td', key+'.row.'+ri+'.1', r.en2, r.zh2));
+        if(cols===3){ tr.appendChild(trText('td', key+'.row.'+ri+'.2', r.en3, r.zh3)); }
         tbody.appendChild(tr);
       });
       table.appendChild(tbody);
-      content.appendChild(table);
+      wrap.appendChild(table);
+      content.appendChild(wrap);
       return;
     }
     if(d.t==='img'){
+      const wrap = document.createElement('div');
+      wrap.className = 'blockwrap';
+      if(editMode) wrap.appendChild(makeBlockCtl(pos));
       const fig = document.createElement('figure');
       fig.className = 'fig';
       const img = document.createElement('img');
       img.src = d.src;
       img.alt = d.en;
       img.loading = 'lazy';
-      const cap = document.createElement('figcaption');
-      cap.className = 'tr';
-      cap.dataset.en = d.en;
-      cap.dataset.zh = d.zh;
       fig.appendChild(img);
-      fig.appendChild(cap);
-      content.appendChild(fig);
+      fig.appendChild(trText('figcaption', key, d.en, d.zh));
+      wrap.appendChild(fig);
+      content.appendChild(wrap);
       return;
     }
-    const el = document.createElement(d.t==='li' ? 'li' : d.t);
-    el.className='tr'; el.dataset.en = d.en; el.dataset.zh = d.zh;
     if(d.t==='li'){
+      const el = trText('li', key, d.en, d.zh);
       let ul = content.lastElementChild;
       if(!ul || ul.tagName!=='UL'){ ul = document.createElement('ul'); content.appendChild(ul); }
       ul.appendChild(el);
-    } else { content.appendChild(el); }
+      return;
+    }
+    const wrap = document.createElement('div');
+    wrap.className = 'blockwrap';
+    if(editMode) wrap.appendChild(makeBlockCtl(pos));
+    wrap.appendChild(trText(d.t, key, d.en, d.zh));
+    content.appendChild(wrap);
   });
 }
 
@@ -2236,7 +2392,8 @@ function renderAll(){
   document.getElementById('chapterSub').textContent = lang==='zh' ? ch.subZh : ch.subEn;
   buildContent();
   document.querySelectorAll('.tr').forEach(el=>{
-    el.innerHTML = lang==='zh' ? el.dataset.zh : el.dataset.en;
+    const target = el.querySelector(':scope > .tr-text') || el;
+    target.innerHTML = lang==='zh' ? el.dataset.zh : el.dataset.en;
   });
   document.getElementById('btn-zh').classList.toggle('active', lang==='zh');
   document.getElementById('btn-en').classList.toggle('active', lang==='en');
@@ -2244,6 +2401,8 @@ function renderAll(){
     ? '滑鼠停在文字上看英文原文' : 'Hover text to see the Chinese translation';
   buildChapterNav();
   buildArchiveBar();
+  applyEditMode();
+  renderLastUpdated();
   {
     const order = CHAPTERS.map((ch,i)=>i).sort((a,b)=> CHAPTERS[a].num - CHAPTERS[b].num);
     const pos = order.indexOf(chapterIdx);
@@ -2263,6 +2422,12 @@ document.getElementById('imgInc').onclick = ()=>{ imgScale += IMG_STEP; applyImg
 document.getElementById('imgReset').onclick = ()=>{ imgScale = IMG_DEFAULT; applyImgScale(); };
 document.getElementById('quietBtn').onclick = ()=>{ quietMode = !quietMode; applyQuietMode(); };
 document.getElementById('archiveBtn').onclick = ()=>{ archiving = !archiving; applyArchiveMode(); };
+document.getElementById('editBtn').onclick = ()=>{ editMode = !editMode; applyEditMode(); renderAll(); };
+document.getElementById('resetEditsBtn').onclick = ()=>{
+  const ch = CHAPTERS[chapterIdx];
+  const msg = lang==='zh' ? '確定要清除本章所有文字編輯與排版調整嗎？' : 'Reset all text edits and layout changes for this chapter?';
+  if(window.confirm(msg)){ resetChapterEdits(ch.id); renderAll(); }
+};
 document.getElementById('prevBtn').onclick = ()=>{
   const order = CHAPTERS.map((ch,i)=>i).sort((a,b)=> CHAPTERS[a].num - CHAPTERS[b].num);
   const pos = order.indexOf(chapterIdx);
@@ -2278,6 +2443,7 @@ applyFontSize();
 applyImgScale();
 applyQuietMode();
 applyArchiveMode();
+loadLastUpdated();
 
 const tip = document.getElementById('tooltip');
 function showTip(el, x, y){
