@@ -40,6 +40,20 @@
   .modebtn:hover{ border-color:var(--amber); color:var(--amber); }
   .modebtn.active{ background:var(--amber); border-color:var(--amber); color:#1B1200; font-weight:600; }
 
+  .chip{ position:relative; display:flex; align-items:center; gap:.3rem; }
+  .chip .chip-x{ display:none; align-items:center; justify-content:center; width:1.05rem; height:1.05rem;
+    border-radius:50%; background:rgba(0,0,0,.25); color:inherit; font-size:.68rem; line-height:1; }
+  body.archiving .chip .chip-x{ display:inline-flex; }
+  body.archiving .chip{ padding-right:.5rem; }
+  .chip .chip-x:hover{ background:var(--amber); color:#1B1200; }
+
+  .archivebar{ display:none; align-items:center; gap:.5rem; padding:0 1.5rem .8rem; flex-wrap:wrap; }
+  .archivebar.show{ display:flex; }
+  .archivebar .archivebar-label{ font-family:'JetBrains Mono',monospace; font-size:.72rem; color:#7C8D97; letter-spacing:.05em; white-space:nowrap; }
+  .archivebar .chip{ opacity:.6; border-style:dashed; }
+  .archivebar .chip:hover{ opacity:1; border-color:var(--amber); color:var(--amber); }
+  .archivebar .chip .chip-x{ display:inline-flex; }
+
   body.quiet{ background:#F7F2E4; }
   body.quiet .chapternav{ display:none; }
   body.quiet .title, body.quiet .hint{ display:none; }
@@ -120,9 +134,13 @@
       <button id="fontInc" title="放大文字" aria-label="放大文字">A+</button>
     </div>
     <button class="modebtn" id="quietBtn">沉靜式閱讀</button>
+    <button class="modebtn" id="archiveBtn">封存</button>
     <span class="hint" id="hoverHint">滑鼠停在文字上看英文原文</span>
   </div>
   <div class="chapternav" id="chapternav"></div>
+  <div class="archivebar" id="archivebar">
+    <span class="archivebar-label">封存區：</span>
+  </div>
 </div>
 
 <div class="wrap">
@@ -2063,18 +2081,85 @@ function applyQuietMode(){
   localStorage.setItem('phak_quiet', quietMode ? '1' : '0');
 }
 
+let archivedChapters = new Set(JSON.parse(localStorage.getItem('phak_archived') || '[]'));
+let archiving = false;
+function applyArchiveMode(){
+  document.body.classList.toggle('archiving', archiving);
+  const btn = document.getElementById('archiveBtn');
+  btn.textContent = archiving ? (lang==='zh' ? '完成' : 'Done') : (lang==='zh' ? '封存' : 'Archive');
+  btn.classList.toggle('active', archiving);
+}
+
+function chapterShortTitle(ch){
+  const full = lang==='zh' ? ch.titleZh : ch.titleEn;
+  const parts = full.split(/\s+—\s+/);
+  return parts.length > 1 ? parts.slice(1).join(' — ') : full;
+}
+
 function buildChapterNav(){
   const nav = document.getElementById('chapternav');
   nav.innerHTML = '';
   const order = CHAPTERS.map((ch,i)=>i).sort((a,b)=> CHAPTERS[a].num - CHAPTERS[b].num);
   order.forEach(i=>{
     const ch = CHAPTERS[i];
+    if(archivedChapters.has(ch.id)) return;
     const b = document.createElement('button');
     b.className = 'chip' + (i===chapterIdx ? ' active' : '');
-    b.textContent = 'Ch.'+ch.num;
+    b.title = chapterShortTitle(ch);
+    const label = document.createElement('span');
+    label.textContent = 'Ch.'+ch.num;
+    b.appendChild(label);
+    const x = document.createElement('span');
+    x.className = 'chip-x';
+    x.textContent = '×';
+    x.title = lang==='zh' ? '封存本章' : 'Archive this chapter';
+    x.onclick = (e)=>{ e.stopPropagation(); archiveChapter(ch.id); };
+    b.appendChild(x);
     b.onclick = ()=>{ chapterIdx = i; renderAll(); };
     nav.appendChild(b);
   });
+}
+
+function buildArchiveBar(){
+  const bar = document.getElementById('archivebar');
+  bar.querySelectorAll('.chip').forEach(el=>el.remove());
+  const label = bar.querySelector('.archivebar-label');
+  label.textContent = lang==='zh' ? '封存區：' : 'Archived:';
+  const order = CHAPTERS.map((ch,i)=>i).sort((a,b)=> CHAPTERS[a].num - CHAPTERS[b].num);
+  let hasArchived = false;
+  order.forEach(i=>{
+    const ch = CHAPTERS[i];
+    if(!archivedChapters.has(ch.id)) return;
+    hasArchived = true;
+    const b = document.createElement('button');
+    b.className = 'chip';
+    b.title = chapterShortTitle(ch);
+    const labelSpan = document.createElement('span');
+    labelSpan.textContent = 'Ch.'+ch.num;
+    b.appendChild(labelSpan);
+    const x = document.createElement('span');
+    x.className = 'chip-x';
+    x.textContent = '↩';
+    x.title = lang==='zh' ? '取出這一章' : 'Restore this chapter';
+    x.onclick = (e)=>{ e.stopPropagation(); unarchiveChapter(ch.id); chapterIdx = i; renderAll(); };
+    b.appendChild(x);
+    b.onclick = ()=>{ unarchiveChapter(ch.id); chapterIdx = i; renderAll(); };
+    bar.appendChild(b);
+  });
+  bar.classList.toggle('show', hasArchived);
+}
+
+function archiveChapter(id){
+  archivedChapters.add(id);
+  saveArchivedChapters();
+  renderAll();
+}
+function unarchiveChapter(id){
+  archivedChapters.delete(id);
+  saveArchivedChapters();
+}
+function saveArchivedChapters(){
+  localStorage.setItem('phak_archived', JSON.stringify(Array.from(archivedChapters)));
 }
 
 function buildContent(){
@@ -2145,6 +2230,7 @@ function renderAll(){
   document.getElementById('hoverHint').textContent = lang==='zh'
     ? '滑鼠停在文字上看英文原文' : 'Hover text to see the Chinese translation';
   buildChapterNav();
+  buildArchiveBar();
   {
     const order = CHAPTERS.map((ch,i)=>i).sort((a,b)=> CHAPTERS[a].num - CHAPTERS[b].num);
     const pos = order.indexOf(chapterIdx);
@@ -2160,6 +2246,7 @@ document.getElementById('fontDec').onclick = ()=>{ fontSize -= 1; applyFontSize(
 document.getElementById('fontInc').onclick = ()=>{ fontSize += 1; applyFontSize(); };
 document.getElementById('fontReset').onclick = ()=>{ fontSize = FS_DEFAULT; applyFontSize(); };
 document.getElementById('quietBtn').onclick = ()=>{ quietMode = !quietMode; applyQuietMode(); };
+document.getElementById('archiveBtn').onclick = ()=>{ archiving = !archiving; applyArchiveMode(); };
 document.getElementById('prevBtn').onclick = ()=>{
   const order = CHAPTERS.map((ch,i)=>i).sort((a,b)=> CHAPTERS[a].num - CHAPTERS[b].num);
   const pos = order.indexOf(chapterIdx);
@@ -2173,6 +2260,7 @@ document.getElementById('nextBtn').onclick = ()=>{
 renderAll();
 applyFontSize();
 applyQuietMode();
+applyArchiveMode();
 
 const tip = document.getElementById('tooltip');
 function showTip(el, x, y){
