@@ -164,7 +164,6 @@
     <div class="editctl" id="editctl">
       <button id="resetEditsBtn">重置本章編輯</button>
     </div>
-    <span class="hint" id="hoverHint">滑鼠停在文字上看英文原文</span>
     <span class="hint" id="lastUpdated">最後更新：載入中…</span>
   </div>
   <div class="chapternav" id="chapternav"></div>
@@ -2452,8 +2451,6 @@ function renderAll(){
   });
   document.getElementById('btn-zh').classList.toggle('active', lang==='zh');
   document.getElementById('btn-en').classList.toggle('active', lang==='en');
-  document.getElementById('hoverHint').textContent = lang==='zh'
-    ? '滑鼠停在文字上看英文原文' : 'Hover text to see the Chinese translation';
   buildChapterNav();
   buildArchiveBar();
   applyEditMode();
