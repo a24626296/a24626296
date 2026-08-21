@@ -23,6 +23,7 @@
     border-bottom:2px solid var(--amber); }
   .topbar-row{ display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.7rem 1.5rem; flex-wrap:wrap; }
   .topbar .title{ font-family:'JetBrains Mono',monospace; font-size:.78rem; letter-spacing:.08em; color:#B9C4CB; text-transform:uppercase; }
+  .titlegroup{ display:flex; align-items:center; gap:.9rem; flex-wrap:wrap; }
   .switch{ display:flex; background:#0D1620; border:1px solid #33424D; border-radius:6px; overflow:hidden; }
   .switch button{ appearance:none; border:none; background:transparent; color:#8CA0AB; font-family:'JetBrains Mono',monospace;
     font-size:.8rem; font-weight:500; padding:.5rem 1rem; cursor:pointer; letter-spacing:.05em; transition:background .15s, color .15s; }
@@ -143,7 +144,10 @@
 
 <div class="topbar">
   <div class="topbar-row">
-    <span class="title">FAA-H-8083-25C</span>
+    <div class="titlegroup">
+      <span class="title">FAA-H-8083-25C</span>
+      <span class="hint" id="lastUpdated">更新時間：載入中…</span>
+    </div>
     <div class="switch">
       <button id="btn-zh" class="active">中文</button>
       <button id="btn-en">EN</button>
@@ -158,13 +162,12 @@
       <button id="imgReset" title="重設圖片大小" aria-label="重設圖片大小">圖</button>
       <button id="imgInc" title="放大圖片" aria-label="放大圖片">圖+</button>
     </div>
-    <button class="modebtn" id="quietBtn">沉靜式閱讀</button>
+    <button class="modebtn" id="quietBtn">沉浸式閱讀</button>
     <button class="modebtn" id="archiveBtn">封存</button>
     <button class="modebtn" id="editBtn">編輯模式</button>
     <div class="editctl" id="editctl">
       <button id="resetEditsBtn">重置本章編輯</button>
     </div>
-    <span class="hint" id="lastUpdated">更新時間：載入中…</span>
   </div>
   <div class="chapternav" id="chapternav"></div>
   <div class="archivebar" id="archivebar">
@@ -2168,7 +2171,7 @@ let quietMode = localStorage.getItem('phak_quiet') === '1';
 function applyQuietMode(){
   document.body.classList.toggle('quiet', quietMode);
   const btn = document.getElementById('quietBtn');
-  btn.textContent = quietMode ? '退出沉靜閱讀' : '沉靜式閱讀';
+  btn.textContent = quietMode ? '退出沉浸閱讀' : '沉浸式閱讀';
   btn.classList.toggle('active', quietMode);
   localStorage.setItem('phak_quiet', quietMode ? '1' : '0');
 }
