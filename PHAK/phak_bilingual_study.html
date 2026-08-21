@@ -28,6 +28,31 @@
     font-size:.8rem; font-weight:500; padding:.5rem 1rem; cursor:pointer; letter-spacing:.05em; transition:background .15s, color .15s; }
   .switch button.active{ background:var(--amber); color:#1B1200; }
   .hint{ font-size:.72rem; color:#7C8D97; font-family:'JetBrains Mono',monospace; }
+  .fontctl{ display:flex; align-items:center; gap:.3rem; }
+  .fontctl button{ appearance:none; border:1px solid #33424D; background:#0D1620; color:#9FB0BA;
+    font-family:'JetBrains Mono',monospace; font-weight:600; font-size:.78rem; width:2rem; height:1.8rem;
+    border-radius:5px; cursor:pointer; transition:all .15s; line-height:1; }
+  .fontctl button:hover{ border-color:var(--amber); color:var(--amber); }
+  .fontctl button#fontReset{ font-size:.7rem; color:#7C8D97; }
+  .modebtn{ appearance:none; border:1px solid #33424D; background:#0D1620; color:#9FB0BA;
+    font-family:'JetBrains Mono',monospace; font-size:.76rem; padding:.4rem .8rem; border-radius:6px;
+    cursor:pointer; letter-spacing:.03em; transition:all .15s; white-space:nowrap; }
+  .modebtn:hover{ border-color:var(--amber); color:var(--amber); }
+  .modebtn.active{ background:var(--amber); border-color:var(--amber); color:#1B1200; font-weight:600; }
+
+  body.quiet{ background:#F7F2E4; }
+  body.quiet .chapternav{ display:none; }
+  body.quiet .title, body.quiet .hint{ display:none; }
+  body.quiet .topbar-row{ padding:.55rem 1.5rem; }
+  body.quiet .topbar{ border-bottom-color:#8C5E17; }
+  body.quiet .wrap{ max-width:640px; padding-top:3rem; }
+  body.quiet .masthead{ margin-bottom:3.2rem; }
+  body.quiet h2{ margin:3.2rem 0 1.1rem; }
+  body.quiet p.tr, body.quiet li.tr{ line-height:2.05; margin-bottom:1.5rem; }
+  body.quiet figure.fig{ margin:2.2rem 0; }
+  body.quiet .navfoot{ opacity:.55; transition:opacity .15s; }
+  body.quiet .navfoot:hover{ opacity:1; }
+  body.quiet footer{ display:none; }
 
   .chapternav{ display:flex; gap:.4rem; padding:0 1.5rem .8rem; overflow-x:auto; scrollbar-width:thin; }
   .chapternav::-webkit-scrollbar{ height:5px; }
@@ -89,6 +114,12 @@
       <button id="btn-zh" class="active">中文</button>
       <button id="btn-en">EN</button>
     </div>
+    <div class="fontctl">
+      <button id="fontDec" title="縮小文字" aria-label="縮小文字">A−</button>
+      <button id="fontReset" title="重設文字大小" aria-label="重設文字大小">A</button>
+      <button id="fontInc" title="放大文字" aria-label="放大文字">A+</button>
+    </div>
+    <button class="modebtn" id="quietBtn">沉靜式閱讀</button>
     <span class="hint" id="hoverHint">滑鼠停在文字上看英文原文</span>
   </div>
   <div class="chapternav" id="chapternav"></div>
@@ -2015,6 +2046,23 @@ const CHAPTERS = [
 let lang = 'zh';
 let chapterIdx = 0;
 
+const FS_MIN = 14, FS_MAX = 22, FS_DEFAULT = 16;
+let fontSize = parseInt(localStorage.getItem('phak_fontsize'), 10) || FS_DEFAULT;
+function applyFontSize(){
+  fontSize = Math.max(FS_MIN, Math.min(FS_MAX, fontSize));
+  document.documentElement.style.fontSize = fontSize + 'px';
+  localStorage.setItem('phak_fontsize', fontSize);
+}
+
+let quietMode = localStorage.getItem('phak_quiet') === '1';
+function applyQuietMode(){
+  document.body.classList.toggle('quiet', quietMode);
+  const btn = document.getElementById('quietBtn');
+  btn.textContent = quietMode ? '退出沉靜閱讀' : '沉靜式閱讀';
+  btn.classList.toggle('active', quietMode);
+  localStorage.setItem('phak_quiet', quietMode ? '1' : '0');
+}
+
 function buildChapterNav(){
   const nav = document.getElementById('chapternav');
   nav.innerHTML = '';
@@ -2084,7 +2132,7 @@ function buildContent(){
 }
 
 function renderAll(){
-  document.body.className = lang==='zh' ? 'zh' : '';
+  document.body.classList.toggle('zh', lang==='zh');
   const ch = CHAPTERS[chapterIdx];
   document.getElementById('chapterTitle').textContent = lang==='zh' ? ch.titleZh : ch.titleEn;
   document.getElementById('chapterSub').textContent = lang==='zh' ? ch.subZh : ch.subEn;
@@ -2108,6 +2156,10 @@ function renderAll(){
 
 document.getElementById('btn-zh').onclick = ()=>{ lang='zh'; renderAll(); };
 document.getElementById('btn-en').onclick = ()=>{ lang='en'; renderAll(); };
+document.getElementById('fontDec').onclick = ()=>{ fontSize -= 1; applyFontSize(); };
+document.getElementById('fontInc').onclick = ()=>{ fontSize += 1; applyFontSize(); };
+document.getElementById('fontReset').onclick = ()=>{ fontSize = FS_DEFAULT; applyFontSize(); };
+document.getElementById('quietBtn').onclick = ()=>{ quietMode = !quietMode; applyQuietMode(); };
 document.getElementById('prevBtn').onclick = ()=>{
   const order = CHAPTERS.map((ch,i)=>i).sort((a,b)=> CHAPTERS[a].num - CHAPTERS[b].num);
   const pos = order.indexOf(chapterIdx);
@@ -2119,6 +2171,8 @@ document.getElementById('nextBtn').onclick = ()=>{
   if(pos<order.length-1){ chapterIdx = order[pos+1]; renderAll(); }
 };
 renderAll();
+applyFontSize();
+applyQuietMode();
 
 const tip = document.getElementById('tooltip');
 function showTip(el, x, y){
