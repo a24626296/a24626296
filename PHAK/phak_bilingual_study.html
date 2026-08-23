@@ -137,6 +137,40 @@
   .navfoot button:hover{ border-color:var(--amber); color:var(--amber-dark); }
   .navfoot button:disabled{ opacity:.35; cursor:default; }
   footer{ max-width:760px; margin:2rem auto 0; padding:1.2rem 1.5rem 0; border-top:1px solid var(--hair); font-size:.8rem; color:var(--ink-soft); font-family:'JetBrains Mono',monospace; }
+
+  /* ---- collapsible sections ---- */
+  .sec-head-row{ display:flex; align-items:center; gap:.5rem; }
+  .sec-head-row.lvl2{ margin:2.4rem 0 .9rem; padding-bottom:.4rem; border-bottom:1px solid var(--hair); }
+  .sec-head-row.lvl2 h2.tr{ margin:0; padding:0; border:0; flex:1; min-width:0; }
+  .sec-head-row.lvl3{ margin:1.5rem 0 .6rem; }
+  .sec-head-row.lvl3 h3.tr{ margin:0; color:var(--teal); flex:1; min-width:0; }
+  .sec-head-row .blockctl{ margin-bottom:0; }
+  .collapsebtn{ appearance:none; border:none; background:transparent; color:var(--ink-soft); cursor:pointer;
+    font-size:.8rem; line-height:1; padding:.2rem .3rem; flex:0 0 auto; transition:transform .15s, color .15s; }
+  .collapsebtn:hover{ color:var(--amber-dark); }
+  .sec.collapsed > .sec-head-row .collapsebtn{ transform:rotate(-90deg); }
+  .kpbtn{ appearance:none; border:1px solid var(--hair); background:var(--paper); color:var(--ink-soft);
+    cursor:pointer; font-size:.72rem; line-height:1; width:1.6rem; height:1.6rem; border-radius:50%; flex:0 0 auto; transition:all .15s; }
+  .kpbtn:hover{ border-color:var(--amber); color:var(--amber-dark); }
+  .kpbtn.active{ background:var(--amber); border-color:var(--amber); color:#1B1200; }
+  .sec.collapsed > .sec-body{ display:none; }
+
+  /* ---- key point mode: only show sections marked as key points ---- */
+  body.keypointmode .sec-h2{ display:none; }
+  body.keypointmode .sec-h2.kp{ display:block; }
+  body.keypointmode .sec-h2.kp.collapsed > .sec-body{ display:block; }
+  body.keypointmode .sec-h2.kp .sec-h3.collapsed > .sec-body{ display:block; }
+
+  /* ---- highlighter ---- */
+  mark.hl{ background:#FFE066; color:inherit; padding:0 .05em; border-radius:2px; }
+  body.highlighting .tr-text{ cursor:text; }
+  body.highlighting mark.hl{ cursor:pointer; }
+  body.highlighting mark.hl:hover{ outline:1px dashed var(--amber-dark); outline-offset:1px; }
+  #hlpopup{ position:fixed; z-index:60; display:none; }
+  #hlpopup.show{ display:block; }
+  #hlpopup button{ appearance:none; border:1px solid var(--amber); background:var(--placard-bg); color:var(--placard-text);
+    font-size:.8rem; padding:.35rem .7rem; border-radius:6px; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,.25); white-space:nowrap; }
+
   @media (max-width:600px){ .masthead h1{ font-size:1.6rem; } }
 </style>
 </head>
@@ -163,6 +197,9 @@
       <button id="imgInc" title="放大圖片" aria-label="放大圖片">圖+</button>
     </div>
     <button class="modebtn" id="quietBtn">沉浸式閱讀</button>
+    <button class="modebtn" id="collapseAllBtn">全部收合</button>
+    <button class="modebtn" id="hlBtn">螢光筆</button>
+    <button class="modebtn" id="kpModeBtn">重點模式</button>
     <button class="modebtn" id="archiveBtn">封存</button>
     <button class="modebtn" id="editBtn">編輯模式</button>
     <div class="editctl" id="editctl">
@@ -191,6 +228,7 @@
 <footer class="tr" data-en="Source: FAA-H-8083-25C (2023), U.S. Department of Transportation / Federal Aviation Administration — public domain U.S. Government work." data-zh="來源：FAA-H-8083-25C（2023），美國交通部／聯邦航空總署 — 美國政府著作，屬公版。">來源：FAA-H-8083-25C（2023），美國交通部／聯邦航空總署 — 美國政府著作，屬公版。</footer>
 
 <div id="tooltip"></div>
+<div id="hlpopup"><button id="hlApplyBtn" type="button">🖍 標記重點</button></div>
 
 <script>
 /* ============================================================
@@ -2301,6 +2339,75 @@ function applyEditMode(){
   btn.classList.toggle('active', editMode);
 }
 
+/* ---- collapsible sections state ---- */
+let collapsedMap = JSON.parse(localStorage.getItem('phak_collapsed') || '{}');
+function isCollapsed(chId, key){ return !!(collapsedMap[chId] && collapsedMap[chId].includes(key)); }
+function setCollapsed(chId, key, val){
+  const arr = collapsedMap[chId] || (collapsedMap[chId] = []);
+  const idx = arr.indexOf(key);
+  if(val && idx===-1) arr.push(key);
+  if(!val && idx!==-1) arr.splice(idx,1);
+  localStorage.setItem('phak_collapsed', JSON.stringify(collapsedMap));
+}
+function headingKeys(ch){
+  const keys = [];
+  ch.blocks.forEach((b,i)=>{ if(b.t==='h2'||b.t==='h3') keys.push(String(i)); });
+  return keys;
+}
+function areAllHeadingsCollapsed(ch){
+  const keys = headingKeys(ch);
+  return keys.length>0 && keys.every(k=> isCollapsed(ch.id, k));
+}
+function toggleAllSections(){
+  const ch = CHAPTERS[chapterIdx];
+  const keys = headingKeys(ch);
+  const collapseAll = !areAllHeadingsCollapsed(ch);
+  keys.forEach(k=> setCollapsed(ch.id, k, collapseAll));
+  buildContent();
+  updateCollapseAllBtnLabel();
+}
+function updateCollapseAllBtnLabel(){
+  const btn = document.getElementById('collapseAllBtn');
+  if(!btn) return;
+  const ch = CHAPTERS[chapterIdx];
+  btn.textContent = areAllHeadingsCollapsed(ch) ? '全部展開' : '全部收合';
+}
+
+/* ---- key point (重點區) state ---- */
+let keypointMap = JSON.parse(localStorage.getItem('phak_keypoints') || '{}');
+function isKeypoint(chId, key){ return !!(keypointMap[chId] && keypointMap[chId].includes(key)); }
+function setKeypoint(chId, key, val){
+  const arr = keypointMap[chId] || (keypointMap[chId] = []);
+  const idx = arr.indexOf(key);
+  if(val && idx===-1) arr.push(key);
+  if(!val && idx!==-1) arr.splice(idx,1);
+  localStorage.setItem('phak_keypoints', JSON.stringify(keypointMap));
+}
+let keypointMode = false;
+function applyKeypointMode(){
+  document.body.classList.toggle('keypointmode', keypointMode);
+  const btn = document.getElementById('kpModeBtn');
+  btn.textContent = keypointMode ? '退出重點模式' : '重點模式';
+  btn.classList.toggle('active', keypointMode);
+}
+
+/* ---- highlighter (螢光筆) state ---- */
+let highlightMode = false;
+function applyHighlightMode(){
+  document.body.classList.toggle('highlighting', highlightMode);
+  const btn = document.getElementById('hlBtn');
+  btn.textContent = highlightMode ? '結束標記' : '螢光筆';
+  btn.classList.toggle('active', highlightMode);
+  if(!highlightMode){ document.getElementById('hlpopup').classList.remove('show'); }
+}
+function persistTrText(trTextEl){
+  const wrap = trTextEl.closest('.tr');
+  if(!wrap || wrap.dataset.key===undefined) return;
+  const html = trTextEl.innerHTML;
+  wrap.dataset[lang] = html;
+  saveEditedText(CHAPTERS[chapterIdx].id, wrap.dataset.key, lang, html);
+}
+
 let lastUpdatedDate = null;
 async function loadLastUpdated(){
   const CACHE_KEY = 'phak_lastupdated_cache';
@@ -2352,6 +2459,7 @@ function buildContent(){
   function trText(elType, key, enFallback, zhFallback){
     const el = document.createElement(elType);
     el.className = 'tr';
+    el.dataset.key = key;
     el.dataset.en = getEditedText(ch.id, key, 'en', enFallback);
     el.dataset.zh = getEditedText(ch.id, key, 'zh', zhFallback);
     const span = document.createElement('span');
@@ -2385,10 +2493,86 @@ function buildContent(){
     return ctl;
   }
 
+  // ---- section (collapsible) plumbing ----
+  let curH2Body = content;
+  let curH3Body = null;
+  function targetContainer(){ return curH3Body || curH2Body; }
+
+  function makeSectionHead(tag, level, key, en, zh, pos){
+    const row = document.createElement('div');
+    row.className = 'sec-head-row lvl' + level;
+    if(editMode) row.appendChild(makeBlockCtl(pos));
+    const collapseBtn = document.createElement('button');
+    collapseBtn.type = 'button';
+    collapseBtn.className = 'collapsebtn';
+    collapseBtn.textContent = '▾';
+    collapseBtn.title = lang==='zh' ? '收合／展開' : 'Collapse / expand';
+    row.appendChild(collapseBtn);
+    let kpBtn = null;
+    if(level===2){
+      kpBtn = document.createElement('button');
+      kpBtn.type = 'button';
+      kpBtn.className = 'kpbtn';
+      kpBtn.textContent = '★';
+      kpBtn.title = lang==='zh' ? '標記為本章重點' : 'Mark as key point';
+      kpBtn.classList.toggle('active', isKeypoint(ch.id, key));
+      row.appendChild(kpBtn);
+    }
+    row.appendChild(trText(tag, key, en, zh));
+    return { row, collapseBtn, kpBtn };
+  }
+
   order.forEach((origIdx, pos)=>{
     const d = ch.blocks[origIdx];
     if(!d) return;
     const key = String(origIdx);
+
+    if(d.t==='h2'){
+      const secWrap = document.createElement('div');
+      secWrap.className = 'sec sec-h2';
+      if(isKeypoint(ch.id, key)) secWrap.classList.add('kp');
+      if(isCollapsed(ch.id, key)) secWrap.classList.add('collapsed');
+      const { row, collapseBtn, kpBtn } = makeSectionHead('h2', 2, key, d.en, d.zh, pos);
+      const body = document.createElement('div');
+      body.className = 'sec-body';
+      secWrap.appendChild(row);
+      secWrap.appendChild(body);
+      content.appendChild(secWrap);
+      collapseBtn.onclick = ()=>{
+        secWrap.classList.toggle('collapsed');
+        setCollapsed(ch.id, key, secWrap.classList.contains('collapsed'));
+        updateCollapseAllBtnLabel();
+      };
+      if(kpBtn){
+        kpBtn.onclick = ()=>{
+          const nowKp = !secWrap.classList.contains('kp');
+          secWrap.classList.toggle('kp', nowKp);
+          kpBtn.classList.toggle('active', nowKp);
+          setKeypoint(ch.id, key, nowKp);
+        };
+      }
+      curH2Body = body;
+      curH3Body = null;
+      return;
+    }
+    if(d.t==='h3'){
+      const secWrap = document.createElement('div');
+      secWrap.className = 'sec sec-h3';
+      if(isCollapsed(ch.id, key)) secWrap.classList.add('collapsed');
+      const { row, collapseBtn } = makeSectionHead('h3', 3, key, d.en, d.zh, pos);
+      const body = document.createElement('div');
+      body.className = 'sec-body';
+      secWrap.appendChild(row);
+      secWrap.appendChild(body);
+      curH2Body.appendChild(secWrap);
+      collapseBtn.onclick = ()=>{
+        secWrap.classList.toggle('collapsed');
+        setCollapsed(ch.id, key, secWrap.classList.contains('collapsed'));
+        updateCollapseAllBtnLabel();
+      };
+      curH3Body = body;
+      return;
+    }
 
     if(d.t==='table'){
       const wrap = document.createElement('div');
@@ -2411,7 +2595,7 @@ function buildContent(){
       });
       table.appendChild(tbody);
       wrap.appendChild(table);
-      content.appendChild(wrap);
+      targetContainer().appendChild(wrap);
       return;
     }
     if(d.t==='img'){
@@ -2427,13 +2611,14 @@ function buildContent(){
       fig.appendChild(img);
       fig.appendChild(trText('figcaption', key, d.en, d.zh));
       wrap.appendChild(fig);
-      content.appendChild(wrap);
+      targetContainer().appendChild(wrap);
       return;
     }
     if(d.t==='li'){
       const el = trText('li', key, d.en, d.zh);
-      let ul = content.lastElementChild;
-      if(!ul || ul.tagName!=='UL'){ ul = document.createElement('ul'); content.appendChild(ul); }
+      const container = targetContainer();
+      let ul = container.lastElementChild;
+      if(!ul || ul.tagName!=='UL'){ ul = document.createElement('ul'); container.appendChild(ul); }
       ul.appendChild(el);
       return;
     }
@@ -2441,7 +2626,7 @@ function buildContent(){
     wrap.className = 'blockwrap';
     if(editMode) wrap.appendChild(makeBlockCtl(pos));
     wrap.appendChild(trText(d.t, key, d.en, d.zh));
-    content.appendChild(wrap);
+    targetContainer().appendChild(wrap);
   });
 }
 
@@ -2460,6 +2645,7 @@ function renderAll(){
   buildChapterNav();
   buildArchiveBar();
   applyEditMode();
+  updateCollapseAllBtnLabel();
   renderLastUpdated();
   {
     const order = CHAPTERS.map((ch,i)=>i).sort((a,b)=> CHAPTERS[a].num - CHAPTERS[b].num);
@@ -2479,6 +2665,9 @@ document.getElementById('imgDec').onclick = ()=>{ imgScale -= IMG_STEP; applyImg
 document.getElementById('imgInc').onclick = ()=>{ imgScale += IMG_STEP; applyImgScale(); };
 document.getElementById('imgReset').onclick = ()=>{ imgScale = IMG_DEFAULT; applyImgScale(); };
 document.getElementById('quietBtn').onclick = ()=>{ quietMode = !quietMode; applyQuietMode(); };
+document.getElementById('collapseAllBtn').onclick = toggleAllSections;
+document.getElementById('hlBtn').onclick = ()=>{ highlightMode = !highlightMode; applyHighlightMode(); };
+document.getElementById('kpModeBtn').onclick = ()=>{ keypointMode = !keypointMode; applyKeypointMode(); };
 document.getElementById('archiveBtn').onclick = ()=>{ archiving = !archiving; applyArchiveMode(); };
 document.getElementById('editBtn').onclick = ()=>{ editMode = !editMode; applyEditMode(); renderAll(); };
 document.getElementById('resetEditsBtn').onclick = ()=>{
@@ -2501,6 +2690,8 @@ applyFontSize();
 applyImgScale();
 applyQuietMode();
 applyArchiveMode();
+applyHighlightMode();
+applyKeypointMode();
 loadLastUpdated();
 
 const tip = document.getElementById('tooltip');
@@ -2533,6 +2724,64 @@ document.addEventListener('click', e=>{
     setTimeout(()=> tip.classList.remove('show'), 3500);
   }
 });
+
+/* ---- highlighter interactions ---- */
+const hlPopup = document.getElementById('hlpopup');
+const hlApplyBtn = document.getElementById('hlApplyBtn');
+let hlPendingRange = null;
+let hlPendingEl = null;
+
+function handleHighlightSelection(e){
+  if(!highlightMode) return;
+  if(e.target.closest && e.target.closest('#hlpopup')) return;
+  setTimeout(()=>{
+    const sel = window.getSelection();
+    if(!sel || sel.rangeCount===0 || sel.isCollapsed){ hlPopup.classList.remove('show'); return; }
+    const range = sel.getRangeAt(0);
+    const container = range.commonAncestorContainer;
+    const node = container.nodeType===1 ? container : container.parentElement;
+    const trTextEl = node ? node.closest('.tr-text') : null;
+    if(!trTextEl){ hlPopup.classList.remove('show'); return; }
+    hlPendingRange = range.cloneRange();
+    hlPendingEl = trTextEl;
+    const rect = range.getBoundingClientRect();
+    hlPopup.style.left = Math.max(8, rect.left + rect.width/2 - 45) + 'px';
+    hlPopup.style.top = Math.max(8, rect.top - 42) + 'px';
+    hlPopup.classList.add('show');
+  }, 0);
+}
+document.addEventListener('mouseup', handleHighlightSelection);
+document.addEventListener('touchend', handleHighlightSelection);
+
+hlApplyBtn.addEventListener('click', ()=>{
+  if(!hlPendingRange || !hlPendingEl) return;
+  const mark = document.createElement('mark');
+  mark.className = 'hl';
+  try{
+    hlPendingRange.surroundContents(mark);
+  }catch(err){
+    const frag = hlPendingRange.extractContents();
+    mark.appendChild(frag);
+    hlPendingRange.insertNode(mark);
+  }
+  persistTrText(hlPendingEl);
+  hlPopup.classList.remove('show');
+  hlPendingRange = null; hlPendingEl = null;
+  window.getSelection().removeAllRanges();
+});
+
+document.addEventListener('click', e=>{
+  if(!highlightMode) return;
+  const mark = e.target.closest('mark.hl');
+  if(!mark) return;
+  e.preventDefault();
+  e.stopPropagation();
+  const trTextEl = mark.closest('.tr-text');
+  const parent = mark.parentNode;
+  while(mark.firstChild) parent.insertBefore(mark.firstChild, mark);
+  parent.removeChild(mark);
+  if(trTextEl) persistTrText(trTextEl);
+}, true);
 </script>
 </body>
 </html>
