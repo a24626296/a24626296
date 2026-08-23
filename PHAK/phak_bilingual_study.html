@@ -156,10 +156,15 @@
   .sec.collapsed > .sec-body{ display:none; }
 
   /* ---- key point mode: only show sections marked as key points ---- */
-  body.keypointmode .sec-h2{ display:none; }
-  body.keypointmode .sec-h2.kp{ display:block; }
-  body.keypointmode .sec-h2.kp.collapsed > .sec-body{ display:block; }
-  body.keypointmode .sec-h2.kp .sec-h3.collapsed > .sec-body{ display:block; }
+  body.keypointmode .kp-hide-in-mode{ display:none !important; }
+  body.keypointmode .kp-force-open.collapsed > .sec-body{ display:block; }
+
+  /* ---- YouTube link button ---- */
+  .ytbtn{ appearance:none; border:1px solid var(--hair); background:var(--paper); color:var(--ink-soft);
+    cursor:pointer; font-size:.66rem; line-height:1; width:1.6rem; height:1.6rem; border-radius:50%; flex:0 0 auto; transition:all .15s; }
+  .ytbtn:hover{ border-color:#D9534F; color:#D9534F; }
+  .ytbtn.has-link{ background:#D9534F; border-color:#D9534F; color:#fff; }
+  .ytbtn.has-link:hover{ background:#c14842; border-color:#c14842; }
 
   /* ---- highlighter ---- */
   mark.hl{ background:#FFE066; color:inherit; padding:0 .05em; border-radius:2px; }
@@ -2391,6 +2396,15 @@ function applyKeypointMode(){
   btn.classList.toggle('active', keypointMode);
 }
 
+/* ---- YouTube link (章節影片連結) state ---- */
+let ytLinkMap = JSON.parse(localStorage.getItem('phak_ytlinks') || '{}');
+function getYtLink(chId, key){ return (ytLinkMap[chId] && ytLinkMap[chId][key]) || ''; }
+function setYtLink(chId, key, url){
+  if(!ytLinkMap[chId]) ytLinkMap[chId] = {};
+  if(url){ ytLinkMap[chId][key] = url; } else { delete ytLinkMap[chId][key]; }
+  localStorage.setItem('phak_ytlinks', JSON.stringify(ytLinkMap));
+}
+
 /* ---- highlighter (螢光筆) state ---- */
 let highlightMode = false;
 function applyHighlightMode(){
@@ -2493,10 +2507,68 @@ function buildContent(){
     return ctl;
   }
 
+  function makeYtBtn(key){
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'ytbtn';
+    const refreshState = ()=>{
+      const url = getYtLink(ch.id, key);
+      btn.classList.toggle('has-link', !!url);
+      btn.title = url
+        ? (lang==='zh' ? '開啟 YouTube 影片（右鍵可編輯／清除）' : 'Open YouTube video (right-click to edit/clear)')
+        : (lang==='zh' ? '新增 YouTube 影片連結' : 'Add YouTube link');
+    };
+    btn.textContent = '▶';
+    refreshState();
+    btn.addEventListener('click', (e)=>{
+      e.preventDefault();
+      const url = getYtLink(ch.id, key);
+      if(url){ window.open(url, '_blank', 'noopener'); }
+      else {
+        const msg = lang==='zh' ? '貼上此段落對應的 YouTube 影片網址：' : 'Paste the YouTube video URL for this section:';
+        const input = window.prompt(msg, '');
+        if(input===null) return;
+        setYtLink(ch.id, key, input.trim());
+        refreshState();
+      }
+    });
+    btn.addEventListener('contextmenu', (e)=>{
+      e.preventDefault();
+      const msg = lang==='zh' ? '編輯 YouTube 影片網址（留空可清除）：' : 'Edit the YouTube video URL (leave blank to clear):';
+      const input = window.prompt(msg, getYtLink(ch.id, key));
+      if(input===null) return;
+      setYtLink(ch.id, key, input.trim());
+      refreshState();
+    });
+    return btn;
+  }
+
   // ---- section (collapsible) plumbing ----
   let curH2Body = content;
   let curH3Body = null;
   function targetContainer(){ return curH3Body || curH2Body; }
+
+  // ---- precompute key-point visibility per h2/h3 ----
+  const h2List = [];
+  let curH2Info = null;
+  order.forEach(origIdx=>{
+    const d = ch.blocks[origIdx];
+    if(!d) return;
+    const key = String(origIdx);
+    if(d.t==='h2'){
+      curH2Info = { key, marked: isKeypoint(ch.id, key), h3s: [] };
+      h2List.push(curH2Info);
+    } else if(d.t==='h3' && curH2Info){
+      curH2Info.h3s.push({ key, marked: isKeypoint(ch.id, key) });
+    }
+  });
+  const h2Info = {};
+  h2List.forEach(h2=>{
+    const anyH3Marked = h2.h3s.some(h=>h.marked);
+    const show = h2.marked || anyH3Marked;
+    const onlyH3 = !h2.marked && anyH3Marked;
+    h2Info[h2.key] = { marked: h2.marked, show, onlyH3, markedH3: new Set(h2.h3s.filter(h=>h.marked).map(h=>h.key)) };
+  });
 
   function makeSectionHead(tag, level, key, en, zh, pos){
     const row = document.createElement('div');
@@ -2508,19 +2580,19 @@ function buildContent(){
     collapseBtn.textContent = '▾';
     collapseBtn.title = lang==='zh' ? '收合／展開' : 'Collapse / expand';
     row.appendChild(collapseBtn);
-    let kpBtn = null;
-    if(level===2){
-      kpBtn = document.createElement('button');
-      kpBtn.type = 'button';
-      kpBtn.className = 'kpbtn';
-      kpBtn.textContent = '★';
-      kpBtn.title = lang==='zh' ? '標記為本章重點' : 'Mark as key point';
-      kpBtn.classList.toggle('active', isKeypoint(ch.id, key));
-      row.appendChild(kpBtn);
-    }
+    const kpBtn = document.createElement('button');
+    kpBtn.type = 'button';
+    kpBtn.className = 'kpbtn';
+    kpBtn.textContent = '★';
+    kpBtn.title = lang==='zh' ? '標記為本章重點' : 'Mark as key point';
+    kpBtn.classList.toggle('active', isKeypoint(ch.id, key));
+    row.appendChild(kpBtn);
     row.appendChild(trText(tag, key, en, zh));
+    row.appendChild(makeYtBtn(key));
     return { row, collapseBtn, kpBtn };
   }
+
+  let curH2Key = null;
 
   order.forEach((origIdx, pos)=>{
     const d = ch.blocks[origIdx];
@@ -2530,8 +2602,12 @@ function buildContent(){
     if(d.t==='h2'){
       const secWrap = document.createElement('div');
       secWrap.className = 'sec sec-h2';
-      if(isKeypoint(ch.id, key)) secWrap.classList.add('kp');
+      const info = h2Info[key];
       if(isCollapsed(ch.id, key)) secWrap.classList.add('collapsed');
+      if(info){
+        if(!info.show) secWrap.classList.add('kp-hide-in-mode');
+        if(info.show) secWrap.classList.add('kp-force-open');
+      }
       const { row, collapseBtn, kpBtn } = makeSectionHead('h2', 2, key, d.en, d.zh, pos);
       const body = document.createElement('div');
       body.className = 'sec-body';
@@ -2543,23 +2619,29 @@ function buildContent(){
         setCollapsed(ch.id, key, secWrap.classList.contains('collapsed'));
         updateCollapseAllBtnLabel();
       };
-      if(kpBtn){
-        kpBtn.onclick = ()=>{
-          const nowKp = !secWrap.classList.contains('kp');
-          secWrap.classList.toggle('kp', nowKp);
-          kpBtn.classList.toggle('active', nowKp);
-          setKeypoint(ch.id, key, nowKp);
-        };
-      }
+      kpBtn.onclick = ()=>{
+        setKeypoint(ch.id, key, !isKeypoint(ch.id, key));
+        buildContent();
+      };
       curH2Body = body;
       curH3Body = null;
+      curH2Key = key;
       return;
     }
     if(d.t==='h3'){
       const secWrap = document.createElement('div');
       secWrap.className = 'sec sec-h3';
       if(isCollapsed(ch.id, key)) secWrap.classList.add('collapsed');
-      const { row, collapseBtn } = makeSectionHead('h3', 3, key, d.en, d.zh, pos);
+      const parentInfo = h2Info[curH2Key];
+      if(parentInfo){
+        if(parentInfo.onlyH3){
+          if(!parentInfo.markedH3.has(key)) secWrap.classList.add('kp-hide-in-mode');
+          else secWrap.classList.add('kp-force-open');
+        } else if(parentInfo.marked){
+          secWrap.classList.add('kp-force-open');
+        }
+      }
+      const { row, collapseBtn, kpBtn } = makeSectionHead('h3', 3, key, d.en, d.zh, pos);
       const body = document.createElement('div');
       body.className = 'sec-body';
       secWrap.appendChild(row);
@@ -2570,6 +2652,10 @@ function buildContent(){
         setCollapsed(ch.id, key, secWrap.classList.contains('collapsed'));
         updateCollapseAllBtnLabel();
       };
+      kpBtn.onclick = ()=>{
+        setKeypoint(ch.id, key, !isKeypoint(ch.id, key));
+        buildContent();
+      };
       curH3Body = body;
       return;
     }
@@ -2578,6 +2664,7 @@ function buildContent(){
       const wrap = document.createElement('div');
       wrap.className = 'blockwrap';
       if(editMode) wrap.appendChild(makeBlockCtl(pos));
+      if(!curH3Body && h2Info[curH2Key] && h2Info[curH2Key].onlyH3) wrap.classList.add('kp-hide-in-mode');
       const table = document.createElement('table');
       const cols = d.rows[0].en3 !== undefined ? 3 : 2;
       const thead = document.createElement('thead');
@@ -2602,6 +2689,7 @@ function buildContent(){
       const wrap = document.createElement('div');
       wrap.className = 'blockwrap';
       if(editMode) wrap.appendChild(makeBlockCtl(pos));
+      if(!curH3Body && h2Info[curH2Key] && h2Info[curH2Key].onlyH3) wrap.classList.add('kp-hide-in-mode');
       const fig = document.createElement('figure');
       fig.className = 'fig';
       const img = document.createElement('img');
@@ -2618,13 +2706,18 @@ function buildContent(){
       const el = trText('li', key, d.en, d.zh);
       const container = targetContainer();
       let ul = container.lastElementChild;
-      if(!ul || ul.tagName!=='UL'){ ul = document.createElement('ul'); container.appendChild(ul); }
+      if(!ul || ul.tagName!=='UL'){
+        ul = document.createElement('ul');
+        if(!curH3Body && h2Info[curH2Key] && h2Info[curH2Key].onlyH3) ul.classList.add('kp-hide-in-mode');
+        container.appendChild(ul);
+      }
       ul.appendChild(el);
       return;
     }
     const wrap = document.createElement('div');
     wrap.className = 'blockwrap';
     if(editMode) wrap.appendChild(makeBlockCtl(pos));
+    if(!curH3Body && h2Info[curH2Key] && h2Info[curH2Key].onlyH3) wrap.classList.add('kp-hide-in-mode');
     wrap.appendChild(trText(d.t, key, d.en, d.zh));
     targetContainer().appendChild(wrap);
   });
