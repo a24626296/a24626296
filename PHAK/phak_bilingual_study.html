@@ -2399,6 +2399,7 @@ function toggleAllSections(){
   const collapseAll = !areAllHeadingsCollapsed(ch);
   keys.forEach(k=> setCollapsed(ch.id, k, collapseAll));
   buildContent();
+  refreshTrText();
   updateCollapseAllBtnLabel();
 }
 function updateCollapseAllBtnLabel(){
@@ -2652,6 +2653,7 @@ function buildContent(){
       kpBtn.onclick = ()=>{
         setKeypoint(ch.id, key, !isKeypoint(ch.id, key));
         buildContent();
+        refreshTrText();
       };
       curH2Body = body;
       curH3Body = null;
@@ -2685,6 +2687,7 @@ function buildContent(){
       kpBtn.onclick = ()=>{
         setKeypoint(ch.id, key, !isKeypoint(ch.id, key));
         buildContent();
+        refreshTrText();
       };
       curH3Body = body;
       return;
@@ -2753,16 +2756,20 @@ function buildContent(){
   });
 }
 
+function refreshTrText(){
+  document.querySelectorAll('.tr').forEach(el=>{
+    const target = el.querySelector(':scope > .tr-text') || el;
+    target.innerHTML = lang==='zh' ? el.dataset.zh : el.dataset.en;
+  });
+}
+
 function renderAll(){
   document.body.classList.toggle('zh', lang==='zh');
   const ch = CHAPTERS[chapterIdx];
   document.getElementById('chapterTitle').textContent = lang==='zh' ? ch.titleZh : ch.titleEn;
   document.getElementById('chapterSub').textContent = lang==='zh' ? ch.subZh : ch.subEn;
   buildContent();
-  document.querySelectorAll('.tr').forEach(el=>{
-    const target = el.querySelector(':scope > .tr-text') || el;
-    target.innerHTML = lang==='zh' ? el.dataset.zh : el.dataset.en;
-  });
+  refreshTrText();
   document.getElementById('btn-zh').classList.toggle('active', lang==='zh');
   document.getElementById('btn-en').classList.toggle('active', lang==='en');
   buildChapterNav();
