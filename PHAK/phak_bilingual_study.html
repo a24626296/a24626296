@@ -69,6 +69,9 @@
   body.editing p.tr:hover, body.editing li.tr:hover{ background:none; }
   body.editing p.tr:hover::before, body.editing li.tr:hover::before{ content:none; }
 
+  a.tr-text.pdf-link{ color:inherit; text-decoration:none; cursor:pointer; }
+  a.tr-text.pdf-link:hover{ text-decoration:underline; text-decoration-thickness:1.5px; text-underline-offset:3px; }
+
   .editctl{ display:none; align-items:center; gap:.4rem; }
   body.editing .editctl{ display:flex; }
   .editctl button{ appearance:none; border:1px solid #33424D; background:#0D1620; color:#9FB0BA;
@@ -1223,33 +1226,33 @@ const CHAPTERS = [
   subEn:'Original pages 5-1 to 5-51 (the longest chapter).',
   subZh:'原文頁碼 5-1 至 5-51（全書篇幅最長的一章）。',
   blocks:[
-{t:'h2', en:'Forces Acting on the Aircraft', zh:'作用於飛機上的力'},
+{t:'h2', en:'Forces Acting on the Aircraft', zh:'作用於飛機上的力', page:1},
 {t:'p', en:'Four forces: Thrust, Lift, Weight, Drag. In steady flight, the sum of all upward force components = sum of all downward components; sum of all forward components = sum of all backward components — not simply "thrust=drag, lift=weight" in every case (e.g., in a climb part of thrust acts upward like lift; in a glide part of weight acts forward like thrust).',
  zh:'四種作用力：推力、升力、重量、阻力。在穩定飛行狀態下，所有向上分量的總和＝所有向下分量的總和；所有向前分量的總和＝所有向後分量的總和——並非每種情況都單純是「推力＝阻力、升力＝重量」（例如爬升時，部分推力會像升力一樣向上作用；滑翔時，部分重量則會像推力一樣向前作用）。'},
 {t:'p', en:'Angle of Attack (AOA): the acute angle between the airfoil\'s chord line and the direction of the relative wind — fundamental to performance, stability, and control.',
  zh:'攻角（AOA）：翼弦線與相對氣流方向之間的銳角——是性能、穩定性與操控性的根本要素。'},
 {t:'img', src:'figs/ch5/fig5-1.png', en:'Figure 5-1. Relationship of forces acting on an aircraft.', zh:'圖5-1。作用於飛機上各力之間的關係。'},
 {t:'img', src:'figs/ch5/fig5-2.png', en:'Figure 5-2. Force vectors during a stabilized climb.', zh:'圖5-2。穩定爬升時的力向量。'},
-{t:'h3', en:'Thrust', zh:'推力'},
+{t:'h3', en:'Thrust', zh:'推力', page:2},
 {t:'p', en:'As speed decreases, required AOA increases; if speed drops enough, AOA reaches critical AOA → stall. Extra vigilance needed at low thrust/low speed.',
  zh:'隨著速度降低，所需的攻角會增加；若速度降得夠低，攻角將達到臨界攻角→發生失速。在低推力／低速狀態下須格外提高警覺。'},
 {t:'img', src:'figs/ch5/fig5-3.png', en:'Figure 5-3. Angle of attack at various speeds.', zh:'圖5-3。不同速度下的攻角。'},
 {t:'img', src:'figs/ch5/fig5-4.png', en:'Figure 5-4. Some aircraft have the ability to change the direction of thrust.', zh:'圖5-4。部分飛機具備改變推力方向的能力。'},
-{t:'h3', en:'Lift', zh:'升力'},
+{t:'h3', en:'Lift', zh:'升力', page:3},
 {t:'p', en:'Lift equation: L = CL × (ρV²/2) × S — lift depends on air density, velocity squared, wing area, and coefficient of lift. Lift is proportional to velocity squared — double the airspeed = 4× the lift. Since an airfoil always stalls at the same AOA, a heavier aircraft needs higher airspeed to generate the extra lift needed at that same AOA.',
  zh:'升力公式：L＝CL×（ρV²/2）×S——升力取決於空氣密度、速度平方、機翼面積與升力係數。升力與速度平方成正比——空速加倍，升力就變為4倍。由於同一翼型總是在相同攻角下失速，較重的飛機必須以更高空速飛行，才能在同一攻角下產生足夠的額外升力。'},
 {t:'img', src:'figs/ch5/fig5-5.png', en:'Figure 5-5. Coefficients of lift and drag at various angles of attack.', zh:'圖5-5。不同攻角下的升力係數與阻力係數。'},
-{t:'h3', en:'Lift/Drag Ratio', zh:'升阻比'},
+{t:'h3', en:'Lift/Drag Ratio', zh:'升阻比', page:5},
 {t:'p', en:'L/D-MAX = the AOA/airspeed combo yielding the most lift for the least drag — the most efficient AOA. Total drag is lowest at L/D-MAX; below/above that speed, total drag increases.',
  zh:'最大升阻比（L/D-MAX）＝能以最少阻力產生最多升力的攻角／空速組合——即最有效率的攻角。總阻力在L/D-MAX時最低；低於或高於該速度，總阻力都會增加。'},
 {t:'img', src:'figs/ch5/fig5-6.png', en:'Figure 5-6. Drag versus speed.', zh:'圖5-6。阻力與速度的關係。'},
-{t:'h3', en:'Drag', zh:'阻力'},
+{t:'h3', en:'Drag', zh:'阻力', page:6},
 {t:'p', en:'Parasite drag (form drag + interference drag + skin friction drag) increases with the square of airspeed. Induced drag ("the price of lift") varies inversely with airspeed — high at low speed (high AOA needed), low at high speed. Total drag = parasite + induced, summing to a minimum at L/D-MAX.',
  zh:'寄生阻力（形狀阻力＋干擾阻力＋表面摩擦阻力）隨空速平方增加。誘導阻力（「升力的代價」）則與空速成反比——低速（需要高攻角）時較大，高速時較小。總阻力＝寄生阻力＋誘導阻力，兩者相加的總和在L/D-MAX處達到最小值。'},
 {t:'img', src:'figs/ch5/fig5-7.png', en:'Figure 5-7. Form drag.', zh:'圖5-7。形狀阻力。'},
 {t:'img', src:'figs/ch5/fig5-8.png', en:'Figure 5-8. A wing root can cause interference drag.', zh:'圖5-8。翼根處可能產生干擾阻力。'},
 
-{t:'h2', en:'Wingtip Vortices', zh:'翼尖渦流'},
+{t:'h2', en:'Wingtip Vortices', zh:'翼尖渦流', page:8},
 {t:'p', en:'High pressure under the wing spills around the wingtip to the low pressure above → rotating vortex trails behind each wingtip. Vortex strength is greatest when the generating aircraft is heavy, clean (gear/flaps up), and slow (high AOA).',
  zh:'機翼下方的高壓氣流繞過翼尖，流向上方的低壓區→在每個翼尖後方形成旋轉的渦流。當產生渦流的飛機越重、外形越乾淨（起落架／襟翼收起）、速度越慢（攻角越大），渦流強度就越強。'},
 {t:'img', src:'figs/ch5/fig5-9.png', en:'Figure 5-9. Wingtip vortex from a crop duster.', zh:'圖5-9。農業噴灑機所產生的翼尖渦流。'},
@@ -1262,26 +1265,26 @@ const CHAPTERS = [
 {t:'img', src:'figs/ch5/fig5-14.png', en:'Figure 5-14. Avoid turbulence from another aircraft.', zh:'圖5-14。應避免另一架飛機所產生的亂流。'},
 {t:'img', src:'figs/ch5/fig5-15.png', en:'Figure 5-15. When the vortices of larger aircraft sink close to the ground, they tend to move laterally over the ground; a crosswind changes the drift of the upwind and downwind vortices.', zh:'圖5-15。當大型飛機的渦流下沉接近地面時，會沿地面橫向移動；側風會改變上風側與下風側渦流的飄移情形。'},
 
-{t:'h2', en:'Ground Effect', zh:'地面效應'},
+{t:'h2', en:'Ground Effect', zh:'地面效應', page:11},
 {t:'p', en:'Within about one wingspan of the surface, airflow/wingtip vortices are restricted → reduces induced drag, changes thrust required. In ground effect: less induced drag, less AOA needed, reduced elevator down-force needed (tendency to pitch up). Aircraft can seem to "float" landing (excess speed in ground effect); on takeoff, may become airborne before reaching safe climb speed, then settle back as it climbs out of ground effect.',
  zh:'在距地面約一個翼展以內的高度，氣流與翼尖渦流會受到限制→降低誘導阻力，並改變所需推力。處於地面效應中：誘導阻力較小、所需攻角較小、升降舵所需的下壓力也較小（有機首上仰的傾向）。落地時飛機可能會出現「飄浮」感（地面效應中速度過剩）；起飛時，飛機可能在達到安全爬升速度前就先離地，離開地面效應範圍爬升時則可能再度下沉。'},
 {t:'img', src:'figs/ch5/fig5-16.png', en:'Figure 5-16. Ground effect changes airflow.', zh:'圖5-16。地面效應會改變氣流型態。'},
 {t:'img', src:'figs/ch5/fig5-17.png', en:'Figure 5-17. Ground effect changes drag and lift.', zh:'圖5-17。地面效應會改變阻力與升力。'},
 
-{t:'h2', en:'Axes of an Aircraft', zh:'飛機的三軸'},
+{t:'h2', en:'Axes of an Aircraft', zh:'飛機的三軸', page:12},
 {t:'p', en:'Longitudinal axis (nose-to-tail) → rolling → ailerons. Lateral axis (wingtip-to-wingtip) → pitching → elevator/stabilator. Vertical axis (top-to-bottom through CG) → yawing → rudder.',
  zh:'縱軸（機首至機尾）→滾轉→由副翼控制。橫軸（翼尖至翼尖）→俯仰→由升降舵／全動平尾控制。垂直軸（通過重心的上下方向）→偏航→由方向舵控制。'},
 {t:'img', src:'figs/ch5/fig5-18.png', en:'Figure 5-18. Axes of an airplane.', zh:'圖5-18。飛機的三軸。'},
 {t:'img', src:'figs/ch5/fig5-19.png', en:'Figure 5-19. A weight-shift control aircraft.', zh:'圖5-19。重心操控式飛行器。'},
 {t:'img', src:'figs/ch5/fig5-20.png', en:'Figure 5-20. A powered parachute.', zh:'圖5-20。動力傘。'},
 
-{t:'h2', en:'Aircraft Design Characteristics — Stability', zh:'飛機設計特性——穩定性'},
-{t:'h3', en:'Static and Dynamic Stability', zh:'靜穩定性與動穩定性'},
+{t:'h2', en:'Aircraft Design Characteristics — Stability', zh:'飛機設計特性——穩定性', page:14},
+{t:'h3', en:'Static and Dynamic Stability', zh:'靜穩定性與動穩定性', page:14},
 {t:'p', en:'Positive static stability — initial tendency to return toward equilibrium after a disturbance. Neutral — tendency to remain in the new position. Negative (instability) — tendency to continue diverging. Dynamic stability describes the response over time: damped (oscillations decrease, positive), neutral (constant amplitude), divergent (oscillations increase, negative).',
  zh:'正靜穩定性——受到擾動後，有回到平衡狀態的初始傾向。中性靜穩定性——傾向維持在新的位置。負靜穩定性（不穩定）——傾向持續偏離。動穩定性描述的則是隨時間演變的反應：阻尼型（振盪逐漸減小，屬正動穩定）、中性型（振幅維持不變）、發散型（振盪逐漸增大，屬負動穩定）。'},
 {t:'img', src:'figs/ch5/fig5-21.png', en:'Figure 5-21. Types of static stability.', zh:'圖5-21。靜穩定性的類型。'},
 {t:'img', src:'figs/ch5/fig5-22.png', en:'Figure 5-22. Damped versus undamped stability.', zh:'圖5-22。阻尼與無阻尼穩定性的比較。'},
-{t:'h3', en:'Longitudinal Stability (Pitching)', zh:'縱向穩定性（俯仰）'},
+{t:'h3', en:'Longitudinal Stability (Pitching)', zh:'縱向穩定性（俯仰）', page:15},
 {t:'p', en:'The most important stability an aircraft should possess. CG typically forward of the wing\'s center of lift → constant nose-down tendency, balanced by a down load on the horizontal tail. Aft CG → less stable, more responsive, easier to stall. Forward CG → more stable, higher control forces, especially at low speed.',
  zh:'飛機最重要應具備的穩定性。重心通常位於機翼升力中心之前→產生持續的機首下俯傾向，並靠水平尾翼上的向下負荷來平衡。重心偏後→穩定性較差、操縱反應較靈敏、也更容易失速。重心偏前→穩定性較佳，但操縱桿力較大，尤其在低速時更為明顯。'},
 {t:'img', src:'figs/ch5/fig5-23.png', en:'Figure 5-23. Longitudinal stability.', zh:'圖5-23。縱向穩定性。'},
@@ -1289,27 +1292,27 @@ const CHAPTERS = [
 {t:'img', src:'figs/ch5/fig5-25.png', en:'Figure 5-25. Reduced power allows pitch down.', zh:'圖5-25。減少動力會使機首下俯。'},
 {t:'img', src:'figs/ch5/fig5-26.png', en:'Figure 5-26. Thrust line affects longitudinal stability.', zh:'圖5-26。推力線位置會影響縱向穩定性。'},
 {t:'img', src:'figs/ch5/fig5-27.png', en:'Figure 5-27. Power changes affect longitudinal stability.', zh:'圖5-27。動力變化會影響縱向穩定性。'},
-{t:'h3', en:'Lateral Stability (Rolling)', zh:'側向穩定性（滾轉）'},
+{t:'h3', en:'Lateral Stability (Rolling)', zh:'側向穩定性（滾轉）', page:17},
 {t:'p', en:'Primary design feature: dihedral (wings angled upward from root to tip) — in a sideslip, the lower wing has a greater effective AOA → generates more lift → rolls back level. Sweepback also contributes. Keel effect: high-wing aircraft — the fuselage hangs like a pendulum below the wing\'s CL, naturally righting the aircraft — more laterally stable than low-wing designs.',
  zh:'主要設計特徵：上反角（機翼由翼根至翼尖向上傾斜）——側滑時，下方機翼的有效攻角較大→產生較多升力→使飛機滾轉回水平狀態。後掠角也有助於此效果。龍骨效應：高單翼飛機的機身如同鐘擺般懸掛在機翼升力中心下方，能自然地使飛機回正——因此側向穩定性比低單翼設計更佳。'},
 {t:'img', src:'figs/ch5/fig5-28.png', en:'Figure 5-28. Dihedral is the upward angle of the wings from a horizontal axis.', zh:'圖5-28。上反角即機翼相對於水平軸向上傾斜的角度。'},
 {t:'img', src:'figs/ch5/fig5-29.png', en:'Figure 5-29. Sideslip causing different AOA on each wing.', zh:'圖5-29。側滑導致兩側機翼產生不同的攻角。'},
 {t:'img', src:'figs/ch5/fig5-30.png', en:'Figure 5-30. Sweepback wings.', zh:'圖5-30。後掠翼。'},
 {t:'img', src:'figs/ch5/fig5-31.png', en:'Figure 5-31. Keel area for lateral stability.', zh:'圖5-31。有助於側向穩定性的龍骨面積。'},
-{t:'h3', en:'Directional Stability (Yawing)', zh:'方向穩定性（偏航）'},
+{t:'h3', en:'Directional Stability (Yawing)', zh:'方向穩定性（偏航）', page:19},
 {t:'p', en:'Achieved mainly via the vertical stabilizer/fin — acts like a weathervane, keeping the nose pointed into the relative wind.',
  zh:'主要透過垂直安定面／垂尾達成——作用如同風向標，使機首保持指向相對氣流的方向。'},
 {t:'img', src:'figs/ch5/fig5-32.png', en:'Figure 5-32. Fuselage and fin for directional stability.', zh:'圖5-32。機身與垂尾對方向穩定性的貢獻。'},
-{t:'h3', en:'Spiral Instability', zh:'螺旋不穩定'},
+{t:'h3', en:'Spiral Instability', zh:'螺旋不穩定', page:20},
 {t:'p', en:'Occurs when directional stability is strong relative to lateral (dihedral) stability — a disturbed aircraft tends to increase bank in a slow spiral rather than return to wings-level; pilot must actively correct.',
  zh:'當方向穩定性相對於側向（上反角）穩定性過強時會發生此現象——受擾動的飛機會傾向於在緩慢的螺旋中持續增加坡度，而非自行恢復水平；飛行員必須主動修正。'},
 
-{t:'h2', en:'Effect of Wing Planform', zh:'機翼平面形狀的影響'},
+{t:'h2', en:'Effect of Wing Planform', zh:'機翼平面形狀的影響', page:20},
 {t:'p', en:'Aspect ratio (span²/area) — higher aspect ratio (long, narrow wings, e.g., gliders) = more efficient lift/less induced drag but structurally heavier and less maneuverable; lower aspect ratio = more induced drag but lighter/more maneuverable.',
  zh:'展弦比（翼展²÷面積）——展弦比越高（機翼細長，例如滑翔機），升力效率越高、誘導阻力越小，但結構較重、機動性較差；展弦比越低則誘導阻力較大，但結構較輕、機動性較佳。'},
 {t:'img', src:'figs/ch5/fig5-33.png', en:'Figure 5-33. Different types of wing planforms.', zh:'圖5-33。不同類型的機翼平面形狀。'},
 
-{t:'h2', en:'Aerodynamic Forces in Flight Maneuvers', zh:'飛行機動中的空氣動力'},
+{t:'h2', en:'Aerodynamic Forces in Flight Maneuvers', zh:'飛行機動中的空氣動力', page:22},
 {t:'p', en:'Banking splits lift into a vertical component (opposing weight) and a horizontal component (turning force). Steeper bank → more back pressure/higher AOA needed to maintain altitude → higher stall speed and load factor. Slipping turn = insufficient rate of turn for the bank angle; skidding turn = excess rate of turn for the bank angle.',
  zh:'坡度會將升力分解為垂直分量（對抗重量）與水平分量（轉彎力）。坡度越陡→需要越大的拉桿力／攻角才能維持高度→失速速度與負載因數也隨之提高。內滑轉彎＝坡度相對於轉彎率而言過大；外滑轉彎＝坡度相對於轉彎率而言過小。'},
 {t:'img', src:'figs/ch5/fig5-34.png', en:'Figure 5-34. Forces during normal, coordinated turn at constant altitude.', zh:'圖5-34。等高度正常協調轉彎時的各力。'},
@@ -1317,7 +1320,7 @@ const CHAPTERS = [
 {t:'img', src:'figs/ch5/fig5-36.png', en:'Figure 5-36. Changes in lift during climb entry.', zh:'圖5-36。進入爬升時升力的變化。'},
 {t:'img', src:'figs/ch5/fig5-37.png', en:'Figure 5-37. Changes in speed during climb entry.', zh:'圖5-37。進入爬升時速度的變化。'},
 
-{t:'h2', en:'Stalls', zh:'失速'},
+{t:'h2', en:'Stalls', zh:'失速', page:25},
 {t:'p', en:'An aircraft stall results from a rapid decrease in lift caused by the separation of airflow from the wing\'s surface, brought on by exceeding the critical AOA. A stall can occur at any pitch attitude or airspeed. Stalls are one of the most misunderstood areas of aerodynamics because pilots often believe an airfoil stops producing lift when it stalls. In a stall, the wing does not totally stop producing lift — rather, it cannot generate adequate lift to sustain level flight.',
  zh:'飛機失速起因於升力的急遽下降，這是由於機翼表面氣流分離所導致，而氣流分離則是因超過臨界攻角所引起。失速可能發生在任何俯仰姿態或任何空速下。失速是空氣動力學中最容易被誤解的領域之一，因為飛行員常誤以為機翼失速時就完全不再產生升力。事實上，失速時機翼並不會完全停止產生升力——而是無法產生足夠維持平飛所需的升力。'},
 {t:'p', en:'Since the CL increases with an increase in AOA, at some point the CL peaks and then begins to drop off. This peak is called the CL-MAX. The amount of lift the wing produces drops dramatically after exceeding the CL-MAX or critical AOA, but as stated above, it does not completely stop producing lift. In most straight-wing aircraft, the wing is designed to stall the wing root first — the wing root reaches its critical AOA first, making the stall progress outward toward the wingtip. By having the wing root stall first, aileron effectiveness is maintained at the wingtips, maintaining controllability of the aircraft. Various design methods are used to achieve this: in one design, the wing is "twisted" to a higher AOA at the wing root; installing stall strips on the first 20–25 percent of the wing\'s leading edge is another method to introduce a stall prematurely.',
@@ -1342,7 +1345,7 @@ const CHAPTERS = [
  zh:'飛行員在全國各地、任何季節，於18,000呎以下、有時甚至更高的高度，都可能遭遇結冰狀況。小型飛機（包括通勤客機）是最容易受影響的機型，因為它們通常在較低、更容易結冰的高度飛行，且缺乏噴射機常見的機翼前緣加溫防冰裝置。只要溫度降至冰點以下、過冷水滴附著於飛機表面並凍結，雲中便可能發生結冰現象（過冷水滴即使溫度低於華氏32度／攝氏0度，仍維持液態）。'},
 {t:'img', src:'figs/ch5/fig5-40.png', en:'Figure 5-40. Inflight ice formation.', zh:'圖5-40。飛行中結冰的情形。'},
 
-{t:'h2', en:'Angle of Attack Indicators', zh:'攻角指示器'},
+{t:'h2', en:'Angle of Attack Indicators', zh:'攻角指示器', page:26},
 {t:'p', en:'The FAA, along with the General Aviation Joint Steering Committee (GAJSC), is promoting AOA indicators as one of the many safety initiatives aimed at reducing the general aviation accident rate. AOA indicators specifically target Loss of Control (LOC) accidents — the number one root cause of fatalities in both general aviation and commercial aviation. More than 25 percent of general aviation fatal accidents occur during the maneuvering phase of flight, and of those accidents, half involve stall/spin scenarios. Technology such as AOA indicators can have a tremendous impact on reversing this trend and are increasingly affordable for general aviation airplanes. [Figure 5-41]',
  zh:'FAA與通用航空聯合指導委員會（GAJSC）正共同推廣攻角指示器，作為降低通用航空事故率的多項安全倡議之一。攻角指示器特別針對「失控」（LOC，Loss of Control）事故——這是通用航空與商用航空致命事故最主要的根本原因。超過25％的通用航空致命事故發生在機動飛行階段，而在這些事故中，有一半涉及失速／尾旋情境。攻角指示器這類技術，能對扭轉此一趨勢帶來極大助益，且如今對通用航空飛機而言，其取得成本也日益親民。〔圖5-41〕'},
 {t:'img', src:'figs/ch5/fig5-41.png', en:'Figure 5-41. A variety of AOA indicators.', zh:'圖5-41。各式各樣的攻角指示器。'},
@@ -1360,14 +1363,14 @@ const CHAPTERS = [
 {t:'p', en:'While AOA indicators provide a simple visual representation of the current AOA and its proximity to the critical AOA, they are not without their limitations. These limitations should be understood by operators of general aviation airplanes equipped with these devices — like advanced automation such as autopilots and moving maps, the misunderstanding or misuse of the equipment can have disastrous results. Some items which may limit the effectiveness of an AOA indicator are listed below: calibration techniques; probes or vanes not being heated; the type of indicator itself; flap setting; and wing contamination. Pilots of general aviation airplanes equipped with AOA indicators should contact the manufacturer for specific limitations applicable to that installation.',
  zh:'雖然攻角指示器能以簡單的視覺方式呈現目前攻角及其與臨界攻角的接近程度，但它並非毫無限制。裝設此類裝置的通用航空飛機操作者，應充分了解這些限制——如同自動駕駛儀、移動地圖等先進自動化裝置一樣，若對設備誤解或誤用，可能導致嚴重後果。可能限制攻角指示器效能的因素包括：校正方式；感測探頭或風標未加溫；指示器本身的類型；襟翼設定；以及機翼表面污染物。裝設攻角指示器的通用航空飛機飛行員，應向製造商確認該裝置適用的具體限制事項。'},
 
-{t:'h2', en:'Basic Propeller Principles', zh:'螺旋槳基本原理'},
+{t:'h2', en:'Basic Propeller Principles', zh:'螺旋槳基本原理', page:28},
 {t:'p', en:'A rotating propeller is essentially an airfoil, generating thrust the same way a wing generates lift. Fixed-pitch propeller — one blade angle, a compromise between climb and cruise. Constant-speed propeller — automatically adjusts blade angle to maintain a set rpm regardless of airspeed/power.',
  zh:'旋轉中的螺旋槳本質上就是一種翼型，其產生推力的方式與機翼產生升力的原理相同。固定槳距螺旋槳——只有單一槳葉角度，須在爬升與巡航效能之間取捨。定速螺旋槳——會自動調整槳葉角度，無論空速或動力如何變化，都能維持設定的轉速。'},
 {t:'img', src:'figs/ch5/fig5-43.png', en:'Figure 5-43. Airfoil sections of propeller blade.', zh:'圖5-43。螺旋槳槳葉的翼型剖面。'},
 {t:'img', src:'figs/ch5/fig5-44.png', en:'Figure 5-44. Propeller blade angle.', zh:'圖5-44。螺旋槳槳葉角。'},
 {t:'img', src:'figs/ch5/fig5-45.png', en:'Figure 5-45. Propeller slippage.', zh:'圖5-45。螺旋槳滑移。'},
 {t:'img', src:'figs/ch5/fig5-46.png', en:'Figure 5-46. Propeller tips travel faster than the hub.', zh:'圖5-46。螺旋槳槳尖的移動速度比槳轂處更快。'},
-{t:'h3', en:'Torque and P-Factor', zh:'扭力與P效應'},
+{t:'h3', en:'Torque and P-Factor', zh:'扭力與P效應', page:30},
 {t:'p', en:'4 elements causing left-turning tendency (standard-rotation prop, most pronounced at high power/low airspeed/high AOA, e.g., takeoff): (1) Torque reaction — Newton\'s 3rd law reaction to the engine turning the prop. (2) Corkscrewing effect — spiraling slipstream strikes the vertical stabilizer from the left. (3) Gyroscopic action — a force applied to the spinning prop is felt 90° later in the direction of rotation. (4) Asymmetric loading (P-factor) — at high AOA, the descending propeller blade generates more thrust than the ascending blade.',
  zh:'導致左偏傾向的四種因素（適用於標準旋轉方向的螺旋槳，在高動力／低空速／高攻角時最明顯，例如起飛階段）：（1）扭力反作用——牛頓第三定律對引擎轉動螺旋槳所產生的反作用力。（2）螺旋效應——呈螺旋狀的滑流會吹擊垂直安定面的左側。（3）陀螺進動效應——施加於旋轉中螺旋槳上的力，其效果會在旋轉方向上延遲90°才顯現。（4）不對稱負載（P效應）——在高攻角時，下降側槳葉產生的推力比上升側槳葉更大。'},
 {t:'img', src:'figs/ch5/fig5-47.png', en:'Figure 5-47. Torque reaction.', zh:'圖5-47。扭力反作用。'},
@@ -1376,7 +1379,7 @@ const CHAPTERS = [
 {t:'img', src:'figs/ch5/fig5-50.png', en:'Figure 5-50. Raising tail produces gyroscopic precession.', zh:'圖5-50。抬起機尾會產生陀螺進動效應。'},
 {t:'img', src:'figs/ch5/fig5-51.png', en:'Figure 5-51. Asymmetrical loading of propeller (P-factor).', zh:'圖5-51。螺旋槳的不對稱負載（P效應）。'},
 
-{t:'h2', en:'Load Factors', zh:'負載因數'},
+{t:'h2', en:'Load Factors', zh:'負載因數', page:33},
 {t:'p', en:'Load factor = the ratio of the load supported by the wings to the actual weight of the aircraft (units of G). Limit load factors by category: Normal 3.8 to −1.52; Utility 4.4 to −1.76; Acrobatic 6.0 to −3.00.',
  zh:'負載因數＝機翼所承受的負荷與飛機實際重量的比值（單位為G）。依類別劃分的限制負載因數：正常類3.8至−1.52；效用類4.4至−1.76；特技類6.0至−3.00。'},
 {t:'img', src:'figs/ch5/fig5-52.png', en:'Figure 5-52. Two forces cause load factor during turns.', zh:'圖5-52。轉彎時由兩種力所產生的負載因數。'},
@@ -1384,11 +1387,11 @@ const CHAPTERS = [
  zh:'在水平協調轉彎中，負載因數會隨坡度增加而急遽上升：60°坡度＝2G；80°坡度≈5.76G——超過45°後增加幅度變得非常快。任何飛機在任何空速下都可能發生失速；負載因數增加時，失速速度會依負載因數的平方根倍數提高。'},
 {t:'img', src:'figs/ch5/fig5-53.png', en:'Figure 5-53. Angle of bank changes load factor in level flight.', zh:'圖5-53。平飛時坡度角改變負載因數的情形。'},
 {t:'img', src:'figs/ch5/fig5-54.png', en:'Figure 5-54. Load factor changes stall speed.', zh:'圖5-54。負載因數改變失速速度的情形。'},
-{t:'h3', en:'Vg Diagram', zh:'Vg圖'},
+{t:'h3', en:'Vg Diagram', zh:'Vg圖', page:37},
 {t:'p', en:'Plots load factor (G) vs. indicated airspeed. Intersection of the positive limit load factor line and the max-lift curve = maneuvering speed (VA) — below VA, the aircraft will stall before structural damage occurs even at full abrupt control deflection; above VA, structural damage can occur before a stall develops.',
  zh:'繪製負載因數（G）與指示空速的關係圖。正限制負載因數線與最大升力曲線的交點＝機動速度（VA）——低於VA時，即使猛烈滿舵操縱，飛機也會先失速而非結構受損；高於VA時，則可能在失速發生前就先造成結構損傷。'},
 {t:'img', src:'figs/ch5/fig5-55.png', en:'Figure 5-55. Typical Vg diagram.', zh:'圖5-55。典型的Vg圖。'},
-{t:'h3', en:'Rate and Radius of Turn', zh:'轉彎率與轉彎半徑'},
+{t:'h3', en:'Rate and Radius of Turn', zh:'轉彎率與轉彎半徑', page:38},
 {t:'p', en:'ROT (degrees/sec) = 1,091 × tan(bank angle) ÷ airspeed (kt TAS) — increasing airspeed at a constant bank angle decreases ROT. Radius of turn: doubling speed at the same bank angle quadruples the radius.',
  zh:'轉彎率（度／秒）＝1,091×tan（坡度）÷空速（節，真空速）——在坡度不變的情況下，空速增加會降低轉彎率。轉彎半徑：在相同坡度下，速度加倍，轉彎半徑則會變為4倍。'},
 {t:'img', src:'figs/ch5/fig5-56.png', en:'Figure 5-56. Rate of turn for a given airspeed (knots, TAS) and bank angle.', zh:'圖5-56。特定空速（節，真空速）與坡度下的轉彎率。'},
@@ -1399,12 +1402,12 @@ const CHAPTERS = [
 {t:'img', src:'figs/ch5/fig5-61.png', en:'Figure 5-61. Another formula that can be used for radius.', zh:'圖5-61。另一種可用於計算轉彎半徑的公式。'},
 {t:'img', src:'figs/ch5/fig5-62.png', en:'Figure 5-62. Airspeed is the most influential factor in determining how much distance is required to turn — two aircraft flying into a 5,000-foot-wide canyon at 120 knots versus 140 knots, both using a 30° bank angle.', zh:'圖5-62。空速是決定轉彎所需距離的最關鍵因素——兩架飛機以30°坡度飛入寬5,000呎的峽谷，一架時速120節、另一架140節的比較。'},
 
-{t:'h2', en:'Weight and Balance', zh:'重量與平衡'},
+{t:'h2', en:'Weight and Balance', zh:'重量與平衡', page:40},
 {t:'p', en:'CG position affects lift, AOA, tail load, and elevator control force. Forward CG → aircraft is "heavier"/slower, stalls at a higher speed, requires higher elevator control forces, but is more stable. Aft CG → less drag/faster cruise, but less stable and more difficult to recover from a stall or spin; loaded too far aft, a "flat spin" can develop that cannot be recovered from.',
  zh:'重心位置會影響升力、攻角、尾翼負載與升降舵操縱力。重心偏前→飛機較「重」、速度較慢，失速速度較高，升降舵所需操縱力較大，但穩定性較佳。重心偏後→阻力較小、巡航速度較快，但穩定性較差，也較難從失速或尾旋中改出；若重心過度偏後，甚至可能發生無法改出的「平尾旋」。'},
 {t:'img', src:'figs/ch5/fig5-63.png', en:'Figure 5-63. Effect of load distribution on balance.', zh:'圖5-63。載重分布對平衡的影響。'},
 
-{t:'h2', en:'High Speed Flight', zh:'高速飛行'},
+{t:'h2', en:'High Speed Flight', zh:'高速飛行', page:44},
 {t:'p', en:'Critical Mach number — the flight Mach number at which airflow first reaches Mach 1.0 somewhere on the airframe (typically over the wing). Transonic range — mixed subsonic/supersonic flow simultaneously. Supersonic range — airflow over the entire aircraft is supersonic.',
  zh:'臨界馬赫數——機身上（通常是機翼表面）某處氣流首次達到馬赫1.0時的飛行馬赫數。穿音速範圍——同時存在次音速與超音速混合氣流。超音速範圍——整架飛機周圍的氣流皆為超音速。'},
 {t:'img', src:'figs/ch5/fig5-64.png', en:'Figure 5-64. Wing airflow.', zh:'圖5-64。機翼周圍的氣流。'},
@@ -1420,7 +1423,7 @@ const CHAPTERS = [
  zh:'馬赫抖振＝在高馬赫數下，因氣流分離或震波所造成的機身抖動——可能發生在相對於重量／高度／G負載而言飛得太慢（低速失速）或太快（高速／馬赫抖振）的情況下；這兩個邊界都會隨高度上升而逐漸收窄，在極高高度時甚至可能重疊（俗稱「棺材角」）。'},
 {t:'img', src:'figs/ch5/fig5-71.png', en:'Figure 5-71. Control surfaces.', zh:'圖5-71。操縱面。'},
 
-{t:'h2', en:'Chapter Summary', zh:'本章摘要'},
+{t:'h2', en:'Chapter Summary', zh:'本章摘要', page:51},
 {t:'p', en:'The most complex and technically detailed chapter of the handbook — covers the aerodynamic principles governing lift/drag/stability/load factors/high-speed flight that pilots need to understand aircraft performance and limitations.',
  zh:'本書技術內容最複雜、最詳盡的一章——涵蓋升力、阻力、穩定性、負載因數與高速飛行等空氣動力原理，這些都是飛行員理解飛機性能與限制所必須具備的知識。'}
   ]
@@ -2501,14 +2504,20 @@ function buildContent(){
   content.innerHTML = '';
   const order = getOrder(ch);
 
-  function trText(elType, key, enFallback, zhFallback){
+  function trText(elType, key, enFallback, zhFallback, pdfPage){
     const el = document.createElement(elType);
     el.className = 'tr';
     el.dataset.key = key;
     el.dataset.en = getEditedText(ch.id, key, 'en', enFallback);
     el.dataset.zh = getEditedText(ch.id, key, 'zh', zhFallback);
-    const span = document.createElement('span');
-    span.className = 'tr-text';
+    const span = document.createElement(pdfPage ? 'a' : 'span');
+    span.className = pdfPage ? 'tr-text pdf-link' : 'tr-text';
+    if(pdfPage){
+      span.href = 'pdf/ch' + ch.num + '.pdf#page=' + pdfPage;
+      span.target = '_blank';
+      span.rel = 'noopener';
+      span.title = lang==='zh' ? ('開啟原文 PDF 第' + pdfPage + '頁') : ('Open original PDF, page ' + pdfPage);
+    }
     span.contentEditable = editMode ? 'true' : 'false';
     if(editMode){
       span.addEventListener('blur', ()=>{
@@ -2516,6 +2525,7 @@ function buildContent(){
         el.dataset[lang] = val;
         saveEditedText(ch.id, key, lang, val);
       });
+      if(pdfPage) span.addEventListener('click', e=> e.preventDefault());
     }
     el.appendChild(span);
     return el;
@@ -2601,7 +2611,7 @@ function buildContent(){
     h2Info[h2.key] = { marked: h2.marked, show, onlyH3, markedH3: new Set(h2.h3s.filter(h=>h.marked).map(h=>h.key)) };
   });
 
-  function makeSectionHead(tag, level, key, en, zh, pos){
+  function makeSectionHead(tag, level, key, en, zh, pos, pdfPage){
     const row = document.createElement('div');
     row.className = 'sec-head-row lvl' + level;
     if(editMode) row.appendChild(makeBlockCtl(pos));
@@ -2618,7 +2628,7 @@ function buildContent(){
     kpBtn.title = lang==='zh' ? '標記為本章重點' : 'Mark as key point';
     kpBtn.classList.toggle('active', isKeypoint(ch.id, key));
     row.appendChild(kpBtn);
-    row.appendChild(trText(tag, key, en, zh));
+    row.appendChild(trText(tag, key, en, zh, pdfPage));
     row.appendChild(makeYtBtn(key));
     return { row, collapseBtn, kpBtn };
   }
@@ -2639,7 +2649,7 @@ function buildContent(){
         if(!info.show) secWrap.classList.add('kp-hide-in-mode');
         if(info.show) secWrap.classList.add('kp-force-open');
       }
-      const { row, collapseBtn, kpBtn } = makeSectionHead('h2', 2, key, d.en, d.zh, pos);
+      const { row, collapseBtn, kpBtn } = makeSectionHead('h2', 2, key, d.en, d.zh, pos, d.page);
       const body = document.createElement('div');
       body.className = 'sec-body';
       secWrap.appendChild(row);
@@ -2673,7 +2683,7 @@ function buildContent(){
           secWrap.classList.add('kp-force-open');
         }
       }
-      const { row, collapseBtn, kpBtn } = makeSectionHead('h3', 3, key, d.en, d.zh, pos);
+      const { row, collapseBtn, kpBtn } = makeSectionHead('h3', 3, key, d.en, d.zh, pos, d.page);
       const body = document.createElement('div');
       body.className = 'sec-body';
       secWrap.appendChild(row);
