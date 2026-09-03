@@ -121,6 +121,9 @@
   table{ width:100%; border-collapse:collapse; margin:1rem 0 1.4rem; font-size:.9rem; }
   th,td{ border:1px solid var(--hair); padding:.55rem .7rem; text-align:left; vertical-align:top; }
   figure.fig{ margin:1.4rem 0; padding:0; }
+  .fig-grid{ display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin:1.4rem 0; }
+  .fig-grid figure.fig{ margin:0; }
+  @media (max-width:600px){ .fig-grid{ grid-template-columns:1fr; } }
   figure.fig img{ width:var(--img-w,100%); height:auto; display:block; margin:0 auto; border:1px solid var(--hair); border-radius:6px; background:#fff; transition:width .15s; }
   figure.fig figcaption{ margin-top:.5rem; font-size:.85rem; color:var(--ink-soft); cursor:help; padding:.15rem .3rem; border-radius:4px; }
   figure.fig figcaption:hover{ background:var(--amber-tint); }
@@ -944,10 +947,12 @@ const CHAPTERS = [
 {t:'img', src:'figs/ch6/fig6-5.png', en:'Figure 6-5. Adverse yaw is caused by higher drag on the outside wing that is producing more lift.', zh:'圖6-5。不利偏航是由升力較大那側機翼的較高阻力所造成。'},
 {t:'p', en:'4 manufacturer solutions to reduce adverse yaw: Differential ailerons (up aileron deflects more than down); Frise-type ailerons (raised aileron\'s leading edge projects into airflow, creating balancing drag); Coupled ailerons and rudder (interconnect springs auto-deflect rudder with aileron input); Flaperons (combine flap+aileron function via a mixer).',
  zh:'廠商減少不利偏航的四種方案：差動式副翼（上偏角度大於下偏角度）；Frise型副翼（上偏副翼的前緣會凸入氣流中，產生平衡用的阻力）；副翼／方向舵連動系統（連動彈簧會隨副翼輸入自動偏轉方向舵）；襟副翼（透過混合器結合襟翼與副翼的功能）。'},
-{t:'img', src:'figs/ch6/fig6-6.png', en:'Figure 6-6. Differential ailerons.', zh:'圖6-6。差動式副翼。'},
-{t:'img', src:'figs/ch6/fig6-7.png', en:'Figure 6-7. Frise-type ailerons.', zh:'圖6-7。Frise型副翼。'},
-{t:'img', src:'figs/ch6/fig6-8.png', en:'Figure 6-8. Coupled ailerons and rudder.', zh:'圖6-8。副翼與方向舵連動系統。'},
-{t:'img', src:'figs/ch6/fig6-9.png', en:'Figure 6-9. Flaperons on a Skystar Kitfox MK 7.', zh:'圖6-9。Skystar Kitfox MK 7上的襟副翼。'},
+{t:'imggrid', items:[
+  {src:'figs/ch6/fig6-6.png', en:'Figure 6-6. Differential ailerons.', zh:'圖6-6。差動式副翼。'},
+  {src:'figs/ch6/fig6-7.png', en:'Figure 6-7. Frise-type ailerons.', zh:'圖6-7。Frise型副翼。'},
+  {src:'figs/ch6/fig6-8.png', en:'Figure 6-8. Coupled ailerons and rudder.', zh:'圖6-8。副翼與方向舵連動系統。'},
+  {src:'figs/ch6/fig6-9.png', en:'Figure 6-9. Flaperons on a Skystar Kitfox MK 7.', zh:'圖6-9。Skystar Kitfox MK 7上的襟副翼。'}
+]},
 
 {t:'h2', en:'Elevator', zh:'升降舵'},
 {t:'p', en:'Aft column movement → elevator trailing edge up ("up-elevator") → downward aerodynamic force on tail → tail down, nose pitches up. Forward column movement → opposite effect.',
@@ -2725,6 +2730,28 @@ function buildContent(){
       });
       table.appendChild(tbody);
       wrap.appendChild(table);
+      targetContainer().appendChild(wrap);
+      return;
+    }
+    if(d.t==='imggrid'){
+      const wrap = document.createElement('div');
+      wrap.className = 'blockwrap';
+      if(editMode) wrap.appendChild(makeBlockCtl(pos));
+      if(!curH3Body && h2Info[curH2Key] && h2Info[curH2Key].onlyH3) wrap.classList.add('kp-hide-in-mode');
+      const grid = document.createElement('div');
+      grid.className = 'fig-grid';
+      d.items.forEach((it, ii)=>{
+        const fig = document.createElement('figure');
+        fig.className = 'fig';
+        const img = document.createElement('img');
+        img.src = it.src;
+        img.alt = it.en;
+        img.loading = 'lazy';
+        fig.appendChild(img);
+        fig.appendChild(trText('figcaption', key+'.'+ii, it.en, it.zh));
+        grid.appendChild(fig);
+      });
+      wrap.appendChild(grid);
       targetContainer().appendChild(wrap);
       return;
     }
