@@ -200,8 +200,8 @@
 <div class="topbar">
   <div class="topbar-row">
     <div class="titlegroup">
-      <span class="title">FAA-H-8083-25C</span>
-      <span class="hint" id="lastUpdated">更新時間：載入中…</span>
+      <span class="title">PHAK</span>
+      <span class="hint" id="lastUpdated">載入中…</span>
     </div>
     <div class="switch">
       <button id="btn-zh" class="active">中文</button>
@@ -221,15 +221,10 @@
     <button class="modebtn" id="collapseAllBtn">全部收合</button>
     <button class="modebtn" id="hlBtn">螢光筆</button>
     <button class="modebtn" id="kpModeBtn">重點模式</button>
-    <button class="modebtn" id="archiveBtn">封存</button>
     <button class="modebtn" id="editBtn">編輯模式</button>
     <div class="editctl" id="editctl">
       <button id="resetEditsBtn">重置本章編輯</button>
     </div>
-  </div>
-  <div class="chapternav" id="chapternav"></div>
-  <div class="archivebar" id="archivebar">
-    <span class="archivebar-label">封存區：</span>
   </div>
 </div>
 
@@ -2504,13 +2499,13 @@ function renderLastUpdated(){
   const el = document.getElementById('lastUpdated');
   if(!el) return;
   if(lastUpdatedDate === null){
-    el.textContent = lang==='zh' ? '更新時間：載入中…' : 'Updated: loading…';
+    el.textContent = lang==='zh' ? '載入中…' : 'loading…';
   } else if(lastUpdatedDate === 'error'){
-    el.textContent = lang==='zh' ? '更新時間：無法取得' : 'Updated: unavailable';
+    el.textContent = lang==='zh' ? '無法取得' : 'unavailable';
   } else {
     const formatted = lastUpdatedDate.toLocaleString(lang==='zh' ? 'zh-TW' : 'en-US',
       { month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', hour12:false });
-    el.textContent = (lang==='zh' ? '更新時間：' : 'Updated: ') + formatted;
+    el.textContent = formatted;
   }
 }
 
@@ -2821,8 +2816,6 @@ function renderAll(){
   refreshTrText();
   document.getElementById('btn-zh').classList.toggle('active', lang==='zh');
   document.getElementById('btn-en').classList.toggle('active', lang==='en');
-  buildChapterNav();
-  buildArchiveBar();
   applyEditMode();
   updateCollapseAllBtnLabel();
   renderLastUpdated();
@@ -2848,7 +2841,6 @@ document.getElementById('quietBtn').onclick = ()=>{ quietMode = !quietMode; appl
 document.getElementById('collapseAllBtn').onclick = toggleAllSections;
 document.getElementById('hlBtn').onclick = ()=>{ highlightMode = !highlightMode; applyHighlightMode(); };
 document.getElementById('kpModeBtn').onclick = ()=>{ keypointMode = !keypointMode; applyKeypointMode(); };
-document.getElementById('archiveBtn').onclick = ()=>{ archiving = !archiving; applyArchiveMode(); };
 document.getElementById('editBtn').onclick = ()=>{ editMode = !editMode; applyEditMode(); renderAll(); };
 document.getElementById('resetEditsBtn').onclick = ()=>{
   const ch = CHAPTERS[chapterIdx];
@@ -2917,7 +2909,6 @@ renderAll();
 applyFontSize();
 applyImgScale();
 applyQuietMode();
-applyArchiveMode();
 applyHighlightMode();
 applyKeypointMode();
 loadLastUpdated();
