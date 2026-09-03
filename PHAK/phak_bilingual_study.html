@@ -931,10 +931,10 @@ const CHAPTERS = [
 {t:'h2', en:'Flight Controls — Primary vs. Secondary', zh:'主操縱與次操縱'},
 {t:'p', en:'Primary: ailerons, elevator (or stabilator), rudder — required for safe control. Secondary: wing flaps, leading edge devices, spoilers, trim systems — improve performance or relieve excess control forces.',
  zh:'主操縱面：副翼、升降舵（或全動平尾）、方向舵——為安全操控所必需。次操縱面：襟翼、前緣裝置、擾流板、配平系統——用於提升性能或減輕過大的操縱桿力。'},
-{t:'table', head:['Surface','Movement / Axis'], headZh:['操縱面','運動方向／軸線'], rows:[
-  {en:'Aileron', zh:'副翼', en2:'Roll — Longitudinal axis — Lateral stability', zh2:'滾轉——縱軸——側向穩定性'},
-  {en:'Elevator / Stabilator', zh:'升降舵／全動平尾', en2:'Pitch — Lateral axis — Longitudinal stability', zh2:'俯仰——橫軸——縱向穩定性'},
-  {en:'Rudder', zh:'方向舵', en2:'Yaw — Vertical axis — Directional stability', zh2:'偏航——垂直軸——方向穩定性'}
+{t:'table', head:['Primary Control Surface','Airplane Movement','Axes of Rotation','Type of Stability'], headZh:['主操縱面','飛機運動','旋轉軸','穩定性類型'], rows:[
+  {en:'Aileron', zh:'副翼', en2:'Roll', zh2:'滾轉', en3:'Longitudinal', zh3:'縱軸', en4:'Lateral', zh4:'側向穩定性'},
+  {en:'Elevator / Stabilator', zh:'升降舵／全動平尾', en2:'Pitch', zh2:'俯仰', en3:'Lateral', zh3:'橫軸', en4:'Longitudinal', zh4:'縱向穩定性'},
+  {en:'Rudder', zh:'方向舵', en2:'Yaw', zh2:'偏航', en3:'Vertical', zh3:'垂直軸', en4:'Directional', zh4:'方向穩定性'}
 ]},
 {t:'img', src:'figs/ch6/fig6-4.png', en:'Figure 6-4. Airplane controls, movement, axes of rotation, and type of stability.', zh:'圖6-4。飛機操縱面、運動方式、旋轉軸與穩定性類型對照。'},
 
@@ -2714,7 +2714,7 @@ function buildContent(){
       if(editMode) wrap.appendChild(makeBlockCtl(pos));
       if(!curH3Body && h2Info[curH2Key] && h2Info[curH2Key].onlyH3) wrap.classList.add('kp-hide-in-mode');
       const table = document.createElement('table');
-      const cols = d.rows[0].en3 !== undefined ? 3 : 2;
+      const cols = d.rows[0].en4 !== undefined ? 4 : (d.rows[0].en3 !== undefined ? 3 : 2);
       const thead = document.createElement('thead');
       const headTr = document.createElement('tr');
       d.head.forEach((h,ci)=>{ headTr.appendChild(trText('th', key+'.head.'+ci, h, d.headZh[ci])); });
@@ -2725,7 +2725,8 @@ function buildContent(){
         const tr = document.createElement('tr');
         tr.appendChild(trText('td', key+'.row.'+ri+'.0', r.en, r.zh));
         tr.appendChild(trText('td', key+'.row.'+ri+'.1', r.en2, r.zh2));
-        if(cols===3){ tr.appendChild(trText('td', key+'.row.'+ri+'.2', r.en3, r.zh3)); }
+        if(cols>=3){ tr.appendChild(trText('td', key+'.row.'+ri+'.2', r.en3, r.zh3)); }
+        if(cols>=4){ tr.appendChild(trText('td', key+'.row.'+ri+'.3', r.en4, r.zh4)); }
         tbody.appendChild(tr);
       });
       table.appendChild(tbody);
