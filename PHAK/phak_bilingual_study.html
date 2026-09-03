@@ -183,6 +183,16 @@
     font-size:.8rem; padding:.35rem .7rem; border-radius:6px; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,.25); white-space:nowrap; }
 
   @media (max-width:600px){ .masthead h1{ font-size:1.6rem; } }
+
+  #backToTopBtn{ position:fixed; right:1.4rem; bottom:1.4rem; z-index:40;
+    width:2.9rem; height:2.9rem; border-radius:50%; border:1px solid var(--amber);
+    background:var(--placard-bg); color:var(--placard-text); font-size:1.15rem; line-height:1;
+    cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,.28);
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; pointer-events:none; transform:translateY(8px);
+    transition:opacity .18s, transform .18s, background .15s, color .15s; }
+  #backToTopBtn.show{ opacity:1; pointer-events:auto; transform:translateY(0); }
+  #backToTopBtn:hover{ background:var(--amber); color:#1B1200; }
 </style>
 </head>
 <body class="zh">
@@ -240,6 +250,7 @@
 
 <div id="tooltip"></div>
 <div id="hlpopup"><button id="hlApplyBtn" type="button">🖍 標記重點</button></div>
+<button id="backToTopBtn" type="button" title="回到頂端" aria-label="回到頂端">↑</button>
 
 <script>
 /* ============================================================
@@ -2822,6 +2833,7 @@ function renderAll(){
     document.getElementById('nextBtn').disabled = pos===order.length-1;
   }
   window.scrollTo({top:0, behavior:'instant'});
+  updateBackToTopVisibility();
 }
 
 document.getElementById('btn-zh').onclick = ()=>{ lang='zh'; renderAll(); };
@@ -2853,6 +2865,54 @@ document.getElementById('nextBtn').onclick = ()=>{
   const pos = order.indexOf(chapterIdx);
   if(pos<order.length-1){ chapterIdx = order[pos+1]; renderAll(); }
 };
+
+/* ---- keyboard navigation: up/down scroll one viewport, left/right switch chapter ---- */
+function goToAdjacentChapter(dir){
+  const order = CHAPTERS.map((ch,i)=>i).sort((a,b)=> CHAPTERS[a].num - CHAPTERS[b].num);
+  const pos = order.indexOf(chapterIdx);
+  const newPos = pos + dir;
+  if(newPos>=0 && newPos<order.length){ chapterIdx = order[newPos]; renderAll(); }
+}
+function isTypingContext(el){
+  if(!el) return false;
+  if(el.isContentEditable) return true;
+  const tag = el.tagName;
+  return tag==='INPUT' || tag==='TEXTAREA' || tag==='SELECT';
+}
+document.addEventListener('keydown', (e)=>{
+  if(e.altKey || e.ctrlKey || e.metaKey) return;
+  if(isTypingContext(document.activeElement)) return;
+  switch(e.key){
+    case 'ArrowUp':
+      e.preventDefault();
+      window.scrollBy({ top: -window.innerHeight * 0.92, behavior:'smooth' });
+      break;
+    case 'ArrowDown':
+      e.preventDefault();
+      window.scrollBy({ top: window.innerHeight * 0.92, behavior:'smooth' });
+      break;
+    case 'ArrowLeft':
+      e.preventDefault();
+      goToAdjacentChapter(-1);
+      break;
+    case 'ArrowRight':
+      e.preventDefault();
+      goToAdjacentChapter(1);
+      break;
+  }
+});
+
+/* ---- floating back-to-top button ---- */
+const backToTopBtn = document.getElementById('backToTopBtn');
+function updateBackToTopVisibility(){
+  backToTopBtn.classList.toggle('show', window.scrollY > 400);
+}
+window.addEventListener('scroll', updateBackToTopVisibility, { passive:true });
+backToTopBtn.addEventListener('click', ()=>{
+  window.scrollTo({ top:0, behavior:'smooth' });
+});
+updateBackToTopVisibility();
+
 renderAll();
 applyFontSize();
 applyImgScale();
